@@ -1,0 +1,46 @@
+//<div class="logout-wrapp">
+//  <p>Welcome back<a href="#" class="name-user">MoadMonster37</a></p>
+//  <a href="#" class="logout-button">LOG OUT</a>
+//</div>
+
+.logout-wrapp {
+  border: 2px solid #793b4f;
+  background: #64283b;
+  margin: 0 0 24px 16px;
+  height: 44px;
+  position: relative;
+  width: 638px;
+  a, p {
+    @include text-shadow(-2px 2px 0px #451a27);
+    line-height: 44px;
+  }
+  p {
+    font-size: 17px;
+    font-family: 'HumanaSansITC';
+    color: #a68099;
+    width: 450px;
+    padding: 0 0 0 21px;
+  }
+  a {
+    font-family: 'HumanaSansITC';
+    color: #a68099;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+    &.logout-button {
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 85px;
+    }
+    &.name-user {
+      font-size: 21px;
+      display: inline-block;
+      padding: 0 7px;
+    }
+  }
+}

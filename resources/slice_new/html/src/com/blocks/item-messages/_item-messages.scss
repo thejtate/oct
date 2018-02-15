@@ -1,0 +1,214 @@
+.item-messages-wrapp {
+  width: 670px;
+  position: relative;
+  margin-bottom: 24px;
+  padding-bottom: 5px;
+  background: url("../images/bg/bg-item-messeges-repeat.png") 44px 0 repeat-y;
+  &:after {
+    content: '';
+    display: block;
+    bottom: -24px;
+    right: 0;
+    background: url("../images/bg/bg-bottom-m.png") 100% 0 no-repeat;
+    width: 670px;
+    height: 29px;
+    position: absolute;
+  }
+  .title-images-wrapp {
+    position: relative;
+    font-family: 'HumanaSansITC';
+    width: 670px;
+    height: 29px;
+    top: 0;
+    background: url("../images/bg/bg-top-title-m.png") 0 0 no-repeat;
+    .title-images {
+      text-indent: -9999px;
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      margin: 0 0 0 -203px;
+      display: block;
+      width: 405px;
+      height: 55px;
+      img {
+        display: block;
+      }
+    }
+  }
+  ul {
+    background: url("../images/bg/bg-item-wrapp-m.png") 0 0 repeat-y;
+    padding: 20px 58px 30px 70px;
+   // margin: 10px 58px 10px 70px;
+    &.manager-links {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0;
+      background: none;
+    }
+  }
+  .messages-new-wrapp {
+    background: url("../images/bg/bg-item-wrapp-m.png") 0 0 repeat-y;
+    padding: 34px 58px 0 70px;
+    //background: url("../images/bg/bg-item-wrapp-m.png") 0 0 repeat-y;
+    //
+    @include clear-box;
+    form {
+      background: url("../images/bg/bg-form-text-new.png") 0 100% repeat-y;
+      height: 170px;
+      width: 541px;
+      position: relative;
+    }
+    .body-field-wrapper {
+      //position: relative;
+      .form-item {
+        label {
+          font-size: 16px;
+          font-family: 'HumanaSansITC';
+          color: #C9C579;
+          padding: 12px 0 0 25px;
+        }
+        textarea {
+          background: none;
+          resize: none;
+          border: none;
+          position: absolute;
+          width: 490px;
+          height: 67px;
+          top: 34px;
+          left: 26px;
+          font-family: 'HumanaSansITC';
+          font-size: 20px;
+          color: #368099;
+          line-height: 24px;
+        }
+      }
+    }
+    .node-form {
+      //position: relative;
+      //@include clear-box;
+    }
+    .button-submit {
+      position: absolute;
+      right: 19px;
+      bottom: 20px;
+      float: right;
+      &:before,
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        height: 31px;
+      }
+      &:before {
+        left: 0;
+        background: sprite($icons, but-input-left) no-repeat;
+        width: 3px;
+      }
+      &:after {
+        right: 0;
+        background: sprite($icons, but-input-right) no-repeat;
+        width: 4px;
+      }
+      .form-submit {
+        @include text-shadow(-2px 2px 0px #d1861d);
+        font-family: 'HumanaSansITC';
+        font-size: 20px;
+        color: #fff9ae;
+        height: 31px;
+        line-height: 24px;
+        padding: 4px 10px 3px;
+        display: block;
+        border: none;
+        background: sprite($horiz,  bg-but-input) repeat-x;
+        cursor: pointer;
+        margin: 0 3px;
+        &:hover {
+          @include text-shadow(0 0 0);
+        }
+      }
+    }
+  }
+}
+.item-messages {
+  //zoom: 1;
+  width: 542px;
+  background: url("../images/bg/bg-top-item-m.png") 100% 0 no-repeat;
+  padding: 39px 0 0 0;
+  margin-bottom: 10px;
+  position: relative;
+  &:after {
+    content: '';
+    display: block;
+    height: 11px;
+    width: 542px;
+    bottom: -11px;
+    right: 0;
+    background: url("../images/bg/bg-bottom-item-m.png") 0 0 no-repeat;
+
+  }
+  .content-item-messeges {
+    background:  url("../images/bg/bg-content-item-m.png") 0 100% repeat-y;
+    padding: 0 25px;
+  }
+  .title-item-messeges {
+    background: url("../images/bg/bg-title-messeges.png") 0 100% repeat-x;
+    @include clear-box;
+    padding: 5px 0px 7px;
+    margin: 0 0 13px 0;
+  }
+  .user-name {
+    float: left;
+    a, span {
+      font-family: 'HumanaSansITC';
+      font-size: 20px;
+      color: #ed9200;
+    }
+    a {
+      font-weight: bold;
+      text-decoration: none;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  .date {
+    font-family: 'HumanaSansITC';
+    font-size:16px;
+    text-transform: uppercase;
+    color: #c9c579;
+    float: right;
+  }
+  .content-text {
+    p {
+      font-family: 'HumanaSansITC';
+      font-size: 20px;
+      color: #368099;
+      line-height: 24px;
+    }
+  }
+  .rating-messages {
+    @include clear-box;
+    .vud-widget-star {
+      float: right;
+    }
+    span {
+      &.vote-current-title,
+      &.vote-current-score {
+        font-family: 'HumanaSansITC';
+        font-size: 16px;
+        color: #C9C579;
+        display: inline-block;
+        line-height: 42px;
+        padding: 0;
+        vertical-align: top;
+      }
+      &.vote-current-title {
+        text-transform: uppercase;
+      }
+    }
+  }
+
+
+}

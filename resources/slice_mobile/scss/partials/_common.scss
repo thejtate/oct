@@ -1,0 +1,39 @@
+*{
+  margin:0;
+  padding:0;
+}
+
+body{
+  width:100%; 
+  min-width:320px;
+  font:14px 'HumanaSansITC',sans-serif;
+   background:#ecc75b;
+}
+
+
+hr {
+  display: block;
+  border: 0 none;
+  clear: both;
+  height: 0px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+a {
+  color: blue;
+  outline: none;
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+img {
+  border: none;
+}
+ul{
+  list-style:none;
+}

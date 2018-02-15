@@ -1,0 +1,12 @@
+name = Vocabulary Permissions Per Role
+description = "Allow adding to/editing terms of/removing terms from vocabularies per role."
+core = 6.x
+dependencies[] = taxonomy
+
+
+; Information added by drupal.org packaging script on 2012-10-06
+version = "6.x-1.1"
+core = "6.x"
+project = "vppr"
+datestamp = "1349516215"
+

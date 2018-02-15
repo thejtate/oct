@@ -1,0 +1,18 @@
+diff --git a/uc_paypal.pages.inc b/uc_paypal.pages.inc
+index a3cc9af..68b554c 100644
+--- a/uc_paypal.pages.inc
++++ b/uc_paypal.pages.inc
+@@ -75,7 +75,12 @@ function uc_paypal_ipn($order_id = 0) {
+ 
+   if (strcmp($response->data, 'VERIFIED') == 0) {
+     watchdog('uc_paypal', 'IPN transaction verified.');
+-
++    //-------------- patch ------------
++    //like paypal pro submition,  make auto decrement.
++    watchdog('uc_decrement', 'Autodecrement and clear cart');
++    oct_custom_cart_autodecrement_product($order_id);
++    uc_cart_empty();
++    //-------------- patch ------------
+     $duplicate = db_result(db_query("SELECT COUNT(*) FROM {uc_payment_paypal_ipn} WHERE txn_id = '%s' AND status <> 'Pending'", $txn_id));
+     if ($duplicate > 0) {
+       if ($order->payment_method != 'credit') {

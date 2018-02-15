@@ -1,0 +1,42 @@
+.clr {
+  zoom: 1;
+}
+#nav>ul>li a b {
+  filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-2, OffY=2, Color='#7f2c32', Positive='true');
+}
+h2.comingup span,
+h2.season span {
+  filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-2, OffY=2, Color='#a65e0c', Positive='true');
+}
+#nav>ul>li.active>span>a b,
+#nav>ul>li.active>span>a:hover b {
+	filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-2, OffY=2, Color='#375a88', Positive='true');
+}
+#content h1 span,
+.footer-left span {
+	filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-2, OffY=2, Color='#2f4c76', Positive='true');
+}
+#nav ul ul {
+  background: transparent;
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#33000000', EndColorStr='#33000000') !important;
+}
+#nav ul ul li {
+  margin-right: 0;
+}
+*+html .b-fairy-tale-inner ul li,
+*+html .b-type-purchase > div,
+*+html .b-article .b-buts-panel a {
+  display: inline;
+}
+*+html #nav {
+  margin-top: 10px;
+}
+*+html #nav>ul {
+  margin-top: 0;
+}
+*+html .b-type-purchase .b-online {
+	margin-left: -25px;
+}
+*+html .b-about dl dd {
+	width: 317px;
+}

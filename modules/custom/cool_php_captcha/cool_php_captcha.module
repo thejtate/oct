@@ -1,0 +1,137 @@
+<?php
+define('IMAGE_PATH', 'cool_php_captcha/image');
+define('ADMIN_PATH', 'admin/config/people/coolphpcaptcha');
+define('VAR_NAME', 'cool_php_captcha_forms');
+define('SESSION_VAR', 'captcha');
+
+/**
+ * Implements hook_init()
+ */
+function cool_php_captcha_init() {
+
+}
+
+/**
+ * Implements hook_menu()
+ */
+function cool_php_captcha_menu() {
+  $items = array();
+
+  $items[IMAGE_PATH] = array(
+    'page callback' => 'cool_php_captcha_get_image',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items[ADMIN_PATH] = array(
+    'title' => 'Cool PHP Captcha',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cool_php_captcha_admin_form'),
+    'access arguments' => array('administer modules'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function cool_php_captcha_admin_form($form_state) {
+
+  $vals = variable_get(VAR_NAME, array());
+
+  $form['name'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Name'),
+//    '#size' => 30,
+//    '#maxlength' => 64,
+    '#default_value' => implode("\n", $vals),
+    '#description' => t('Enter the name for this group of settings'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+
+  return $form;
+}
+
+function cool_php_captcha_admin_form_validate(&$form, &$form_state) {
+}
+
+function cool_php_captcha_admin_form_submit(&$form, &$form_state) {
+  $vals = explode(' ', str_replace(array("\n", "\r\n", "\r", ',' , ';'), ' ', $form_state['values']['name']));
+  foreach($vals as $k => $val) {
+    $val2 = trim($val);
+    $vals[$k] = $val2;
+    if (empty($val2)) {
+      unset($vals[$k]);
+    }
+
+  }
+
+  variable_set(VAR_NAME, $vals);
+  drupal_set_message(t('Settings saved'));
+}
+
+/**
+ * Captcha image callback
+ */
+function cool_php_captcha_get_image() {
+  include_once drupal_get_path('module', 'cool_php_captcha') . "/cool-php-captcha/captcha.php";
+  $captcha = new SimpleCaptcha();
+  $captcha->imageFormat = 'png';
+  $captcha->blur = true;
+  $captcha->session_var = SESSION_VAR;
+  $captcha->resourcesPath = drupal_get_path('module', 'cool_php_captcha')  .'/cool-php-captcha/resources';
+  @session_start();
+  $captcha->CreateImage();
+  exit();
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function cool_php_captcha_form_alter(&$form, &$form_state, $form_id) {
+  $form_ids = variable_get(VAR_NAME, array());
+//  die($form_id);
+
+  if (in_array($form_id, $form_ids)) {
+
+      $form['captcha'] = array(
+        '#prefix' => '<img src="'. base_path() . IMAGE_PATH . '">',
+        '#type' => 'textfield',
+        '#title' => t('Captcha'),
+        '#default_value' => '',
+        '#required' => true,
+        '#size' => 24,
+        '#attributes' => array('autocomplete' =>'off'),
+      );
+
+      $form['#validate'][] = 'cool_php_captcha_validate_captcha';
+      $form['#submit'][] = 'cool_php_captcha_submit_captcha';
+
+  }
+}
+
+/**
+ * Captcha field validation function
+ */
+function cool_php_captcha_validate_captcha(&$form, &$form_state) {
+
+  if (!empty($form_state['values']['captcha'])){
+    if( $form_state['values']['captcha'] != $_SESSION[SESSION_VAR]){
+      form_set_error('captcha', t("Captcha is wrong"));
+    }
+  }
+  unset($_SESSION[SESSION_VAR]);
+  // Clearing current inputted value
+  $form['captcha']['#value'] = '';
+}
+
+
+/**
+ * Captcha field submit function
+ */
+function cool_php_captcha_submit_captcha(&$form, &$form_state) {
+
+}

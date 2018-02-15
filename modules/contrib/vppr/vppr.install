@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Vocabulary Permissions Per Role - uninstallation routines.
+ */
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function vppr_uninstall() {
+  variable_del('vppr_perms');
+}
+

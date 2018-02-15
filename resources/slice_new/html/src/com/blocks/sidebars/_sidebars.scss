@@ -1,0 +1,96 @@
+.sidebar {
+  //width: 322px;
+  float: right;
+}
+
+.sidebar-block {
+  @include clear-box;
+  width: 322px;
+  .button-go {
+    @include text-shadow(-2px 2px 0px #d1861d);
+    font-family: 'HumanaSansITC';
+    display: block;
+    font-size: 33px;
+    color: #fff9ae;
+    position: relative;
+    background: sprite($horiz,  bg-but-go) repeat-x;
+    height: 60px;
+    float: right;
+    margin: 0 51px 0 10px;
+    text-decoration: none;
+    line-height: 48px;
+    padding: 0 0 0 9px;
+    z-index: 1;
+    &:hover {
+      @include text-shadow(0 0 0);
+    }
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+    }
+    &:before {
+      width:10px;
+      height: 60px;
+      left: -10px;
+      top: 0;
+      background: sprite($icons, but-go-left) no-repeat;
+    }
+    &:after {
+      width: 51px;
+      height: 84px;
+      right: -37px;
+      top: -12px;
+      z-index: -1;
+      background: sprite($icons, but-go-right) no-repeat;
+    }
+  }
+  .sidebar-title {
+    text-indent: -9999px;
+    margin: 0 auto;
+  }
+  .sidebar-content {
+    //margin: 0 auto;
+    position: relative;
+  }
+  .button-submit {
+    position: relative;
+    float: right;
+    &:before, 
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      height: 31px;
+    }
+    &:before {
+      left: 0;
+      background: sprite($icons, but-input-left) no-repeat;
+      width: 3px;
+    }
+    &:after {
+      right: 0;
+      background: sprite($icons, but-input-right) no-repeat;
+      width: 4px;
+    }
+    .form-submit {
+      @include text-shadow(-2px 2px 0px #d1861d);
+      font-family: 'HumanaSansITC';
+      font-size: 20px;
+      color: #fff9ae;
+      height: 31px;
+      line-height: 24px;
+      padding: 4px 10px 3px;
+      display: block;
+      border: none;
+      background: sprite($horiz,  bg-but-input) repeat-x;
+      cursor: pointer;
+      margin: 0 3px;
+      &:hover {
+        @include text-shadow(0 0 0);
+      }
+    }
+  }
+}

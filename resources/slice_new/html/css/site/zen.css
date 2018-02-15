@@ -1,0 +1,441 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*** webkit hack ***/
+textarea {
+  resize:none;
+}
+/*** END ***/
+
+.col {
+  float:left;
+}
+.clor {
+  float:right;
+}
+.endcol {
+  clear:both;
+}
+.enddiv {
+  clear:both;
+  height:0;
+  line-height:0;
+  font-size:0;
+  overflow:hidden;
+}
+
+a {
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+a span {
+  cursor: pointer;
+}
+img {
+  border: none;
+}
+* {
+  outline: 0;
+}
+
+form {
+  padding: 0;
+  margin: 0;
+}
+
+/*** IE8 button fix ***/ .form-submit-click, .form-submit-unclick { background-position:1px 1px !important; } /*** END ***/
+
+/** body **/
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#page {
+
+}
+
+#page-inner {
+
+}
+
+/** header **/
+#header {
+
+}
+
+#header-inner {
+
+}
+
+#logo-title {
+
+}
+
+#logo {
+  margin: 0;
+  padding: 0;
+}
+
+#logo-image {
+
+}
+
+h1#site-name, div#site-name {
+  margin: 0;
+  font-size: 2em;
+  line-height: 1.3em;
+}
+
+#site-name a:link, #site-name a:visited {
+  color: #000;
+  text-decoration: none;
+}
+
+#site-name a:hover {
+  text-decoration: underline;
+}
+
+#site-slogan {
+
+}
+
+#header-blocks {
+
+}
+
+/** main (container for everything else) **/
+#main {
+
+}
+
+#main-inner {
+
+}
+
+/** content **/
+#content {
+
+}
+
+#content-inner {
+
+}
+
+#mission {
+
+}
+
+#content-top {
+
+}
+
+#content-header {
+
+}
+
+.breadcrumb {
+  padding-bottom: 0; /* Undo system.css */
+}
+
+h1.title, /* The title of the page */
+h2.title, /* Block title or the title of a piece of content when it is given in a list of content */
+h3.title /* Comment title */
+{
+  margin: 0;
+}
+
+.help {
+  margin: 1em 0;
+}
+
+.more-help-link {
+  font-size: 0.85em;
+  text-align: right;
+}
+
+#content-area {
+
+}
+
+#content-area .node-inner, #content-area .profile, #content-area #user-login {
+
+}
+
+.pager {
+  clear: both;
+  margin: 1em 0;
+  text-align: center;
+}
+
+.pager a, .pager strong.pager-current {
+  padding: 0.5em;
+}
+
+.feed-icons {
+  margin: 1em 0;
+}
+
+#content-bottom {
+
+}
+
+/** navbar **/
+#navbar {
+
+}
+
+#navbar-inner {
+
+}
+
+#search-box {
+
+}
+
+#edit-search-theme-form-1-wrapper label {
+  display: none;
+}
+
+#primary {
+
+}
+
+#secondary {
+
+}
+
+/** sidebar-left **/
+#sidebar-left {
+
+}
+
+#sidebar-left-inner {
+
+}
+
+/** sidebar-right **/
+#sidebar-right {
+
+}
+
+#sidebar-right-inner {
+
+}
+
+/** footer **/
+#footer {
+
+}
+
+#footer-inner {
+
+}
+
+#footer-message {
+
+}
+
+/** closure **/
+#closure-blocks {
+
+}
+
+.node-unpublished div.unpublished, .comment-unpublished div.unpublished {
+  height: 0;
+  overflow: visible;
+  color: #d8d8d8;
+  font-size: 75px;
+  line-height: 1;
+  font-family: Impact, "Arial Narrow", Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  word-wrap: break-word; /* A very nice CSS3 property */
+}
+
+.marker {
+  color: #c00;
+}
+
+.node .picture {
+
+}
+
+.node.node-unpublished .picture, .comment.comment-unpublished .picture {
+  position: relative;
+}
+
+.node div.links {
+  margin: 1em 0;
+}
+
+ul.links {
+  margin: 0;
+  padding: 0;
+}
+
+ul.links.inline {
+  display: inline;
+}
+
+ul.links li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}
+
+/** Drupal comments **/
+#comments {
+  margin: 1em 0;
+}
+
+#comments-title {
+
+}
+
+.new {
+  color: #c00;
+}
+
+.comment div.links {
+  margin: 1em 0;
+}
+
+/** Drupal blocks **/
+.block {
+  margin-bottom: 0;
+}
+
+/** Miscellaneous Drupal styles **/
+.error {
+  
+}
+
+.warning {
+  
+}
+
+.more-link {
+  text-align: right;
+}
+
+#user-login-form {
+  text-align: left;
+}
+
+tr.even, tr.odd {
+  border-bottom: none;
+  padding: 0;
+}
+
+tr.even {
+  
+}
+
+tr.odd {
+
+}
+
+
+/** Drupal forms **/
+.form-item, .form-checkboxes, .form-radios {
+  margin:0;
+}
+
+.form-item input.error, .form-item textarea.error, .form-item select.error {
+  border: 2px solid #c00;
+}
+
+.form-item label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-item label.option {
+  display: inline;
+  font-weight: normal;
+}
+
+.form-required {
+  color: #c00;
+}
+
+.form-item .description {
+  font-size: 0.85em;
+}
+
+.form-checkboxes .form-item, .form-radios .form-item {
+  margin: 0.4em 0;
+}
+
+.form-submit {
+
+}
+
+.container-inline div, .container-inline label {
+  display: inline;
+}
+
+.tips {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9em;
+}
+
+/** OpenID **/
+/* The default styling for the OpenID login link seems to assume Garland's
+* styling of list items.
+*/
+#user-login-form ul {
+  margin-bottom: 0;
+}
+
+#user-login-form li.openid-link, #user-login li.openid-link {
+  margin-top: 1em;
+  margin-left: -20px; /* Un-do some of the padding on the ul list. */
+  padding-left: 20px;
+  background-position: left center;
+}
+
+#user-login-form li.user-link, #user-login li.user-link {
+  margin-top: 1em;
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+#user-login li.openid-link, #user-login li.user-link {
+  margin-left: -2em; /* Un-do all of the padding on the ul list. */
+}
+
+/** Drupal admin tables **/
+/* We overrode these styles in html-elements.css, but restore them for the
+* admin section of the site.
+*/
+.section-admin tbody {
+  border-top: 1px solid #ccc;
+}
+
+.section-admin th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 3px solid #ccc;
+}
+
+.section-admin tbody th {
+  border-bottom: 1px solid #ccc;
+}
+
+.section-admin thead th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 3px solid #ccc;
+}
+
+.section-admin tr.even, .section-admin tr.odd {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+  padding: 0.1em 0.6em;
+}

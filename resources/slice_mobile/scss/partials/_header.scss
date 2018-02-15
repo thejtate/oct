@@ -1,0 +1,42 @@
+@import "mixins";
+
+.header{
+  background:#ecc75b url('../images/bg-header.jpg') repeat-x 0 0;
+  height:126px;
+  width:100%;
+  position:relative;
+  padding-top:0.1em;
+  overflow:hidden;  
+}
+.logo_OKT{
+  width:308px;
+  height:31px;
+  display:block;
+  margin:0 auto;
+  position:relative;
+}
+.header-logo{
+  height:31px; 
+  padding-top:13px;
+  margin-bottom:21px;
+}
+.header-title{
+  h2{
+    text-align:center;
+    vertical-align:middle;
+    color:#9dc1f2;
+    text-shadow:#192B2F 1px 1px 2px, #192B4D -3px 5px 9px;
+    font-size:1.7em; 
+    display:table-cell;
+    font-family:'HumanaSansITC';
+    width:100%;
+  }
+ a:first-child{
+   @include title-link;
+   background-position: 0 0;
+ }
+ h2 + a{
+   @include title-link;
+   background-position: -40px 0;
+ }
+}

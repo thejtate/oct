@@ -1,0 +1,228 @@
+.form-register-wrapper {
+  width: 559px;
+  margin: 0 auto;
+  background: url('../images/bg/bg-register-bottom.png') 50% 100% no-repeat;
+  padding: 5px 0 44px 0;
+  .title-form {
+    background: url('../images/bg/bg-title-register.png') 0 0 no-repeat;
+    text-indent: -9999px;
+    width: 559px;
+    height: 208px;
+  }
+  .register-wrapper {
+    @include clear-box;
+    background: url('../images/bg/bg-register-repeat.png') 0 0 repeat;
+    padding: 16px 20px 0 68px;
+    .messages {
+      margin-left: 0;
+      margin-right: 26px;
+    }
+  }
+  .password-description {
+    margin-right: 28px;
+  }
+  .form-item {
+    margin: 0 0 6px 0;
+    @include clear-box;
+    label {
+      font-family: 'HumanaSansITC';
+      font-size: 16px;
+      display: block;
+      color: #ed9200;
+      line-height: 24px;
+    }
+    .form-text {
+      display: block;
+    }
+    textarea {
+      font-size: 11px;
+      padding: 5px;
+      font-family: 'HumanaSansITC';
+      color: #368099;
+      border: none;
+      background: none;
+      width: 418px !important;
+      height: 94px - 10;
+      resize: none;
+    }
+    .description, .password-confirm {
+      font-family: 'HumanaSansITC';
+      font-size: 16px;
+      color: #c9c579;
+      width: 214px;
+      float: right;
+      margin-right: 18px;
+      height: 32px;
+      display: table;
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+
+    }
+    input {
+      font-family: 'HumanaSansITC';
+      font-size: 20px;
+      border-top: 2px solid #ebdd88;
+      border-bottom: 1px solid #f9f3a8;
+      border-right: 2px solid #ebdd88;
+      border-left: 1px solid #f9f3a8;
+      background: #fffdd9;
+      height: 30px - 10;
+      width: 210px - 10;
+      float: left;
+      color: #368099;
+      padding: 5px;
+    }
+    input[type="password"] {
+      font-family: "Times New Roman", "serif";
+    }
+  }
+  .parrent-wrapp,
+  .email-wrapp {
+    @include clear-box;
+    .form-item {
+      float: left;
+      clear: none;
+      margin-right: 18px;
+    }
+  }
+  .button-submit {
+    text-align: center;
+    margin: 0 26px 12px 0;
+    .form-item {
+      margin: 0;
+      display: inline-block;
+      position: relative;
+      &:before,
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        height: 35px;
+      }
+      &:before {
+        left: 0;
+        background: sprite($icons, but-input-left-l) no-repeat;
+        width: 7px;
+      }
+      &:after {
+        right: 0;
+        background: sprite($icons, but-input-right-l) no-repeat;
+        width: 7px;
+      }
+    }
+    .form-submit {
+      @include text-shadow(-2px 2px 0px #d1861d);
+      font-family: 'HumanaSansITC';
+      width: auto;
+      overflow: visible;
+      font-size: 20px;
+      color: #fff9ae;
+      height: 35px;
+      line-height: 24px;
+      padding: 1px 8px 5px 16px;
+      display: block;
+      border: none;
+      background: sprite($horiz, bg-submit-log) repeat-x;
+      cursor: pointer;
+      margin: 0 7px;
+      &:hover {
+        @include text-shadow(0 0 0);
+      }
+    }
+  }
+  .form-textarea-wrapp {
+    margin-bottom: 5px;
+    .form-item {
+      margin-bottom: 15px;
+    }
+    .description {
+      font-family: 'HumanaSansITC';
+      font-size: 16px;
+      text-transform: uppercase;
+      text-align: center;
+      color: #d0cc80;
+      line-height: 20px;
+      margin-right: 23px;
+    }
+  }
+  .cuTextWrap {
+    position: relative;
+    border-top: 2px solid #ebdd88;
+    border-bottom: 1px solid #f9f3a8;
+    border-right: 2px solid #ebdd88;
+    border-left: 1px solid #f9f3a8;
+    width: 440px;
+    background: #fffdd9;
+    &.error {
+      border:#ea2b2b solid 1px;
+      background:#f3adb0;
+    }
+    .scroll-pane {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .form-textarea {
+      display: block;
+      overflow: hidden;
+      resize: none;
+    }
+
+    .form-textarea:focus {
+      outline: 0;
+    }
+
+    .jScrollPaneContainer {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .jScrollPaneTrack {
+      position: absolute;
+      width: 11px !important;
+      cursor: pointer;
+      right: 3px;
+      top: 0;
+      height: 100%;
+      //background: image-url('icons/slider.png') repeat-y top center;
+    }
+
+    .jScrollPaneDrag {
+      position: absolute;
+      background-color: #ebdd88;
+      cursor: pointer;
+      overflow: hidden;
+      width: 11px !important;
+      margin: 3px 0;
+    }
+
+    .jScrollPaneDragTop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      //background: image-url('icons/bar-top.png') no-repeat 0 0;
+      height: 10px;
+    }
+
+    .jScrollPaneDragBottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+     //background: image-url('icons/bar-bottom.png') no-repeat 0 0;
+      height:10px;
+    }
+
+    .jScrollPaneDragBottom {
+      * html & {
+        bottom: -1px;
+      }
+    }
+  }
+}

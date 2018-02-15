@@ -1,0 +1,33 @@
+.sidebar-block {
+  &.sidebar-prop {
+    margin-bottom: 21px;
+    .sidebar-title {
+      background: sprite($icons, prop-title) no-repeat;
+      width: 289px;
+      height: 52px;
+    }
+    .sidebar-content {
+      background: sprite($icons, bg-prop) no-repeat;
+      width: 185px;
+      height: 210px;
+      margin: 7px 0 0 16px;
+      .button-go {
+        position: absolute;
+        bottom: 21px;
+        right: -128px;
+      }
+      p {
+        @include text-shadow(-2px 2px 0px #3b1723);
+        font-family: 'HumanaSansITC';
+        font-size: 19px;
+        width: 108px;
+        text-align: center;
+        color: #b398aa;
+        position: absolute;
+        top: 20px;
+        right: -111px;
+        line-height: 22px;
+      }
+    }
+  }
+}

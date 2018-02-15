@@ -1,0 +1,26 @@
+.item-messages-wrapp {
+  after: ' ';
+  suffix: -item;
+  .after-item {
+    display: block;
+    bottom: -14px;
+    right: 0;
+    background: url("../images/bg/bg-bottom-m.png") 100% 0 no-repeat;
+    width: 670px;
+    height: 29px;
+    position: absolute;
+  }
+}
+.item-messages {
+  zoom: 1;
+  after: ' ';
+  suffix: -item;
+  .after-item {
+    display: block;
+    height: 11px;
+    width: 542px;
+    bottom: -11px;
+    right: 0;
+    background: url("../images/bg/bg-bottom-item-m.png") 0 0 no-repeat;
+  }
+}

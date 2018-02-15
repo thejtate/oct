@@ -1,0 +1,22 @@
+.sidebar-block {
+  &.sidebar-message {
+    margin-bottom: 14px;
+    .sidebar-title {
+      background: sprite($icons, message-title) no-repeat;
+      width: 202px;
+      height: 82px;
+      margin-bottom: 4px;
+    }
+    .sidebar-content {
+      background: sprite($icons, bg-messeges) no-repeat;
+      width: 249px;
+      height: 177px;
+      margin: 0 0 0 24px;
+      .button-go {
+        position: absolute;
+        right: -65px;
+        bottom: 39px;
+      }
+    }
+  }
+}

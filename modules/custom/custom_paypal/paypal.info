@@ -1,0 +1,8 @@
+name = PayPal Custom
+description = Support for PayPal through the Payment API
+package = Payment API
+dependencies[] = pay
+core = 6.x
+
+
+; Patched !

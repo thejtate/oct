@@ -1,0 +1,33 @@
+.sidebar-block {
+  &.sidebar-calendar {
+    margin-bottom: 18px;
+    .sidebar-title {
+      background: sprite($icons, calendar-title) no-repeat;
+      width: 233px;
+      height: 49px;
+    }
+    .sidebar-content {
+      background: sprite($icons, bg-calendar) no-repeat;
+      width: 208px;
+      height: 246px;
+      margin: 3px 0 0 24px;
+      .button-go {
+        position: absolute;
+        bottom: 53px;
+        right: -106px;
+      }
+      p {
+        @include text-shadow(-2px 2px 0px #3b1723);
+        font-family: 'HumanaSansITC';
+        font-size: 19px;
+        width: 74px;
+        text-align: center;
+        color: #b398aa;
+        position: absolute;
+        top: 23px;
+        right: -72px;
+        line-height: 22px;
+      }
+    }
+  }
+}

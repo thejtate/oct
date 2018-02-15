@@ -1,0 +1,26 @@
+diff --git a/uc_attribute.module b/uc_attribute.module
+index 811c2f1..08cd204 100644
+--- a/uc_attribute.module
++++ b/uc_attribute.module
+@@ -501,9 +501,13 @@ function uc_attribute_order_product_alter(&$product, $order) {
+   if (is_array($product->data['attributes']) && is_numeric(key($product->data['attributes']))) {
+     $attributes = array();
+     $options = _uc_cart_product_get_options($product);
++    if(is_array($options) && !empty($options)){
+       foreach ($options as $aid => $option) {
+         $attributes[$option['attribute']][] = $option['name'];
++        $values[$option['attribute']][] = array('val' => $option['value'], 'oid' => $option['oid']);
+       }
++    }
++    $product->data['values'] = $values;
+     $product->data['attributes'] = $attributes;
+   }
+ }
+@@ -729,6 +733,7 @@ function _uc_cart_product_get_options($item) {
+               $options[$index] = (array) $attribute->options[$oid];
+               $options[$index]['display'] = $attribute->display;
+               $options[$index]['attribute'] = $name;
++              $options[$index]['value'] = $data['attributes'][12][$oid];
+               // Store cost/each and quantity for theme_uc_product_attributes
+               $options[$index]['cost_each'] = $options[$index]['cost'];
+               $options[$index]['price_each'] = $options[$index]['price'];

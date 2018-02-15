@@ -1,0 +1,66 @@
+//bg-input.png
+
+.outer-wrapper-login {
+  .main {
+    .login-form-wrapper {
+      before: ' ';
+      suffix: -item;
+      .before-item {
+        position: absolute;
+        width: 625px;
+        height: 614px;
+        background: url('../images/bg/bg-wof.png') 0 0 no-repeat;
+        z-index: 100;
+      }
+      .button-submit {
+        before: ' ';
+        after: ' ';
+        suffix: -item;
+        .before-item,
+        .after-item {
+          display: block;
+          position: absolute;
+          top: 0;
+          height: 35px;
+        }
+        .before-item {
+          left: 0;
+          background: sprite($icons, but-input-left-l) no-repeat;
+          width: 7px;
+        }
+        .after-item {
+          right: 0;
+          background: sprite($icons, but-input-right-l) no-repeat;
+          width: 7px;
+        }
+      }
+      .block-reg {
+        .button-go {
+          before: ' ';
+          after: ' ';
+          suffix: -item;
+          .before-item,
+          .after-item {
+            display: block;
+            position: absolute;
+          }
+          .before-item {
+            width:8px;
+            height: 38px;
+            left: -8px;
+            top: 0;
+            background: sprite($icons, but-go-form-l) no-repeat;
+          }
+          .after-item {
+            width: 33px;
+            height: 56px;
+            right: -32px;
+            top: -9px;
+            z-index: -1;
+            background: sprite($icons, but-go-form-r) no-repeat;
+          }
+        }
+      }
+    }
+  }
+}

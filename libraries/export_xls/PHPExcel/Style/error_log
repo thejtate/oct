@@ -1,0 +1,9 @@
+[09-Oct-2014 20:34:18 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Color.php on line 37
+[13-Oct-2014 19:48:32 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/NumberFormat.php on line 37
+[20-Oct-2014 04:52:39 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Fill.php on line 37
+[20-Oct-2014 10:43:59 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Font.php on line 37
+[23-Oct-2014 01:56:34 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Borders.php on line 37
+[24-Oct-2014 21:10:23 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Alignment.php on line 37
+[02-Nov-2014 18:18:06 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Border.php on line 37
+[14-Nov-2014 22:23:59 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Color.php on line 37
+[23-Nov-2014 00:22:02 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style/Protection.php on line 37

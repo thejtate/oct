@@ -1,0 +1,198 @@
+<?php
+/**
+ * @file
+ * Replacement for PHP's get_browser() function.
+ */
+
+// Include browscap data import functions
+include_once('import.inc');
+
+/**
+ * Implementation of hook_perm().
+ */
+function browscap_perm() {
+  return array(
+    'administer browscap',
+    'view browscap reports',
+  );
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function browscap_menu() {
+  $items['admin/settings/browscap'] = array(
+    'title' => 'Browscap',
+    'description' => 'Configure user agent monitoring and browscap information settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('browscap_settings_form'),
+    'access arguments' => array('administer browscap'),
+    'file' => 'browscap.admin.inc',
+  );
+  $items['admin/reports/browscap'] = array(
+    'title' => 'Browscap',
+    'description' => 'Browser-specific site statistics.',
+    'page callback' => 'browscap_top_useragents',
+    'page arguments' => array('all'),
+    'access arguments' => array('view browscap reports'),
+    'file' => 'browscap.reports.inc',
+    'weight' => 5,
+  );
+  $items['admin/reports/browscap/useragents'] = array(
+    'title' => 'All',
+    'access arguments' => array('view browscap reports'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/reports/browscap/browsers'] = array(
+    'title' => 'Browsers',
+    'page callback' => 'browscap_top_useragents',
+    'page arguments' => array('browsers'),
+    'access arguments' => array('view browscap reports'),
+    'file' => 'browscap.reports.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  $items['admin/reports/browscap/crawlers'] = array(
+    'title' => 'Crawlers',
+    'page callback' => 'browscap_top_useragents',
+    'page arguments' => array('crawlers'),
+    'access arguments' => array('view browscap reports'),
+    'file' => 'browscap.reports.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+  );
+  $items['admin/reports/browscap/useragent/%'] = array(
+    'title' => 'Useragent details',
+    'page callback' => 'browscap_useragent_properties',
+    'page arguments' => array(4),
+    'access arguments' => array('view browscap reports'),
+    'file' => 'browscap.user_agent.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_exit().
+ */
+function browscap_exit() {
+  // Check the status of user agent monitoring
+  $monitoring = variable_get('browscap_monitor', FALSE);
+
+  // Record the current user agent if monitoring is enabled
+  if ($monitoring == TRUE) {
+    // Get browscap data about the current user agent
+    $user_agent = browscap_get_browser();
+
+    // Identify the user agent using browscap data
+    // Otherwise, use the USER_AGENT header from the current request
+    if (!empty($user_agent['parent'])) {
+      $user_agent_string = substr(trim($user_agent['parent']), 0, 255);
+    }
+    else {
+      $user_agent_string = substr(trim($_SERVER['HTTP_USER_AGENT']), 0, 255);
+    }
+
+    // Determine if the user agent is a crawler using browscap data
+    // Otherwise, assume that the user agent isn't a crawler
+    if (!empty($user_agent['crawler'])) {
+      $user_agent_crawler = $user_agent['crawler'];
+    }
+    else {
+      $user_agent_crawler = 0;
+    }
+
+    // Record the user agent in the database
+    db_query("UPDATE {browscap_statistics} SET counter = counter + 1, is_crawler=%d WHERE parent='%s'", $user_agent_crawler, $user_agent_string);
+    // If no rows were affected then this is the first time that the current user agent has been encountered
+    if (!db_affected_rows()) {
+      // Create a new row to store counters for the user agent
+      db_query("INSERT INTO {browscap_statistics} (parent,counter,is_crawler) VALUES('%s', 1, %d)", $user_agent_string, $user_agent_crawler);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_cron().
+ */
+function browscap_cron() {
+  // Check the current update interval
+  $update_interval = variable_get('browscap_update_interval', 7);
+
+  // Convert the update interval from days to seconds
+  $update_interval = $update_interval * 7 * 24 * 60 * 60;
+
+  // Check when the last update occurred
+  $last_imported = variable_get('browscap_imported', REQUEST_TIME);
+
+  // Update the browscap data if the amount of time specified by the update
+  // interval has passed
+  if (($last_imported + $update_interval) < REQUEST_TIME) {
+    // Update the browscap information
+    _browscap_import();
+
+    // Record when the browscap information was updated
+    variable_set('browscap_imported', time());
+  }
+}
+
+/**
+ * Provide data about a user agent string or the current user agent.
+ *
+ * @param string $user_agent
+ *   Optional user agent string to test. If empty, use the value from the current request.
+ * @return array
+ *   An array of information about the user agent.
+ */
+function browscap_get_browser($user_agent = NULL) {
+  // Determine the current user agent if a user agent was not specified
+  if ($user_agent != NULL) {
+    $user_agent = $user_agent;
+  }
+  elseif ($user_agent == NULL && isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+  }
+  else {
+    $user_agent = 'Default Browser';
+  }
+
+  // Check the cache for user agent data
+  $cache = cache_get($user_agent, 'cache_browscap');
+
+  // Attempt to find a cached user agent
+  // Otherwise store the user agent data in the cache
+  if ($cache != 0 && ($cache->created > time() - 60 * 60 * 24)) {
+    $user_agent_properties = $cache->data;
+  }
+  else {
+    // Find the user agent's properties
+    // The useragent column contains the wildcarded pattern to match against our
+    // full-length string while the ORDER BY chooses the most-specific matching
+    // pattern
+    $user_agent_properties = db_fetch_object(db_query_range("SELECT * from {browscap} WHERE '%s' LIKE useragent ORDER BY LENGTH(useragent) DESC", $user_agent, 0, 1));
+
+    // Store user agent data in the cache
+    cache_set($user_agent, $user_agent_properties, 'cache_browscap');
+  }
+
+  // Create an array to hold the user agent's properties
+  $properties = array();
+
+  // Return an array of user agent properties
+  if (isset($user_agent_properties) && isset($user_agent_properties->data)) {
+    // Unserialize the user agent data found in the cache or the database
+    $properties = unserialize($user_agent_properties->data);
+
+    // Set the user agent name and name pattern
+    $properties['useragent'] = $user_agent;
+    $properties['browser_name_pattern'] = strtr($user_agent_properties->useragent, '%_', '*?');
+  }
+  else {
+    // Set the user agent name and name pattern to 'unrecognized'
+    $properties['useragent'] = 'unrecognized';
+    $properties['browser_name_pattern'] = strtr('unrecognized', '%_', '*?');
+  }
+
+  return $properties;
+}

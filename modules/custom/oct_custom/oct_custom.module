@@ -1,0 +1,3977 @@
+<?php
+
+/**
+ * @file
+ * Site-related functionnality
+ *
+ * @author
+ * Sergey Grigorenko
+ * @package OCT
+ */
+
+define('CAMPS_SPONSORS_VID', 2);
+define('CAMPS_PARTNERS_VID', 3);
+define('SUMMER_CAMP_DATES_VID', 9);
+
+define('CAMPS_NID', 10);
+
+define('AID_DATE_TIME', 2);
+define('AID_TICKETS', 12);
+define('AID_CLASS_DATE' , 13);
+define('AID_BIRTH_YEAR', 5);
+define('AID_BIRTH_MONTH', 15);
+define('AID_BIRTH_DAY', 16);
+
+define('AID_CHILDREN_FIRST_NAME', 3);
+define('AID_CHILDREN_SECOND_NAME', 4);
+define('AID_CHILDREN_FOOD_ALLERGY', 18);
+define('AID_T_SHORTS', 14);
+
+define('OID_ADULT', 52);
+define('OID_CHILDREN', 53);
+define('OID_COMPLIMENTARY_ADULT', 54);
+define('OID_GROUP_ADULT', 55);
+define('OID_GROUP_CHILDREN', 56);
+define('OID_STUDENT', 57);
+
+define('PRODUCTS_TAXONOMY_ID', 1);
+define('CLASSES_TAXONOMY_ID', 2);
+define('CAMPS_TAXONOMY_ID', 3);
+define('THEATRE_TAXONOMY_ID', 24);
+define('SUMMERCAMPS_POSITON_TAXONOMY_ID', 8);
+
+define('BOARD_OF_DIRECTORS_TOP_QID', 1);
+define('STAFF_TOP_QID', 2);
+define('ARTIST_QID', 3);
+define('BOARD_OF_DIRECTORS_BOTTOM_QID', 4);
+define('STAFF_BOTTOM_QID', 5);
+define('HOMEPAGE_QID', 6);
+define('AUCTION_ITEMS_QID', 7);
+define('GENERAL_INFO_ITEMS_QID', 8);
+define('SPONSORSHIP_ITEMS_QID', 9);
+define('SUMMER_CAMPS_LIST_QID', 10);
+define('SUMMER_CAMPS_DESCRIPTION_QID', 11);
+
+define('TICKETS_FEESID', 4);
+define('CLASS_AND_CAMPS_FEESID', 3);
+define('TSHIRTS_FEESID', 5);
+
+define('ONLINE_REGISTER_NID', 163);
+define('ONLINE_REGISTER_STEP2_NID', 182);
+define('SPONSORSHIP_OPPORTUNITIES_PDF_FILE_NID', 184);
+define('SUGGESTION_BOX_NID', 396);
+
+define('SUMMER_CAMPS_LIST_TID', 36);
+define('SUMMER_CAMPS_DESCRIPTION_TID', 37);
+
+/**
+ * Implementation of hook_perm
+ */
+function oct_custom_perm() {
+  return array(
+      'manager access',
+      'administer custom oct configuration',
+      );
+}
+
+/**
+ * Implementation of hook_init
+ */
+function oct_custom_init(){
+  global $user;
+
+  if ($router_item = menu_get_item($_GET['q'])) {
+    if (!$router_item['access']) {
+      // The user hasn't access to the page in $path.
+      if ($user->uid == 0) {
+        $dest = drupal_get_destination();
+        drupal_goto('user/login', $dest);
+      }
+    }
+  }
+
+  jquery_ui_add(array( 'ui.datepicker'));
+  drupal_add_js(drupal_get_path('module', 'oct_custom') . '/js/jquery.tablesorter.min.js');
+  drupal_add_js(drupal_get_path('module', 'oct_custom') . '/js/UI/jquery-ui-1.7.3.custom.min.js');
+  drupal_add_js(drupal_get_path('module', 'oct_custom') . '/js/manager_accordion.js');
+  drupal_add_js(drupal_get_path('module', 'oct_custom') . '/js/custom.js');
+  drupal_add_js(drupal_get_path('module', 'oct_custom') . '/js/jquery.ui.timepicker.js');
+
+  drupal_add_css(drupal_get_path('module', 'oct_custom') . '/js/UI/theme/smoothness/jquery-ui-1.7.3.custom.css');
+  drupal_add_css(drupal_get_path('module', 'oct_custom') . '/css/oct_custom.css');
+  drupal_add_css(drupal_get_path('module', 'oct_custom') . '/css/admin.css');
+  variable_set('unvaliable_message', t('Online Registration unavailable, please call (405) 606-7003') );
+}
+/**
+ * Implementation of hook_access
+ */
+function oct_custom_access($op, $node, $account) {
+  if ($op == 'create') {
+    return user_access('create stories', $account);
+  }
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own stories', $account) && ($account->uid == $node->uid)) {
+      return TRUE;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function oct_custom_menu() {
+  $items['admin/settings/oct_custom'] = array(
+    'title'             => 'OCT settings',
+    'page callback'     => 'drupal_get_form',
+    'page arguments'    => array('oct_custom_admin_settings'),
+    //'access callback' => 'user_access',
+    'access arguments'  => array('administer custom oct configuration'),
+    'file'              => 'oct_custom.admin.inc',
+  );
+  $items['enrollment'] = array(
+    'page callback'     => 'oct_custom_enrollment',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['enrollment/getData'] = array(
+    'page callback'     => 'oct_custom_enrollment_get_data',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['enrollment/setData'] = array(
+    'page callback'     => 'oct_custom_enrollment_set_data',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+
+  $items['tickets'] = array(
+    'page callback'     => 'oct_custom_product_tikets',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['tickets/get_product_node'] = array(
+    'page callback'     => 'oct_custom_get_product_node',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['admin/user-info'] = array(
+    'page callback'     => 'oct_custom_user_info_page',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['admin/user-info/get_from_date'] = array(
+    'page callback'     => 'oct_custom_get_data_from_filter',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK
+  );
+  $items['fairy-tale-ball/register-online/step_1'] = array(
+    'page callback'     => 'call_online_registration_form_step_1',
+    'access arguments'  => array('access content'),
+    'type'              => MENU_CALLBACK
+  );
+  $items['fairy-tale-ball/register-online/step_2'] = array(
+    'page callback'     => 'call_online_registration_form_step_2',
+    'access arguments'  => array('access content'),
+    'type'              => MENU_CALLBACK
+  );
+  /*
+  $items['admin/fairy-tale-ball/pdf'] = array(
+    'title' => t('Sponsorship Opportunities pdf'),
+    'page callback'     => 'drupal_get_form',
+    'page arguments' => array('fairy_tale_config_form'),
+    'access arguments'  => array('manager access'),
+    'type'              => MENU_CALLBACK
+  );*/
+  $items['admin/online-register/info'] = array(
+    'title' => t('Online Register'),
+    'page callback'     => 'online_register_data',
+    'access arguments'  => array('manager access'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+  /*
+  $items['admin/product_aid_stock/'] = array(
+    'title' => t('Online Register'),
+    'page callback'     => 'oct_custom_ajax_check_product_parametr',
+    'access arguments'  => array('access content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );*/
+  $items['coming-up'] = array(
+    'title' => t('Coming Up'),
+    'page callback'     => 'coming_up_data',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+  $items['mobile-page/%'] = array(
+    'title' => t('About Us'),
+    'page callback'     => 'mobile_page_second_level_menu',
+    'access arguments'  => array('access content'),
+    'page arguments'    => array(1),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+  $items['productions'] = array(
+    'title' => t('Productions'),
+    'page callback'     => 'about_us_data',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+  $items['cart/checkout/uc_custom_submittion'] = array(
+    'title' => t('Productions'),
+    'page callback'     => 'free_uc_custom_submittion',
+    'access arguments'  => array('access content'),
+    'file'              => 'oct_custom.inc',
+    'type'              => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function oct_custom_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks = array();
+      $blocks[0] = array('info' => t('OCT updates form'));
+      $blocks[1] = array('info' => t('Social'));
+      $blocks[2] = array('info' => t('Cart link'));
+
+      $blocks[3] = array('info' => t('Prop Room'));
+      $blocks[4] = array('info' => t('Message Board'));
+      $blocks[5] = array('info' => t('Calendar'));
+
+      return $blocks;
+    case 'view':
+      switch ($delta) {
+        case 0:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_updates_form_block()
+          );
+        break;
+        case 1:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_social_block()
+          );
+        break;
+        case 2:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_cart_block()
+          );
+        break;
+
+      case 3:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_prop_room_block()
+          );
+        break;
+      case 4:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_message_board_block()
+          );
+        break;
+      case 5:
+          $block = array(
+              'subject' => '',
+              'content' => _oct_custom_calendar_block()
+          );
+        break;
+
+      }
+      return $block;
+  }
+}
+
+/**
+ *  Implementation of hook_form_alter
+ */
+function oct_custom_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  //kpr($form_id);
+    switch($form_id){
+      case 'taxonomy_form_term':
+        if (in_array('manager', $user->roles) && ($user->uid != 1)) {
+          if(!empty($form['#vocabulary']['vid']) && $form['#vocabulary']['vid'] == SUMMER_CAMP_DATES_VID) {
+            $form['back_link'] = array(
+              '#value' => l('< Back to list', 'admin/content/taxonomy/' . SUMMER_CAMP_DATES_VID),
+              '#weight' => -30,
+            );
+            $form['advanced']['#access'] = FALSE;
+            $form['delete']['#access'] = FALSE;
+            $form['identification']['description']['#access'] = FALSE;
+            $form['identification']['name']['#title'] = t('Week name');
+            $form['identification']['name']['#description'] = '';
+          }
+        }
+        break;
+      case 'taxonomy_overview_terms':
+        if (in_array('manager', $user->roles) && ($user->uid != 1)) {
+          if(!empty($form['#vocabulary']['vid']) && $form['#vocabulary']['vid'] == SUMMER_CAMP_DATES_VID) {
+            $form['reset_alphabetical']['#access'] = FALSE;
+            //change term link to term names
+            foreach ($form as $key => $element) {
+              if(isset($element['#term']['name'])) {
+                //term element
+                $form[$key]['view']['#value'] = $element['#term']['name'];
+              }
+            }
+          }
+        }
+        break;
+      case 'user_profile_form':
+        if (in_array('manager', $user->roles) && ($user->uid != 1)) {
+          $form['timezone']['#access'] = FALSE;
+          $form['htmlmail']['#access'] = FALSE;
+        }
+        break;
+      case 'online_registration_form_step_1':
+        // we get all sponsors items and create new radiobutton field in form
+        $sponsorship_list = views_get_view_result('sponsorship_list');
+        if (!empty($sponsorship_list) && (is_array($sponsorship_list))){
+          $now_nid = null;
+          $i = 0;
+          foreach ($sponsorship_list as $key => $val){
+            if ($now_nid != $val->nid){
+              $now_nid = $val->nid;
+              $form['online_registration_checkbox_'.$i] = array(
+                '#type' => 'checkbox',
+                '#title' => $val->node_title . ' ' . $val->node_data_field_sponsorship_price_field_sponsorship_price_value,
+                '#weight' => 0,
+                '#nid' => $val->nid,
+                '#attributes' => array('class' => 'checkbox styled'),
+                '#prefix' => '<div class="online-register-radiobutton-price hidden">' . $val->node_data_field_sponsorship_price_field_sponsorship_price_value . '</div>',
+              );
+              $form['online_registration_checkbox_value_'.$i] = array(
+                '#type' => 'hidden',
+                '#value' => $val->node_data_field_sponsorship_price_field_sponsorship_price_value,
+              );
+              $form['online_registration_checkbox_name_'.$i] = array(
+                '#type' => 'hidden',
+                '#value' => $val->node_title,
+              );
+              $i++;
+            }
+          }
+        }
+        // set previous default values
+        if (!empty($form['#step_1_previous_val'])){
+          foreach($form['#step_1_previous_val'] as $key => $val){
+            foreach ($form as $key_form => $val_form){
+              if ( ($key == $key_form) && !empty($val) ){
+                switch ($form[$key_form]['#type']){
+                  case 'textfield':
+                    $form[$key]['#value'] = $val;
+                    break;
+                  case 'select':
+                  case 'checkbox':
+                    $form[$key]['#default_value'] = $val;
+                    break;
+                }
+              }
+            }
+          }
+        }
+        break;
+      case 'webform_client_form_'.SUGGESTION_BOX_NID:
+        $form['submitted']['message']['#default_value'] = '';
+        $form['submitted']['message']['#attributes'] = array( 'autocomplete' =>"off");
+        break;
+      case 'webform_client_form_'.ONLINE_REGISTER_STEP2_NID:
+        // set previous default values
+
+        $form['actions']['back'] = array(
+          '#type' => 'button',
+          '#value' => t('Back'),
+          '#weight' => 99,
+        );
+        $form['actions']['submit']['#weight'] = 100;
+        $form['submitted']['state']['#attributes'] = array ('class' => 'enrollment-select');
+
+        $children_names = $form['submitted']['first_last_names_ages_of_children_in_my_party'];
+        //unset($form['submitted']['first_last_names_ages_of_children_in_my_party']);
+        $form['submitted']['first_last_names_ages_of_children_in_my_party']['#access'] = false;
+        $form['first_last_names_ages_of_children_in_my_party[]'] = $children_names;
+        $form['first_last_names_ages_of_children_in_my_party[]']['#weight'] = 0;
+        $form['first_last_names_ages_of_children_in_my_party[]']['#prefix'] = '<div class="first-last-names-of-children">';
+        $form['first_last_names_ages_of_children_in_my_party[]']['#suffix'] = '</div>';
+
+        $adult_names = $form['submitted']['first_last_names_of_adults_in_my_party'];
+        //unset($form['submitted']['first_last_names_of_adults_in_my_party']);
+        $form['submitted']['first_last_names_of_adults_in_my_party']['#access'] = false;
+        $form['first_last_names_of_adults_in_my_party[]'] = $adult_names;
+        $form['first_last_names_of_adults_in_my_party[]']['#weight'] = 1;
+        $form['first_last_names_of_adults_in_my_party[]']['#prefix'] = '<div class="first-last-names-of-adult">';
+        $form['first_last_names_of_adults_in_my_party[]']['#suffix'] = '</div>';
+
+        $form['name_of_your_sitter'] = $form['submitted']['name_of_your_sitter'];
+        //$form['submitted']['name_of_your_sitter']['#weight'] = 2;
+        //unset($form['submitted']['name_of_your_sitter']);
+        $form['submitted']['name_of_your_sitter']['#access'] = false;
+
+        $form['we_wish_to_be_seated_with'] = $form['submitted']['we_wish_to_be_seated_with'];
+        //$form['name_of_your_sitter']['#weight'] = 3;
+        //unset($form['submitted']['we_wish_to_be_seated_with']);
+        $form['submitted']['we_wish_to_be_seated_with']['#access'] = false;
+
+        if( is_array($form['#submit']) && !empty($form['#submit']) ){
+          $submits = $form['#submit'];
+          $form['#submit'] = array();
+          $form['#submit'][] = 'online_register_form_step_2_submit';
+          foreach ($submits as $key => $val){
+            $form['#submit'][] = $val;
+          }
+        }
+        //$form['#submit'][] = 'online_register_form_step_2_submit';
+        $form['#validate'] = array(0 =>'online_register_form_step_2_validate');
+
+        $step_1_val = $form['#parameters'][1]['post'];
+        if (!empty($step_1_val) && is_array($step_1_val) ){
+          if (!empty($step_1_val['online_registration_step_2_values'])){
+            $form['#step_2_previous_val'] = unserialize($step_1_val['online_registration_step_2_values']);
+            unset($step_1_val['online_registration_step_2_values']);
+          }
+          $form['online_registration_step_1_values'] = array('#type' => 'hidden', '#value' => serialize($step_1_val));
+        }
+        $form['order_info_msg'] = array('#type' => 'hidden', '#value' => theme('online_registration_email_order_info', unserialize($form['online_registration_step_1_values']['#value'])));
+        //set prev values
+        if (!empty($form['#step_2_previous_val'])){
+          foreach($form['#step_2_previous_val'] as $key => $val){
+            foreach ($form['submitted'] as $key_form => $val_form){
+              if ( ($key == $key_form) && !empty($val) ){
+                switch ($form['submitted'][$key_form]['#type']){
+                  case 'textfield':
+                    $form['submitted'][$key]['#value'] = $val;
+                    break;
+                  case 'select':
+                    $form['submitted'][$key]['#default_value'] = $val;
+                    break;
+                }
+              }
+            }
+          }
+          //set total amount;
+        }
+        //$form['submitted']['total_amount']['#value'] = $step_1_val['online_registration_total_attendee_cost'];
+        break;
+      case 'discounts_node_form':
+        $form['buttons']['preview']['#access'] = false;
+        if (empty($form['#node']->taxonomy[34]->tid)){
+          $form['buttons']['delete']['#access'] = false;
+        }
+        //dont get create discount type ecsept Manual
+        unset($form['taxonomy'][7]['#options'][0]);
+        unset($form['taxonomy'][7]['#options'][2]);
+        unset($form['taxonomy'][7]['#options'][3]);
+        unset($form['taxonomy'][7]['#options'][4]);
+        break;
+      case 'uc_discounts_form': // DISCOUNT ADMIN FORM
+         $form['qualifications']['has_qualifying_amount_max']['#access'] = FALSE;
+         $form['qualifications']['has_role_filter']['#access'] = FALSE;
+         $form['qualifications']['use_only_discounted_products_to_qualify']['#access'] = FALSE;
+         $form['qualifications']['required_product']['#access'] = FALSE;
+         $form['qualifications']['requires_single_product_to_qualify']['#access'] = FALSE;
+
+         $form['discount_set']['max_times_applied']['#access'] = FALSE;
+         $form['discount_set']['filter_type']['#options'] = array('2' => 'Type');
+         $form['discount_set']['filter_type']['#default_value'] = 2;
+         $form['discount_set']['filter_type']['#access'] = FALSE;
+
+         $form['discount_set']['product_ids']['#pre fix'] = "<div class='products-container' style='display:none'>";
+         $form['discount_set']['term_ids']['#prefix'] = "<div class='terms-container'>";
+         $form['discount_set']['term_ids']['#options'] = array(
+             '-1' => '<All Terms>',
+             'Store type' => $form['discount_set']['term_ids']['#options']['Store type']
+         );
+
+         $form['discount_set']['max_uses']['#access'] = FALSE;
+         $form['discount_set']['max_uses_per_user']['#access'] = FALSE;
+         $form['discount_set']['max_uses_per_code']['#access'] = FALSE;
+
+      break;
+      case 'sponsors_node_form':
+          if (empty($form['field_sponsors_url'][0]['#default_value']['value'])) {
+            $form['field_sponsors_url'][0]['#default_value']['value'] = (isset($_REQUEST['destination'])) ? $_REQUEST['destination'] : '';
+          }
+          $form['buttons']['preview']['#access'] = FALSE;
+      break;
+      case 'webform_client_form_67':
+        //$alias = drupal_get_path_alias($_GET['q']);
+        //$form['#redirect'] = FALSE;
+        $form['#submit'][] = 'oct_custom_subscribe_form_submit';
+        break;
+      case 'webform_client_form_' . SUGGESTION_BOX_NID:
+        $form['#redirect'] = FALSE;
+        $form['#submit'][] = 'oct_custom_suggestion_box_form_submit';
+        break;
+      case 'node_delete_confirm':
+      case 'user_login':
+        $form['#prefix'] = '<div class="title-form-login"><h1>' . t("Sign In") . '</h1></div>';
+        $form['submit']['#value'] = t('Enter');
+
+        $form['submit']['#prefix'] = '<div class="button-submit"><div class="form-item">';
+        $form['submit']['#suffix'] = '</div></div>';
+      break;
+      case 'user_register':
+        $form['account']['#title'] = '';
+        $form['account']['name']['#title'] = t('Pick a Username');
+        $form['account']['name']['#description'] = t('Letters and numbers only No spaces or special characters');
+        $form['account']['mail']['#title'] = t('Email');
+        $form['account']['mail']['#description'] = '';
+        $form['account']['pass']['#description'] = '';
+
+        $form['submit']['#prefix'] = '<div class="button-submit"><div class="form-item">';
+        $form['submit']['#suffix'] = '</div></div>';
+
+        $form['Personal information']['#weight'] = -11;
+        $form['Personal information']['#title'] = '';
+
+        $form['Personal information']['#prefix'] = '<div class="parrent-wrapp">';
+        $form['Personal information']['#suffix'] = '</div>';
+
+
+        $agreement_descripton = t('By clicking “Create new account” you agree to the terms and conditions of this website.');
+        $form['agreement'] = array(
+          '#type' => 'textarea',
+          '#title' => t('User Agreement'),
+          '#default_value' => variable_get('backstage_user_agreement', ''),
+          '#disabled'  => TRUE,
+          '#prefix' => '<div class="form-textarea-wrapp">',
+          '#suffix' => '<div class="description">' . $agreement_descripton . '</div></div>'
+        );
+        $form['conditions'] = array(
+          '#type' => 'markup',
+          '#markup' => t('BY CLICKING “SUBMIT” YOU AGREE TO THE TERMS AND CONDITIONS OF THIS WEBSITE.'),
+          '#weight' => 29
+          );
+
+      break;
+
+      case 'nodequeue_arrange_subqueue_form':
+        switch ($form['#queue']['qid']){
+          case GENERAL_INFO_ITEMS_QID:
+          case SUMMER_CAMPS_LIST_QID:
+          case SUMMER_CAMPS_DESCRIPTION_QID:
+            $form['add']['#access'] = false;
+            break;
+        }
+        break;
+      case 'general_info_item_node_form':
+        $form['title']['#access'] = false;
+        break;
+      case 'uc_cart_checkout_form':
+        $cart_nodes = uc_cart_get_contents();
+        //$cart_nodes = unserialize($form['cart_contents']['#value']);
+        if (!empty($cart_nodes)){
+          foreach ($cart_nodes as $key => $val){
+            if (!empty($val->data['attributes'][2]) && !empty($val->data['attributes'][12])){
+              //product
+              $form['panes']['oct_custom']['user_info_first_name']['#access'] = true;
+              $form['panes']['oct_custom']['user_info_last_name']['#access'] = true;
+            }
+            if(!empty($val->data['attributes'][3]) && !empty($val->data['attributes'][4])){
+              //class
+              $form['panes']['oct_custom']['user_info_parent_of_guardian_first_name']['#access'] = true;
+              $form['panes']['oct_custom']['user_info_parent_of_guardian_last_name']['#access'] = true;
+              $form['panes']['oct_custom']['user_info_another_parent_of_guardian_first_name']['#access'] = true;
+              $form['panes']['oct_custom']['user_info_another_parent_of_guardian_last_name']['#access'] = true;
+            }
+          }
+        }
+        // drop standart stock validation
+        foreach ($form['#validate'] as $key => $val){
+          if ($val == 'uc_out_of_stock_validate_form_checkout'){
+            $form['#validate'][$key] = 'oct_custom_out_of_stock_checkout_form_validate';
+          }
+        }
+        //oct_custom_out_of_stock_checkout_form_validate
+        $form['#validate'][] = 'user_info_checkout_form_validate';
+        $form['#submit'][] = 'user_info_checkout_form_submit';
+        $form['#prefix'] = '<div id="content-inner">
+                              <div id="content-bot">
+                                <div id="content-area">';
+        $form['#suffix'] =     '</div>
+                              </div>
+                            </div>';
+        break;
+      case 'product_node_form':
+        // node "Product" form
+        $form['group_productions']['group_product_date']['#group_fields']['field_qty_product_ticket']['prefix'] = '<div class="clear-both float-left">';
+        $form['group_productions']['group_product_date']['#group_fields']['field_qty_product_ticket']['suffix'] = '</div>';
+        $form['group_productions']['group_product_date']['#group_fields']['field_product_sold']['prefix'] = '<div class="float-left">';
+        $form['group_productions']['group_product_date']['#group_fields']['field_product_sold']['suffix'] = '</div>';
+        $form['group_productions']['group_product_date']['#group_fields']['field_product_unvaliable_online']['prefix'] = '<div class="float-left">';
+        $form['group_productions']['group_product_date']['#group_fields']['field_product_unvaliable_online']['suffix'] = '</div>';
+        $form['group_productions']['group_product_date']['#group_fields']['field_show_in_calendar']['prefix'] = '<div class="float-left">';
+        $form['group_productions']['group_product_date']['#group_fields']['field_show_in_calendar']['suffix'] = '</div>';
+
+        // node "Class" form
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_date_from']['prefix'] = '<div class="clear-both float-left">';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_date_from']['suffix'] = '</div>';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_qty_class_ticket']['prefix'] = '<div class="clear-both float-left">';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_qty_class_ticket']['suffix'] = '</div>';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_sold']['prefix'] = '<div class="float-left">';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_sold']['suffix'] = '</div>';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_unvaliable_online']['prefix'] = '<div class="float-left">';
+        $form['group_classes']['group_product_session_time']['#group_fields']['field_class_unvaliable_online']['suffix'] = '</div>';
+
+        //published option
+        $form['options']['#access'] = true;
+        $form['options']['promote']['#access'] = false;
+        $form['options']['sticky']['#access'] = false;
+        $form['options']['#collapsible'] = false;
+
+        drupal_add_css(drupal_get_path('module', 'oct_custom'). "/js/UI/theme/smoothness/jquery-ui-1.7.3.custom.css");
+        drupal_add_js(drupal_get_path('module', 'oct_custom').'/js/datepicker_setup.js');
+        // hide formats
+        rich_text_body_format($form);
+        $form['base']['shipping']['#access'] = false;
+        $form['base']['#access'] = false;
+
+        //ned node or old  set SKU* field
+        if (empty($form['base']['model']['#default_value'])){
+          $form['base']['model']['#default_value'] = (ohb_get_auto_increment_sku());
+        }
+        // onload hide date to field. and set date the same as date from. ( time is actually different )
+        // onchange it also duplicate dates in js
+        /*
+        if(!empty($form['#node']->field_product_date)){
+          foreach ($form['#node']->field_product_date as $key => $val){
+            if(!empty($form['#node']->field_product_date[$key]['value'])&& !empty($form['#node']->field_product_date[$key]['value2']) ){
+              $date = strtotime($form['#node']->field_product_date[$key]['value']);
+              $date2 = strtotime($form['#node']->field_product_date[$key]['value2']);
+              $form['#node']->field_product_date[$key]['value2'] = date('Y-m-d', $date).' '.date('H:i:s' ,$date2);
+            }
+          }
+        }
+         */
+        /*
+        if(!empty($form['field_product_date'])){
+          foreach( $form['field_product_date'] as $key => $val){
+            if ($form['field_product_date'][$key]['#field_name'] == 'field_product_date'){
+              $date = strtotime( $form['field_product_date'][$key]['#default_value']['value'] );
+              $date2 = strtotime( $form['field_product_date'][$key]['#default_value']['value2'] );
+              $form['field_product_date'][$key]['#default_value']['value2'] = date('Y-m-d', $date).' '.date('H:i:s' ,$date2);
+            }
+          }
+        }*/
+        break;
+      case 'uc_cart_view_form':
+        // hide qty field from cart;
+        if (!isset($form_state['post']) || !count($form_state['post'])) {
+          foreach ($form['items'] as $key => $val){
+            if( !empty($val['qty']['#type'])){
+
+              //submit real qty on page
+
+              //$form['items'][$key]['qty-other'] = $form['items'][$key]['qty'];
+
+              $form['items'][$key]['qty']['#type'] = 'hidden';
+              if ($form['items'][$key]['qty']['#default_value'] > 1){
+                $form['items'][$key]['qty_show'] = $form['items'][$key]['qty'];
+                $form['items'][$key]['qty_show']['#value'] = $form['items'][$key]['qty']['#default_value'].'X';
+                unset($form['items'][$key]['qty_show']['#type']);
+              }else{
+                $form['items'][$key]['qty_show'] = $form['items'][$key]['qty'];
+                $form['items'][$key]['qty_show']['#access'] = FALSE;
+              }
+            }
+          }
+
+          $form['items']['#columns']['image']['cell'] = '';
+          $form['items']['#columns']['desc']['cell'] = t('Products');
+          foreach ($form['items'] as $key => $value ){
+            if (is_array($value) && !empty($value['nid']['#value'])){
+              foreach ($form['#parameters'][2] as $val){
+                if ($val->nid == $value['nid']['#value']){
+                  $form['items'][$key]['desc']['#value'] = $val->title . $form['items'][$key]['description']['#value'];
+                }
+              }
+            }
+          }
+        }
+        if (!empty($form['#validate'])) {
+          foreach($form['#validate'] as $key => $val){
+            if ($val == 'uc_out_of_stock_validate_form_cart'){
+              unset($form['#validate'][$key]);
+            }
+          }
+        }
+        $form['#validate'][] = 'oct_custom_validate_form_cart';
+        break;
+      case'uc_product_add_to_cart_form':
+        if (!empty($form['attributes'][2]) && isset($form['attributes'][2]['#options'])){
+//             array_unshift($form['attributes'][2]['#options'], 'Please select ...');
+          $a = array(0 => 'Please select ...');
+          $a += $form['attributes'][2]['#options'];
+          $form['attributes'][2]['#options'] = $a;
+
+//          $form['attributes'][2]['#options'] += array('Please select ...');
+
+//           $form['attributes'][2]['#options'][0] = 'Please select ...';
+        }
+
+        $form['#attributes']['nid'] = $form['nid']['#value'];
+        if (!empty($form['attributes'][12])){
+          $form['#prefix'] =  '<div id="product-form" >';
+          $form['#suffix'] = '</div>';
+          $form['attributes'][2]['#attributes']['class'] = ' enrollment-select';
+
+          $sorted[52] = t('Adult');
+          $sorted[57] = t('Student (with student ID)');
+          $sorted[53] = t('Children (ages 2 – 12)');
+          $sorted[56] = t('Group Children (20 to 49)');
+          $sorted[55] = t('Group Children (50+)');
+          $sorted[54] = t('Complimentary Adult');
+
+          $form['attributes'][12]['#grid'] = $sorted;
+
+          $form['attributes'][12]['#ahah']['#min_val'][55] = $form['node']['#value']->field_group_adult_quantity_from[0]['value'];
+          $form['attributes'][12]['#ahah']['#min_val'][56] = $form['node']['#value']->field_group_child_quantity_from[0]['value'];
+
+          $form['attributes'][12]['#ahah']['#max_val'][52] = $form['node']['#value']->field_adult_quantity_to[0]['value'];
+          $form['attributes'][12]['#ahah']['#max_val'][53] = $form['node']['#value']->field_children_quantity_to[0]['value'];
+          $form['attributes'][12]['#ahah']['#max_val'][54] = 0;
+          $form['attributes'][12]['#ahah']['#max_val'][55] = $form['node']['#value']->field_group_adult_quantity_to[0]['value'];
+          $form['attributes'][12]['#ahah']['#max_val'][56] = $form['node']['#value']->field_group_child_quantity_to[0]['value'];
+          $form['attributes'][12]['#ahah']['#max_val'][57] = $form['node']['#value']->field_students_quantity_to[0]['value'];
+
+          $form['attributes'][12]['#ahah']['#price'][52] = $form['node']['#value']->field_adult_price[0]['value'];
+          $form['attributes'][12]['#ahah']['#price'][53] = $form['node']['#value']->field_children_price[0]['value'];
+          $form['attributes'][12]['#ahah']['#price'][54] = 0;
+          $form['attributes'][12]['#ahah']['#price'][55] = $form['node']['#value']->field_group_adult_price[0]['value'];
+          $form['attributes'][12]['#ahah']['#price'][56] = $form['node']['#value']->field_group_children_price[0]['value'];
+          $form['attributes'][12]['#ahah']['#price'][57] = $form['node']['#value']->field_students_price[0]['value'];
+
+          $form['attributes'][12]['#value']['#location'] = $form['node']['#value']->field_product_teaser[0]['value'];
+
+          // create new element for add_to_cart form
+          foreach($form['node']['#value']->field_qty_class_ticket as $key => $value){
+            //we have no more ticket for that date
+            if ($value['value'] == 0){
+              //find that date and drop it from form
+              foreach($form['attributes'][2]['#options'] as $k =>  $val){
+                if ($val == $form['node']['#value']->field_product_date[$key]['value']){
+                  unset($form['attributes'][2]['#options'][$k]);
+                }
+              }
+            }
+          }
+
+          // change validation for "product" type
+          $product_validation = false;
+          foreach ($form['node']['#value']->taxonomy as $val){
+            if ($val->tid == 1){
+              $product_validation = true;
+            }
+          }
+          if($product_validation){
+            foreach ($form['#validate'] as $key => $val){
+              if ($val == 'uc_out_of_stock_validate_form_addtocart'){
+                // cahnge validation
+                $form['#validate'][$key] = 'oct_custom_stock_validate_form_addtocart';
+              }
+            }
+          }
+        }
+        break;
+      case 'uc_cart_checkout_review_form':
+        //$form['#submit'][] = 'oct_custom_cart_checkout_review_form_submit';
+        // drop standart stock validation
+        foreach ($form['#validate'] as $key => $val){
+          if ($val == 'uc_out_of_stock_validate_form_checkout'){
+            $form['#validate'][$key] = 'oct_custom_out_of_stock_checkout_form_validate';
+          }
+        }
+        break;
+      case 'calendar_event_node_form':
+        $form['options']['#access'] = FALSE;
+        $form['buttons']['preview']['#access'] = false;
+        if(!empty($form['nodewords'])){
+          $form['nodewords']['#access'] = FALSE;
+        }
+        hide_standart_menus($form);
+        break;
+      case 'fun_night_event_node_form':
+        $form['options']['#access'] = true;
+        $form['options']['promote']['#access'] = true;
+        $form['options']['sticky']['#access'] = false;
+        $form['options']['status']['#access'] = false;
+        break;
+      case 'views_exposed_form':
+        if ($form['#id'] == 'views-exposed-form-summer-camps-products-default'){
+          $form['tid_1']['#attributes']['class'] = 'enrollment-select';
+        }
+        break;
+      case 'uc_paypal_wps_form':
+        $total_amount = 0;
+        if(!empty($form['#parameters'][2]->line_items) && is_array($form['#parameters'][2]->line_items)){
+         foreach($form['#parameters'][2]->line_items as $key => $val){
+           $total_amount += $val['amount'];
+         }
+        }
+        if ($total_amount == 0 && !empty($_SESSION['uc_discounts_codes'])){
+          $form['#parameters'][2]->order_status = 'completed';
+          $form['#action']= '/cart/checkout/uc_custom_submittion' ;
+          $form['#submit'][] = 'oct_custom_paypal_redirect_submission';
+          $form['#validate'][] = 'oct_custom_paypal_redirect_validate';
+        }
+        break;
+      case 'message_node_form':
+        $form['body_field']['body']['#attributes'] = array( 'autocomplete' =>"off");
+        $form['body_field']['body']['#default_value'] = '';
+        if (isset($form['#node']->act) && $form['#node']->act == 'message') {
+          $form['#redirect'] = 'message-board';
+          $form['body_field']['body']['#rows'] = 3;
+          $form['body_field']['body']['#title'] = t('Share something');
+          $form['buttons']['submit']['#value'] = t('Post it');
+          $form['body_field']['format']['#access'] = FALSE;
+          $form['menu']['#access'] = FALSE;
+          $form['path']['#access'] = FALSE;
+          $form['field_message_vote']['#access'] = FALSE;
+          $form['nodewords']['#access'] = FALSE;
+          $form['comment_settings']['#access'] = FALSE;
+          $form['author']['name']['#default_value'] = $user->name;
+          $form['author']['#access'] = FALSE;
+          $form['revision_information']['#access'] = FALSE;
+          $form['options']['#access'] = FALSE;
+          $form['buttons']['preview']['#access'] = FALSE;
+          $form['buttons']['submit']['#prefix'] = '<div class="button-submit"><div class="form-item">';
+          $form['buttons']['submit']['#suffix'] = '</div></div>';
+        } else {
+          $form['options']['#access'] = FALSE;
+          $form['menu']['#access'] = FALSE;
+          $form['comment_settings']['#access'] = FALSE;
+          $form['nodewords']['#access'] = FALSE;
+          $form['path']['#access'] = FALSE;
+          $form['author']['#access'] = FALSE;
+          $form['revision_information']['#access'] = FALSE;
+        }
+        break;
+      case 'prop_room_res_node_form':
+        $form['options']['#access'] = FALSE;
+        $form['menu']['#access'] = FALSE;
+        $form['comment_settings']['#access'] = FALSE;
+        $form['nodewords']['#access'] = FALSE;
+        $form['path']['#access'] = FALSE;
+        $form['author']['#access'] = FALSE;
+        $form['revision_information']['#access'] = FALSE;
+        break;
+      }
+
+
+
+
+    //$form_state
+    $form['options']['#collapsed'] = false;
+
+    // hide some functional for manager group
+    if (in_array('manager', $user->roles)) {
+
+      if( $form['#id']  == 'node-form'){
+
+        $form['path']['#access'] = false;
+        $form['path']['pathauto_perform_alias']['#default_value'] = true;
+        hide_standart_menus($form);
+        rich_text_body_format($form);
+        // for product foorm
+        if($form['type']['#value'] == 'product'){
+          $form['options']['#access'] = true;
+        }
+      }
+      // hide fields from for manager
+
+      switch($form_id){
+        case 'pdf_menu_file_node_form':
+          $form['title']['#access'] = false;
+          $form['buttons']['preview']['#access'] = false;
+        break;
+      }
+
+    }
+}
+
+// Implementation of hook_menu_alter
+function oct_custom_menu_alter(&$menu){
+  global $user;
+  if (in_array('manager', $user->roles)) { // only for manager group
+    $menu['admin_menu/toggle-modules']['access callback'] = FALSE;
+    $menu['admin/user']['access callback'] = FALSE;
+    $menu['admin/generate']['access callback'] = FALSE;
+    $menu['admin/content/node-settings']['access callback'] = FALSE;
+    $menu['admin/content/rss-publishing']['access callback'] = FALSE;
+    $menu['admin/build/menu/add']['access callback'] = FALSE;
+    $menu['admin/build/menu/settings']['access callback'] = FALSE;
+    $menu['admin/build/modules']['access callback'] = FALSE;
+    $menu['admin/build/themes']['access callback'] = FALSE;
+    $menu['admin/by-module']['access callback'] = FALSE;
+    $menu['admin/settings/admin-links']['access callback'] = FALSE;
+    $menu['admin/settings/admin_menu']['access callback'] = FALSE;
+    $menu['admin/settings/admin']['access callback'] = FALSE;
+    $menu['admin/settings/clean-urls']['access callback'] = FALSE;
+    $menu['admin/settings/date-time']['access callback'] = FALSE;
+    $menu['admin/settings/devel']['access callback'] = FALSE;
+    $menu['admin/settings/error-reporting']['access callback'] = FALSE;
+    $menu['admin/settings/image-toolkit']['access callback'] = FALSE;
+    $menu['admin/settings/logging']['access callback'] = FALSE;
+    $menu['admin/settings/jquery_update']['access callback'] = FALSE;
+    $menu['admin/reports/updates']['access callback'] = FALSE;
+    $menu['admin/help']['access callback'] = FALSE;
+    $menu['admin/settings/performance']['access callback'] = FALSE;
+    $menu['admin/reports']['access callback'] = FALSE;
+  }
+  $menu['uc_out_of_stock/query']['page callback'] = 'oct_custom_stock_query';
+}
+
+/**
+ * Implementation of hook_checkout_pane().
+ *
+ * @see hook_checkout_pane()
+ */
+function oct_custom_checkout_pane() {
+  $panes[] = array(
+    "id" => "oct_custom",
+    "callback" => "oct_custom_checkout_user_form",
+    "title" => t("User Information"),
+    /*"desc" => t('Print here your information'),*/
+    "weight" => 5,
+    'process' => TRUE,
+    'collapsible' => FALSE,
+  );
+  return $panes;
+}
+
+function oct_custom_checkout_user_form($op) {
+  switch ($op) {
+    case 'view':
+      $form = checkout_user_form();
+      return array(/*"description" => 'Fill this form',*/ "contents" => $form , /*'theme' => 'draw_user_form'*/);
+      break;
+    case 'review':
+      break;
+  }
+}
+/**
+ * implementation theme_draw_user_form()
+ */
+function theme_draw_user_form(){
+  return '';
+}
+
+ /**
+ * Implementation of hook_theme().
+ */
+function oct_custom_theme() {
+  return array(
+    'oct_updates_form_block' => array(
+      'arguments' => array(),
+      'template' => 'templates/blocks/oct_updates_form_block'
+    ),
+    'oct_social_block' => array(
+      'arguments' => array('make_donation_url' => null, 'facebook_url' => null),
+      'template' => 'templates/blocks/oct_social_block'
+    ),
+    'manager_links' => array(
+      'arguments' => array('nid' => null, 'class' => null),
+      'template' => 'manager_links',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/tab'
+    ),
+    'online_registration_email_order_info' => array(
+      'arguments' => array('vars' => null),
+      //'template' => 'oct_order_info',
+      //'path' => drupal_get_path('module', 'oct_custom') . '/templates/webform'
+    ),
+    'manager_custom_links' => array(
+      'arguments' => array('links' => array(), 'class' => null, 'destination' => null),
+      'template' => 'manager_custom_links',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/tab'
+    ),
+    'enrollment_page' => array(
+      'arguments' => array('data' => null),
+      'template' => 'enrollment_page',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'
+    ),
+    'product_tickets_page' => array(
+      'arguments' => array('data' => null),
+      'template' => 'product_tickets_page',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'
+    ),
+    'oct_cart_block' => array(
+      'arguments' => array('data' => null),
+      'template' => 'templates/blocks/oct_cart_block'/*,
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'*/
+    ),
+    'oct_prop_room_block' => array(
+      'arguments' => array('data' => null),
+      'template' => 'templates/blocks/oct_prop_room_block',
+    ),
+    'oct_calendar_block' => array(
+      'arguments' => array('data' => null),
+      'template' => 'templates/blocks/oct_calendar_block',
+    ),
+    'oct_message_board_block' => array(
+      'arguments' => array('data' => null),
+      'template' => 'templates/blocks/oct_message_board_block',
+    ),
+
+
+
+    'draw_user_form' => array(
+      'arguments' => array()/*
+      'template' => 'templates/blocks/oct_cart_block',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'*/
+    ),
+    'order_user_info' => array(
+      'arguments' => array('data' => array()),
+      'template' => 'order_user_info',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'
+    ),
+    'order_user_info_table_data' => array(
+      'arguments' => array('result' => NULL, 'type' => NULL, 'now_page' => NULL, 'total_row' => NULL, 'show_per_page' => NULL),
+      'template' => 'order_user_info_table_data',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page'
+    ),
+    'date_sorter_user_info' => array(
+      'arguments' => array('data' => array()),
+    ),
+    'online_register_form_step_1' => array(
+      'arguments' => array('form' => NULL),
+      'template' => 'online_register_form_step_1',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/forms',
+    ),
+    'online_register_form_step_2' => array(
+      'arguments' => array('form' => NULL),
+      'template' => 'online_register_form_step_2',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/forms',
+    ),
+    'online_register_table' => array(
+      'arguments' => array('data' => array()),
+      'template' => 'online_register_table',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/page',
+    ),
+    'fairy_tale_ball_register_email' => array(
+      'arguments' => array('vars' => array()),
+      'template' => 'fairy_tale_ball_register_email',
+      'path' => drupal_get_path('module', 'oct_custom') . '/templates/email',
+    ),
+  );
+}
+
+/**
+ * Implementation theme_date_sorter_user_info()
+ */
+function theme_online_registration_email_order_info($vars = array()) {
+  $output = '';
+  if (!empty($vars) && is_array($vars)) {
+    //$output .= t('Order info') . "\n";
+
+    if (!empty($vars['online_registration_adult_qty']) && !empty($vars['online_registration_total_adult_cost'])) {
+      $output .= $vars['online_registration_adult_qty'] . ' ' .  t('Adults x $150 each = $') . $vars['online_registration_total_adult_cost'] . ' ' . t('Total adult cost') . "\n";
+    }
+    if (!empty($vars['online_registration_children_qty_children_dinner']) && !empty($vars['online_registration_total_child_cost_children_dinner'])) {
+      $output .= $vars['online_registration_children_qty_children_dinner'] . ' ' .  t('Children x $50 each = $') . $vars['online_registration_total_child_cost_children_dinner'] . ' ' . t('Total child cost(Attending children’s dinner)') . "\n";
+    }
+    if (!empty($vars['online_registration_children_qty_adult_dinner']) && !empty($vars['online_registration_total_child_cost_adult_dinner'])) {
+      $output .= "\n" . t('AND/OR') . "\n";
+      $output .= $vars['online_registration_children_qty_adult_dinner'] . ' ' .  t('Children x $125 each = $') . $vars['online_registration_total_child_cost_adult_dinner'] . ' ' . t('Total child cost(Attending adult’s dinner)') . "\n";
+    }
+    if (!empty($vars['online_registration_sitters_qty_children_dinner']) && isset($vars['online_registration_total_sitters_cost_children_dinner'])) {
+      $output .= "\n" . t('OPTIONAL') . "\n";
+      $output .= $vars['online_registration_sitters_qty_children_dinner'] . ' ' .  t('Sitters x $0 = $') . $vars['online_registration_total_sitters_cost_children_dinner'] . ' ' . t('Total sitter cost(Attending children’s dinner)') . "\n";
+    }
+    if (!empty($vars['online_registration_sitters_qty_adult_dinner']) && !empty($vars['online_registration_total_sitters_cost_adult_dinner'])) {
+      $output .= $vars['online_registration_sitters_qty_adult_dinner'] . ' ' .  t('Sitters x $125 = $') . $vars['online_registration_total_sitters_cost_adult_dinner'] . ' ' . t('Total sitter cost(Attending adult’s dinner)') . "\n";
+    }
+    if (!empty($vars['online_registration_tweenball']) && !empty($vars['online_registration_total_tweenball_cost'])) {
+      $output .= $vars['online_registration_tweenball'] . ' ' .  t('Tween Ball x $75 = $') . $vars['online_registration_total_tweenball_cost'] . ' ' . t('Total tweenball cost') . "\n";
+    }
+    if (!empty($vars['online_registration_total_coins_cost'])) {
+      $output .= '$' . $vars['online_registration_total_coins_cost'] . ' ' . t('Total coins cost') . "\n";
+    }
+    $flag = TRUE;//first printed row flag
+    for($i=0; !empty($vars['online_registration_checkbox_name_'.$i]); $i++){
+      if ($flag && !empty($vars['online_registration_checkbox_' . $i])){//first row
+        $flag = FALSE;
+        $output .= "\n" . t('Sponsorship packages:') . "\n";
+      }
+      if (!empty($vars['online_registration_checkbox_' . $i])){
+        $output .= $vars['online_registration_checkbox_name_' . $i] . ' $' . $vars['online_registration_checkbox_value_' . $i] . "\n";
+      }
+    }
+    if (!empty($vars['online_registration_donate_amount']) && !empty($vars['online_registration_donate'])) {
+      $output .= "\n";
+      $output .= '$' . $vars['online_registration_donate_amount'] . ' ' . t('Donate') . "\n";
+    }
+    $output .= "\n";
+    if (!empty($vars['online_registration_total_cost'])) {
+      $output .= '$' . $vars['online_registration_total_cost'] . ' ' . t('Total') . "\n";
+    }
+    if (!empty($vars['online_registration_handling_fee'])) {
+      $output .= '$' . $vars['online_registration_handling_fee'] . ' ' . t('Handling Fee') . "\n";
+    }
+    if (!empty($vars['online_registration_total_attendee_cost'])) {
+      $output .= '$' . $vars['online_registration_total_attendee_cost'] . ' ' . t('TOTAL ATTENDEE COST') . "\n";
+    }
+
+  }
+
+  //$output .= print_r($vars);
+
+
+  return $output;
+}
+
+  /**
+   * BLOCKS
+   */
+
+  function _oct_custom_prop_room_block(){
+    return theme('oct_prop_room_block');
+  }
+
+  function _oct_custom_calendar_block(){
+    return theme('oct_calendar_block');
+  }
+
+  function _oct_custom_message_board_block(){
+    return theme('oct_message_board_block');
+  }
+
+  function _oct_custom_updates_form_block(){
+    return theme('oct_updates_form_block');
+  }
+  function _oct_custom_cart_block(){
+    return theme('oct_cart_block');
+  }
+  function _oct_custom_social_block(){
+    $make_donation_url = variable_get('make_donation_url', '');
+    $facebook_url = variable_get('facebook_url', '');
+    return theme('oct_social_block', $make_donation_url, $facebook_url);
+  }
+  /**
+   * END BLOCKS
+   */
+  function _oct_custom_get_sponsors(){
+    $nid = arg(1);
+    $terms = array();
+    //if (is_numeric($nid) && ($nid == CAMPS_NID) && $node = node_load($nid)) {
+    //  $sponsors = taxonomy_node_get_terms_by_vocabulary($node, CAMPS_SPONSORS_VID);
+      $sponsors = taxonomy_get_tree(2);
+      foreach($sponsors as $key => $value) {
+       $terms[] = $value->name;
+      }
+    //}
+    return $terms;
+  }
+/**
+ *
+ * @return integer next sku id
+ */
+function ohb_get_auto_increment_sku(){
+  $select = 'SELECT u_products.nid, u_products.model
+  FROM {uc_products} AS u_products
+  ORDER BY u_products.nid DESC
+  LIMIT 1;';
+  $result = db_fetch_array( db_query($select));
+  return (int)$result['model']+1;
+}
+/**
+ * hide some menu im admin panel
+ */
+function hide_standart_menus(&$form){
+  $form['menu']['#access'] = false;
+  $form['author']['#access'] = false;
+  $form['revision_information']['#access'] = false;
+  //$form['options']['#access'] = false;
+  $form['path']['#access'] = false;
+  $form['comment_settings']['#access'] = false;
+}
+
+/**
+ * hide format menu im admin panel
+ * and chose rich text
+ */
+function rich_text_body_format(&$form){
+  $form['body_field']['format']['#prefix'] = '<div class="hidden">';
+  $form['body_field']['format']['#suffix'] = '</div>';
+  $form['body_field']['format'][2]['#return_value'] = 2;
+  $form['body_field']['format'][2]['#default_value'] = 2;
+  $form['body_field']['format'][3]['#access'] = false;
+  $form['body_field']['body']['#description'] = false;
+}
+
+/**
+ *
+ * Implementation hook_nodeapi
+ */
+function oct_custom_nodeapi(&$node, $op){
+
+  switch($node->type){
+    case 'product':
+    switch($op){
+      case 'load':
+          /* We don't use default UC Store module.
+          // Automaticly set Qty of seats to node.
+          $result = db_query("SELECT stock FROM {uc_product_stock} WHERE nid = %d", $node->nid );
+          $qty = db_fetch_array($result);
+          if (!empty($qty['stock'])){
+            $node->field_quantity_of_seats[0]['value'] = $qty['stock'];
+          }
+          */
+        break;
+      case 'presave':
+          if(in_array(PRODUCTS_TAXONOMY_ID, $node->taxonomy)){
+            $node->sell_price = null;
+            //save first date to order date
+            if (!empty($node->field_product_date[0]['value'])){
+              $node->field_home_item_order_date[0] = $node->field_product_date[0];
+            }
+          }elseif( in_array(CLASSES_TAXONOMY_ID, $node->taxonomy)  || in_array(CAMPS_TAXONOMY_ID, $node->taxonomy) ){
+            $node->sell_price = $node->field_class_price[0]['value'];
+            $node->cost = $node->field_class_price[0]['value'];
+            //save first date to order date
+            if (!empty($node->field_class_date_from[0]['value'])){
+              $date =  explode('/',$node->field_class_date_from[0]['value']);
+              $node->field_home_item_order_date[0]['value'] = $date[2].'-'.$date[0].'-'.$date[1].'T00:00:00';
+            }
+            //drop products taxonomy
+            if (!empty($node->taxonomy[4])){
+              unset($node->taxonomy[4]);
+            }
+          }
+        break;
+      case 'insert':
+
+        // Automaticly set Fees
+        $result = db_query("SELECT price FROM {uc_fees} WHERE fid = %d;", TICKETS_FEESID);
+        $default_ticket_price = db_fetch_array($result);
+        $result = db_query("SELECT price FROM {uc_fees} WHERE fid = %d;", CLASS_AND_CAMPS_FEESID);
+        $default_class_percent = db_fetch_array($result);
+
+        if(in_array(PRODUCTS_TAXONOMY_ID, $node->taxonomy)){
+          db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, TICKETS_FEESID, $default_ticket_price['price'],1);
+          db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, CLASS_AND_CAMPS_FEESID, 0,0);
+
+        }elseif( in_array(CLASSES_TAXONOMY_ID, $node->taxonomy) || in_array(CAMPS_TAXONOMY_ID, $node->taxonomy)){
+        // Not work for Classes T_T
+          db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, TICKETS_FEESID, 0,0);
+          db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, CLASS_AND_CAMPS_FEESID, $default_class_percent['price'],1);
+        }
+
+      case 'update':
+
+          $sku = $node->model;
+          $nid = db_query("SELECT nid FROM {uc_product_fees} WHERE nid = %d;", $node->nid);
+          if(mysql_num_rows($nid) == 0) {
+            $result = db_query("SELECT price FROM {uc_fees} WHERE fid = %d;", TICKETS_FEESID);
+            $default_ticket_price = db_fetch_array($result);
+            $result = db_query("SELECT price FROM {uc_fees} WHERE fid = %d;", CLASS_AND_CAMPS_FEESID);
+            $default_class_percent = db_fetch_array($result);
+            if (in_array(PRODUCTS_TAXONOMY_ID, $node->taxonomy)) {
+              db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, TICKETS_FEESID, $default_ticket_price['price'], 1);
+              db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, CLASS_AND_CAMPS_FEESID, 0, 0);
+            }
+            elseif (in_array(CLASSES_TAXONOMY_ID, $node->taxonomy) || in_array(CAMPS_TAXONOMY_ID, $node->taxonomy)) {
+              // Not work for Classes T_T
+              db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, TICKETS_FEESID, 0, 0);
+              db_query("INSERT INTO {uc_product_fees} VALUES(%d, %d, %f, %d);", $node->nid, CLASS_AND_CAMPS_FEESID, $default_class_percent['price'], 1);
+            }
+          }
+          /* We don't use default UC Store module.
+          // Automaticly set Stock
+          // like function uc_stock_set();
+          $result = db_query("SELECT sku FROM {uc_product_stock} WHERE nid = %d", $node->nid );
+          $res_sku = db_fetch_array($result);
+
+          if (!empty($res_sku['sku'])){
+            db_query("UPDATE {uc_product_stock} SET stock = %d WHERE sku = '%s'", $qty, $sku);
+          }else{
+            db_query("INSERT INTO {uc_product_stock} (sku, nid, active, stock, threshold) VALUES ('%s', %d, %d, %d, %d)", $sku, $node->nid, 1, $qty, 0);
+          }
+          */
+
+          if(in_array(PRODUCTS_TAXONOMY_ID, $node->taxonomy) && in_array(THEATRE_TAXONOMY_ID, $node->taxonomy) ){
+            //one ticket to concert
+
+  //############################################################################//
+  //1 Productions
+  //2 Classes
+  //3 Camps
+
+            //INSERT PRODUCT HERE
+
+            // delette uc_attribute_options
+            $query = "SELECT u_product_o.oid
+            FROM {uc_product_options} AS u_product_o
+            WHERE u_product_o.nid =  %d;";
+            $result = db_query($query, $node->nid);
+
+            while($row = db_fetch_array($result)){
+              $query = "DELETE FROM {uc_attribute_options}
+                WHERE (oid = %d) AND (aid = %d); ";
+              db_query($query, $row['oid'], AID_DATE_TIME);
+            }
+            //delete uc_product_options
+            $query = "DELETE FROM {uc_product_options}
+              WHERE nid = %d;";
+            db_query($query, $node->nid);
+
+            // drop previous product tickets
+            $query = "DELETE FROM {uc_product_stock_custom}
+              WHERE nid_product = %d;";
+            db_query($query, $node->nid);
+
+            //save to db DATE_TIME
+            if (isset($node->field_product_date) && !empty($node->field_product_date) && is_array($node->field_product_date) ){
+              foreach ( $node->field_product_date as $key => $var ){
+                if (!empty($var['value'])){
+                  $formatted_date = date('m-d-Y h:ia', strtotime( $var['value']) );
+                  $query = 'INSERT INTO {uc_attribute_options}(`aid`, `name`, `price`) VALUES( %d, "%s", %f);';
+                  db_query($query, AID_DATE_TIME, $formatted_date);
+                  $oid = db_last_insert_id('uc_attribute_options', 'oid');
+
+                  //insert custom product quantity of ticket
+                  $query = 'INSERT INTO {uc_product_stock_custom}(`sku`, `nid_product`, `oid_attribute`, `delta`) VALUES( %d, %d, %d, %d)';
+                  db_query($query, $sku, $node->nid, $oid, $key);
+
+                  //sve new oid rows
+                  $query = 'INSERT {uc_product_options}(`nid`, `oid`, `price`)
+                  VALUES(%d, %d, %f);';
+                  db_query($query, $node->nid, $oid, $var['field_attributes_price']['value']);
+                }
+              }
+            }
+            // save TICKETS options
+            if (!empty($node->field_adult_price[0]['value'])){
+              $query = 'INSERT INTO {uc_product_options}(`nid`, `oid`, `price`, `weight`)
+              VALUES(%d, %d, %f, %d);';
+              db_query($query, $node->nid, OID_ADULT, $node->field_adult_price[0]['value'], 1);
+              db_query($query, $node->nid, OID_STUDENT, $node->field_students_price[0]['value'], 2);
+              db_query($query, $node->nid, OID_CHILDREN, $node->field_children_price[0]['value'], 3);
+              db_query($query, $node->nid, OID_GROUP_CHILDREN, $node->field_group_children_price[0]['value'], 4);
+              db_query($query, $node->nid, OID_GROUP_ADULT, $node->field_group_adult_price[0]['value'], 5);
+              db_query($query, $node->nid, OID_COMPLIMENTARY_ADULT, 0, 6);
+            }
+
+            //chek if these node alredy in db
+            //add uc_product_attributes
+
+            //del old row
+            $query = ('DELETE FROM {uc_product_attributes}
+            WHERE nid = %d;');
+            db_query($query, $node->nid);
+            // save new row then ->
+
+            // insert uc_product_attributes DATE_TIME
+            /*
+            $query = "SELECT uc_attributes.label
+            FROM {uc_attributes}
+            WHERE uc_attributes.aid = %d";
+            $label = db_fetch_array(db_query($query, AID_DATE_TIME));
+            */
+            $label = 'Date and time';
+
+            $query = 'INSERT INTO {uc_product_attributes}  VALUES (%d, %d, "%s", %d, %d, %d, %d);';
+            db_query($query, $node->nid, AID_DATE_TIME, $label, 0, $oid, 0, 1);
+
+            $label = 'Product tickets';
+
+            // insert uc_product_attributes TICKETS
+            /*
+              $query = "SELECT uc_attributes.label
+              FROM {uc_attributes}
+              WHERE uc_attributes.aid = %d";
+              $label = db_fetch_array(db_query($query, AID_TICKETS));
+            */
+            $label = 'Tickets';
+
+            //$query = 'INSERT INTO {uc_product_attributes}  VALUES (%d, %d, "%s", %d, %d, %d, %d);';
+            db_query($query, $node->nid, AID_TICKETS, $label, 0, OID_ADULT, 0, 4);
+
+            //############################################################################//
+          }elseif(in_array(CLASSES_TAXONOMY_ID, $node->taxonomy) || in_array(CAMPS_TAXONOMY_ID, $node->taxonomy) ){
+
+            //INSERT CLASSES HERE!
+
+            // delette uc_attribute_options
+            $query = "SELECT u_product_o.oid
+            FROM {uc_product_options} AS u_product_o
+            WHERE u_product_o.nid =  %d;";
+            $result = db_query($query, $node->nid);
+
+            while($row = db_fetch_array($result)){
+              $query = "DELETE FROM {uc_attribute_options}
+                WHERE (oid = %d) AND (aid = %d); ";
+              db_query($query, $row['oid'], AID_CLASS_DATE);
+            }
+
+            //delete uc_product_options
+            $query = "DELETE FROM {uc_product_options}
+              WHERE nid = %d;";
+            db_query($query, $node->nid);
+
+
+            $result = db_query("SELECT * FROM {uc_product_ticket_dates} WHERE nid_product =%d;", $node->nid);;
+            //drop previous dates before save
+            $data = db_fetch_array($result);
+            if( !empty($data) ){
+              db_query("DELETE FROM {uc_product_ticket_dates}
+                WHERE nid_product = %d;", $node->nid);
+            }
+
+            // drop previous product tickets
+            $query = "DELETE FROM {uc_product_stock_custom}
+              WHERE nid_product = %d;";
+            db_query($query, $node->nid);
+
+            //save to db DATE_TIME
+            if (isset($node->field_class_date_from) && !empty($node->field_class_date_from) && is_array($node->field_class_date_from) ){
+              foreach ( $node->field_class_date_from as $key => $var ){
+                $attributItem = '';
+
+                if ($node->field_product_wd_monday[$key]['value'] == 1){
+                  $attributItem .= ' Monday';
+                };
+                if ($node->field_product_wd_tuesday[$key]['value'] == 1){
+                  $attributItem .= ' Tuesday';
+                };
+                if ($node->field_product_wd_thursday[$key]['value'] == 1){
+                  $attributItem .= ' Thursday';
+                };
+                if ($node->field_product_wd_wednesday[$key]['value'] == 1){
+                  $attributItem .= ' Wednesday';
+                };
+                if ($node->field_product_wd_friday[$key]['value'] == 1){
+                  $attributItem .= ' Friday';
+                };
+                if ($node->field_product_wd_saturday[$key]['value'] == 1){
+                  $attributItem .= ' Saturday';
+                };
+                if ($node->field_product_wd_sunday[$key]['value'] == 1){
+                  $attributItem .= ' Sunday';
+                };
+                if(!empty($node->field_class_time_from[$key]['value']) && (!empty($node->field_class_time_to[$key]['value']))){
+                  $attributItem .= ' | ' . $node->field_class_time_from[$key]['value'] . ' - ' . $node->field_class_time_to[$key]['value'];
+                }
+                if(!empty($node->field_class_date_from[$key]['value']) && (!empty($node->field_class_date_to[$key]['value']))){
+                  $attributItem .= ' | ' . $node->field_class_date_from[$key]['value'] . ' - ' .  $node->field_class_date_to[$key]['value'];
+                }
+                if (!empty($attributItem)){
+                  $query = 'INSERT INTO {uc_attribute_options} (`aid`, `name`, `price`) VALUES( %d, "%s", %f);';
+                  db_query($query, AID_CLASS_DATE, $attributItem, 0);
+                  $oid = db_last_insert_id('uc_attribute_options', 'oid');
+
+                  // save link oid and product date
+                  $split_date = explode('/', $node->field_class_date_from[$key]['value']);
+                  $min_born_year = (int)$split_date[2] - (int)$node->field_max_class_age[0]['value'];
+                  $max_born_year = (int)$split_date[2] - (int)$node->field_min_class_age[0]['value'];
+                  // mysql data format yyyy-mm-dd 00:00:00
+
+                  $db_from_date = $min_born_year . '-' . $split_date[0] . '-' . $split_date[1] . ' 00:00:00';
+                  $db_to_date = $max_born_year . '-' . $split_date[0] . '-' . $split_date[1] . ' 00:00:00';
+                  /*
+                  //insert custom class quantity of ticket
+                  $query = 'INSERT INTO {uc_product_stock_custom}(`sku`, `nid_product`, `oid_attribute`, `delta`) VALUES( %d, %d, %d, %d)';
+                  db_query($query, $sku, $node->nid, $oid, $key);
+                  */
+                  //save min max dates
+                  $query = "INSERT uc_product_ticket_dates (`nid_product`, `oid`, `min_birth_date`, `max_birth_date`,`delta`) VALUES (%d, %d,'%s','%s', %d);";
+                  db_query($query, $node->nid, $oid, $db_from_date, $db_to_date, $key);
+                  // sve new oid rows
+                  $query = 'INSERT {uc_product_options} (`nid`, `oid`, `price`)
+                  VALUES(%d, %d, %f);';
+                  db_query($query, $node->nid, $oid, 0);
+                }
+              }
+            }
+            $query = "SELECT u_attribute_o.oid, u_attribute_o.name, u_attribute_o.ordering
+                      FROM {uc_attribute_options} AS u_attribute_o
+                      WHERE u_attribute_o.aid = %d";
+            $rsult_year = db_query($query, AID_BIRTH_YEAR);
+            $rsult_month = db_query($query, AID_BIRTH_MONTH);
+            $rsult_day = db_query($query, AID_BIRTH_DAY);
+            $rsult_t_short_attr = db_query($query, AID_T_SHORTS);
+            foreach(array($rsult_year, $rsult_month, $rsult_day) as $product_opt){
+              while($row = db_fetch_array($product_opt)){
+                //if ($node->field_min_class_age[0]['value'] <= (int)$row['name'] and (int)$row['name'] <= $node->field_max_class_age[0]['value']){
+                  $query = "INSERT INTO {uc_product_options}(`nid`, `oid` , `ordering`) VALUES (%d, %d, %d);";
+                  db_query($query, $node->nid, $row['oid'], $row['ordering']);
+                //}
+              }
+            }
+
+            $query = "DELETE FROM {uc_product_attributes}
+                      WHERE nid = %d";
+            db_query($query, $node->nid);
+
+            $query = "SELECT u_attr.aid, u_attr.label FROM {uc_attributes} AS u_attr;";
+            $result = db_query($query);
+            $label = array(AID_BIRTH_YEAR =>'', AID_BIRTH_MONTH => '', AID_BIRTH_DAY => '', AID_CHILDREN_FIRST_NAME => '', AID_CHILDREN_SECOND_NAME => '', AID_CHILDREN_FOOD_ALLERGY=> '', AID_CLASS_DATE => '', AID_T_SHORTS => '');
+            while($row = db_fetch_array($result)){
+              foreach($label as $key => $value){
+                if ($row['aid'] == $key){
+                  $label[$key] = $row['label'];
+                }
+              }
+            }
+            $query = 'INSERT INTO {uc_product_attributes}  VALUES (%d, %d, "%s", %d, %d, %d, %d);';
+            db_query($query, $node->nid, AID_BIRTH_YEAR, $label[AID_BIRTH_YEAR], 0, 12, 0, 1);
+            db_query($query, $node->nid, AID_BIRTH_MONTH, $label[AID_BIRTH_MONTH], 0, 460, 0, 1);
+            db_query($query, $node->nid, AID_BIRTH_DAY, $label[AID_BIRTH_DAY], 0, 472, 0, 1);
+
+            db_query($query, $node->nid, AID_CHILDREN_FIRST_NAME, $label[AID_CHILDREN_FIRST_NAME], 0, 0, 0, 0);
+            db_query($query, $node->nid, AID_CHILDREN_SECOND_NAME, $label[AID_CHILDREN_SECOND_NAME], 0, 0, 0, 0);
+            db_query($query, $node->nid, AID_CHILDREN_FOOD_ALLERGY, $label[AID_CHILDREN_FOOD_ALLERGY], 0, 0, 0, 0);
+            db_query($query, $node->nid, AID_CLASS_DATE, $label[AID_CLASS_DATE], 0, 0, 0, 1);
+
+            // switch-on special t-short class
+            if ($node->field_product_t_shirts[0]['value'] == 1){
+              db_query($query, $node->nid, AID_T_SHORTS, $label[AID_T_SHORTS], 0, 0, 0, 1);
+              while( $row = db_fetch_array($rsult_t_short_attr) ){
+                $query = "INSERT INTO {uc_product_options}(`nid`, `oid` ) VALUES (%d, %d);";
+                db_query($query, $node->nid, $row['oid']);
+              }
+            }else{
+              $query = "SELECT *
+                        FROM {uc_product_attributes} AS p_option
+                        WHERE p_option.nid = %d AND p_option.aid = %d";
+              $result = db_query($query, $nid, $oid);
+              $row = db_fetch_array($result);
+              if (!empty($row['nid'])){
+                db_query('DELETE FROM {uc_product_attributes} WHERE nid = %d AND aid = %d;', $node->nid, AID_T_SHORTS);
+                while( $row = db_fetch_array($rsult_t_short_attr) ){
+                  $query = "DELETE FROM {uc_product_options} WHERE nid = %d AND oid = %d;";
+                  db_query($query, $node->nid, $row['oid']);
+                }
+              }
+            }
+        }
+    //############################################################################//
+      break;
+      case 'delete':
+        db_query("DELETE FROM {uc_product_stock} WHERE nid = '%d'", $node->nid);
+        db_query("DELETE FROM {uc_product_stock_custom} WHERE nid_product = '%d'", $node->nid);
+      break;
+    }
+    break;
+  /* save event and make "from date" = "to date" */
+  case 'fun_night_event':
+    switch($op){
+      case 'prepare':
+        drupal_add_js('Drupal.behaviors.prepareFromDateForSaveEvent = function(context){ saveEventToDate(); }', 'inline');
+        break;
+      case 'presave':
+        if ($node->promote == 1){
+          $queue = nodequeue_load_queues(array( 0 => HOMEPAGE_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(HOMEPAGE_QID);
+          nodequeue_subqueue_add($queue[HOMEPAGE_QID], $subqueue[HOMEPAGE_QID], $node->nid);
+        }else{
+          nodequeue_subqueue_remove_node(HOMEPAGE_QID, $node->nid);
+        }
+        break;
+    }
+  case 'camp_sunmmer_item':
+    switch($op){
+      case 'insert':
+        if( $node->taxonomy[SUMMERCAMPS_POSITON_TAXONOMY_ID] == SUMMER_CAMPS_LIST_TID ){
+          $queue = nodequeue_load_queues(array( 0 => SUMMER_CAMPS_LIST_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(SUMMER_CAMPS_LIST_QID);
+          nodequeue_subqueue_add($queue[SUMMER_CAMPS_LIST_QID], $subqueue[SUMMER_CAMPS_LIST_QID], $node->nid);
+        }elseif( $node->taxonomy[SUMMERCAMPS_POSITON_TAXONOMY_ID] == SUMMER_CAMPS_DESCRIPTION_TID ){
+          $queue = nodequeue_load_queues(array( 0 => SUMMER_CAMPS_DESCRIPTION_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(SUMMER_CAMPS_DESCRIPTION_QID);
+          nodequeue_subqueue_add($queue[SUMMER_CAMPS_DESCRIPTION_QID], $subqueue[SUMMER_CAMPS_DESCRIPTION_QID], $node->nid);
+        }
+      break;
+    }
+    break;
+  case 'homepage_post':
+    if ($op == 'insert'){
+      $queue = nodequeue_load_queues(array( 0 => HOMEPAGE_QID));
+      $subqueue = nodequeue_load_subqueues_by_queue(HOMEPAGE_QID);
+      nodequeue_subqueue_add($queue[HOMEPAGE_QID], $subqueue[HOMEPAGE_QID], $node->nid);
+    }
+    break;
+  /* automaticly add to nodeque after insert node */
+  case 'board_parson_item':
+    if($op == 'insert'){
+      if (in_array(26, $node->taxonomy)){
+          $queue = nodequeue_load_queues(array( 0 => BOARD_OF_DIRECTORS_TOP_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(BOARD_OF_DIRECTORS_TOP_QID);
+          nodequeue_subqueue_add($queue[BOARD_OF_DIRECTORS_TOP_QID], $subqueue[BOARD_OF_DIRECTORS_TOP_QID], $node->nid);
+      }
+      if (in_array(27, $node->taxonomy)){
+          $queue = nodequeue_load_queues(array( 0 => BOARD_OF_DIRECTORS_BOTTOM_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(BOARD_OF_DIRECTORS_BOTTOM_QID);
+          nodequeue_subqueue_add($queue[BOARD_OF_DIRECTORS_BOTTOM_QID], $subqueue[BOARD_OF_DIRECTORS_BOTTOM_QID], $node->nid);
+          break;
+      }
+    }
+  break;
+  case 'staff_person_item':
+    if($op == 'insert'){
+      if (in_array(28, $node->taxonomy)){
+          $queue = nodequeue_load_queues(array( 0 => STAFF_TOP_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(STAFF_TOP_QID);
+          nodequeue_subqueue_add($queue[STAFF_TOP_QID], $subqueue[STAFF_TOP_QID], $node->nid);
+      }
+      if (in_array(29, $node->taxonomy)){
+          $queue = nodequeue_load_queues(array( 0 => STAFF_BOTTOM_QID));
+          $subqueue = nodequeue_load_subqueues_by_queue(STAFF_BOTTOM_QID);
+          nodequeue_subqueue_add($queue[STAFF_BOTTOM_QID], $subqueue[STAFF_BOTTOM_QID], $node->nid);
+          break;
+      }
+    }
+  break;
+  case 'artists':
+    if($op == 'insert'){
+      $queue = nodequeue_load_queues(array( 0 => ARTIST_QID));
+      $subqueue = nodequeue_load_subqueues_by_queue(ARTIST_QID);
+      nodequeue_subqueue_add($queue[ARTIST_QID], $subqueue[ARTIST_QID], $node->nid);
+      break;
+    }
+  break;
+  case 'auctoin_item':
+    if($op == 'insert'){
+      $queue = nodequeue_load_queues(array( 0 => AUCTION_ITEMS_QID));
+      $subqueue = nodequeue_load_subqueues_by_queue(AUCTION_ITEMS_QID);
+      nodequeue_subqueue_add($queue[AUCTION_ITEMS_QID], $subqueue[AUCTION_ITEMS_QID], $node->nid);
+      break;
+    }
+  break;
+  case 'general_info_item':
+    if($op == 'insert'){
+      $queue = nodequeue_load_queues(array( 0 => GENERAL_INFO_ITEMS_QID));
+      $subqueue = nodequeue_load_subqueues_by_queue(GENERAL_INFO_ITEMS_QID);
+      nodequeue_subqueue_add($queue[GENERAL_INFO_ITEMS_QID], $subqueue[GENERAL_INFO_ITEMS_QID], $node->nid);
+      break;
+    }
+    if($op == 'presave'){
+      $node->title = t('Gen info '.$node->nid);
+    }
+    break;
+  case 'sponsorship':
+    if($op == 'insert'){
+      $queue = nodequeue_load_queues(array( 0 => SPONSORSHIP_ITEMS_QID));
+      $subqueue = nodequeue_load_subqueues_by_queue(SPONSORSHIP_ITEMS_QID);
+      nodequeue_subqueue_add($queue[SPONSORSHIP_ITEMS_QID], $subqueue[SPONSORSHIP_ITEMS_QID], $node->nid);
+      break;
+    }
+    break;
+  case 'message':
+    if($op == 'view'){
+      drupal_get_messages(); // remove message
+      break;
+    }
+    break;
+  }
+}
+
+function oct_custom_preprocess_page(&$vars){
+  global $user;
+    if (in_array('page-enrollment',  $vars['template_files'])){
+        drupal_add_js(drupal_get_path('module', 'oct_custom').'/js/enrollment.js');
+        drupal_add_css(drupal_get_path('module', 'oct_custom').'/css/enrollment.css');
+    }
+    if (in_array('page-tickets',  $vars['template_files'])){
+        drupal_add_js(drupal_get_path('module', 'oct_custom').'/js/tickets.js');
+    }
+    // dont show node webform step two.
+    if ($user->uid != 1 && (arg(0) == 'node') && (arg(1) == ONLINE_REGISTER_STEP2_NID) && (arg(2) == NULL) ){
+      drupal_goto( 'node/' . ONLINE_REGISTER_NID );
+    }
+    if ($user->uid != 1 && (arg(0) == 'node') && (arg(1) == ONLINE_REGISTER_STEP2_NID) && (arg(2) == 'webform-results') ){
+      unset($vars['tabs']);
+    }
+    if ( $_GET['q'] == 'admin/build/views/edit/calendar' ){
+      drupal_set_message(t('Be <span style="color:red">carefully</span> when you move "Filters" in views. There changes in <span style="color:red">hook_views_query_alter();</span>'), 'warning');
+    }
+}
+
+/**
+ *
+ * Export to Exel Product table
+ */
+function export_array_to_xls($data = array(), $filename = 'export'){
+
+  require_once 'sites/all/libraries/export_xls/PHPExcel.php';
+
+  // Create new PHPExcel object
+  $objPHPExcel = new PHPExcel();
+
+  // Set properties
+  $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                 ->setLastModifiedBy("Maarten Balliauw")
+                 ->setTitle("Office 2007 XLSX Test Document")
+                 ->setSubject("Office 2007 XLSX Test Document")
+                 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                 ->setKeywords("office 2007 openxml php")
+                 ->setCategory("Test result file");
+
+  // Create a first sheet, representing sales data
+  $objPHPExcel->setActiveSheetIndex(0);
+
+      $objPHPExcel->getActiveSheet()->setCellValue('A1', t('id'));
+      $objPHPExcel->getActiveSheet()->setCellValue('B1', t('Name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('C1', t('Type'));
+      $objPHPExcel->getActiveSheet()->setCellValue('D1', t('Created'));
+      $objPHPExcel->getActiveSheet()->setCellValue('E1', t('Show'));
+      $objPHPExcel->getActiveSheet()->setCellValue('F1', t('Show On Homepage'));
+      $objPHPExcel->getActiveSheet()->setCellValue('G1', t('Status'));
+      $objPHPExcel->getActiveSheet()->setCellValue('H1', t('Online'));
+  if(!empty($data)){
+      foreach ($data as $key => $values ) {
+          $objPHPExcel->getActiveSheet()->setCellValue('A' . ($key+2), $values['nid']);
+          $objPHPExcel->getActiveSheet()->setCellValue('B' . ($key+2), $values['title']);
+          $objPHPExcel->getActiveSheet()->setCellValue('C' . ($key+2), $values['tid']);
+          $objPHPExcel->getActiveSheet()->setCellValue('D' . ($key+2), $values['created']);
+          $objPHPExcel->getActiveSheet()->setCellValue('E' . ($key+2), $values['status']);
+          $objPHPExcel->getActiveSheet()->setCellValue('F'. ($key+2), $values['field_show_on_homepage_value']);
+          $objPHPExcel->getActiveSheet()->setCellValue('G'. ($key+2), $values['field_product_sold_value']);
+          $objPHPExcel->getActiveSheet()->setCellValue('H'. ($key+2), $values['field_product_unvaliable_online_value']);
+      }
+  }
+
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+  $objWriter->save($filename);
+
+}
+/**
+ *
+ * Export to Exel "class and camps" user info table
+ */
+function _user_info_xls_export_class($xls_table, $filename){
+
+  require_once 'sites/all/libraries/export_xls/PHPExcel.php';
+
+  // Create new PHPExcel object
+  $objPHPExcel = new PHPExcel();
+
+  // Set properties
+  $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                 ->setLastModifiedBy("Maarten Balliauw")
+                 ->setTitle("Office 2007 XLSX Test Document")
+                 ->setSubject("Office 2007 XLSX Test Document")
+                 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                 ->setKeywords("office 2007 openxml php")
+                 ->setCategory("Test result file");
+
+      $objPHPExcel->setActiveSheetIndex(0);
+      $objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(112);
+
+      $objDrawing = new PHPExcel_Worksheet_Drawing();
+      $objDrawing->setName('Logo');
+      $objDrawing->setDescription('Logo');
+      //$objDrawing->setPath( url(path_to_theme() . '/images/oct-logo.png',array('absolute' => true )));
+      $objDrawing->setPath(drupal_get_path('module', 'oct_custom').'/images/oct-logo.png');
+      $objDrawing->setHeight(111);
+      $objDrawing->setWidth(551);
+      $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+
+
+      $objPHPExcel->getActiveSheet()->setCellValue('A2', t('Id'));
+      $objPHPExcel->getActiveSheet()->setCellValue('B2', t('Purchaser'));
+      $objPHPExcel->getActiveSheet()->setCellValue('C2', t('Parent or Guardian first name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('D2', t('Parent or Guardian last name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('E2', t('Another Parent or Guardian first name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('F2', t('Another Parent or Guardian last name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('G2', t('Phone'));
+      $objPHPExcel->getActiveSheet()->setCellValue('H2', t('Address'));
+      $objPHPExcel->getActiveSheet()->setCellValue('I2', t('City'));
+      $objPHPExcel->getActiveSheet()->setCellValue('J2', t('State'));
+      $objPHPExcel->getActiveSheet()->setCellValue('K2', t('Zip'));
+      $objPHPExcel->getActiveSheet()->setCellValue('L2', t('Email'));
+      $objPHPExcel->getActiveSheet()->setCellValue('M2', t('Cost'));
+      $objPHPExcel->getActiveSheet()->setCellValue('N2', t('Class name(s)'));
+      $objPHPExcel->getActiveSheet()->setCellValue('O2', t('Session time & days'));
+      $objPHPExcel->getActiveSheet()->setCellValue('P2', t('Child'));
+      $objPHPExcel->getActiveSheet()->setCellValue('Q2', t('Food allergy'));
+  if(!empty($xls_table)){
+      foreach ($xls_table as $key => $values ) {
+          $data = unserialize($values['data']);
+          $objPHPExcel->getActiveSheet()->setCellValue('A' . ($key+3), $values['order_id']);
+          $objPHPExcel->getActiveSheet()->setCellValue('B' . ($key+3), $values['purchaser']);
+          $objPHPExcel->getActiveSheet()->setCellValue('C' . ($key+3), $values['parent_first_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('D' . ($key+3), $values['parent_last_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('E' . ($key+3), $values['parent_2_first_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('F' . ($key+3), $values['parent_2_last_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('G' . ($key+3), $values['phone_number']);
+          $objPHPExcel->getActiveSheet()->setCellValue('H' . ($key+3), $values['address']);
+          $objPHPExcel->getActiveSheet()->setCellValue('I' . ($key+3), $values['сity']);
+          $objPHPExcel->getActiveSheet()->setCellValue('J' . ($key+3), $values['state']);
+          $objPHPExcel->getActiveSheet()->setCellValue('K' . ($key+3), $values['zip']);
+          $objPHPExcel->getActiveSheet()->setCellValue('L' . ($key+3), $values['email']);
+          $objPHPExcel->getActiveSheet()->setCellValue('M' . ($key+3), number_format($values['price'], 2, '.',''));
+          $objPHPExcel->getActiveSheet()->setCellValue('N' . ($key+3), $values['title']);
+          if (!empty($data['attributes']['Class date'][0])){
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . ($key+3), $data['attributes']['Class date'][0]);
+          }
+          $name = $data['attributes']['birth month'][0] . '.' . $data['attributes']['birth day'][0] . '.' . $data['attributes']['birth year'][0]
+          . ' ' . $data['attributes']['child’s first name'][0] . ' ' . $data['attributes']['child’s sirst name'][0];
+
+          $objPHPExcel->getActiveSheet()->setCellValue('P' . ($key+3), $name);
+          $objPHPExcel->getActiveSheet()->setCellValue('Q' . ($key+3), !empty($data['attributes']['Child’s food allergy'][0]) ? $data['attributes']['Child’s food allergy'][0] : '');
+      }
+  }
+
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+  $objWriter->save($filename);
+}
+/**
+ *
+ * Export to Exel "priduct" user info table
+ */
+function _user_info_xls_export_product($xls_table, $filename){
+  require_once 'sites/all/libraries/export_xls/PHPExcel.php';
+
+  // Create new PHPExcel object
+  $objPHPExcel = new PHPExcel();
+
+  // Set properties
+  $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                 ->setLastModifiedBy("Maarten Balliauw")
+                 ->setTitle("Office 2007 XLSX Test Document")
+                 ->setSubject("Office 2007 XLSX Test Document")
+                 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                 ->setKeywords("office 2007 openxml php")
+                 ->setCategory("Test result file");
+
+      $objPHPExcel->setActiveSheetIndex(0);
+      $objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(112);
+
+      $objDrawing = new PHPExcel_Worksheet_Drawing();
+      $objDrawing->setName('Logo');
+      $objDrawing->setDescription('Logo');
+      //$objDrawing->setPath( url(path_to_theme() . '/images/oct-logo.png',array('absolute' => true )));
+      $objDrawing->setPath(drupal_get_path('module', 'oct_custom').'/images/oct-logo.png');
+      $objDrawing->setHeight(111);
+      $objDrawing->setWidth(551);
+      $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+
+
+      $objPHPExcel->getActiveSheet()->setCellValue('A2', t('Id'));
+      $objPHPExcel->getActiveSheet()->setCellValue('B2', t('Purchaser'));
+      $objPHPExcel->getActiveSheet()->setCellValue('C2', t('First Name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('D2', t('Last Name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('E2', t('Phone'));
+      $objPHPExcel->getActiveSheet()->setCellValue('F2', t('Address'));
+      $objPHPExcel->getActiveSheet()->setCellValue('G2', t('City'));
+      $objPHPExcel->getActiveSheet()->setCellValue('H2', t('State'));
+      $objPHPExcel->getActiveSheet()->setCellValue('I2', t('Zip'));
+      $objPHPExcel->getActiveSheet()->setCellValue('J2', t('Email'));
+      $objPHPExcel->getActiveSheet()->setCellValue('K2', t('Cost'));
+      $objPHPExcel->getActiveSheet()->setCellValue('L2', t('Production name(s)'));
+      $objPHPExcel->getActiveSheet()->setCellValue('M2', t('Show DateTime'));
+      $objPHPExcel->getActiveSheet()->setCellValue('N2', t('Payment DateTime'));
+      $objPHPExcel->getActiveSheet()->setCellValue('O2', t('Quantity Adults'));
+      $objPHPExcel->getActiveSheet()->setCellValue('P2', t('Quantity Students'));
+      $objPHPExcel->getActiveSheet()->setCellValue('Q2', t('Quantity Children'));
+      $objPHPExcel->getActiveSheet()->setCellValue('R2', t('Quantity Group Children'));
+      $objPHPExcel->getActiveSheet()->setCellValue('S2', t('Quantity Group Adult'));
+      $objPHPExcel->getActiveSheet()->setCellValue('T2', t('Quantity Complimentary Adult'));
+
+  if(!empty($xls_table)){
+      foreach ($xls_table as $key => $values ) {
+          $data = unserialize($values['data']);
+          $objPHPExcel->getActiveSheet()->setCellValue('A' . ($key+3), $values['order_id']);
+          $objPHPExcel->getActiveSheet()->setCellValue('B' . ($key+3), $values['purchaser']);
+          $objPHPExcel->getActiveSheet()->setCellValue('C' . ($key+3), $values['first_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('D' . ($key+3), $values['last_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('E' . ($key+3), $values['phone_number']);
+          $objPHPExcel->getActiveSheet()->setCellValue('F' . ($key+3), $values['address']);
+          $objPHPExcel->getActiveSheet()->setCellValue('G' . ($key+3), $values['сity']);
+          $objPHPExcel->getActiveSheet()->setCellValue('H' . ($key+3), $values['state']);
+          $objPHPExcel->getActiveSheet()->setCellValue('I' . ($key+3), $values['zip']);
+          $objPHPExcel->getActiveSheet()->setCellValue('J' . ($key+3), $values['email']);
+          $objPHPExcel->getActiveSheet()->setCellValue('K' . ($key+3), number_format($values['price'], 2, '.',''));
+          $objPHPExcel->getActiveSheet()->setCellValue('L' . ($key+3), $values['title']);
+          $objPHPExcel->getActiveSheet()->setCellValue('M' . ($key+3), $data['attributes']['Date and time'][0]);
+          $objPHPExcel->getActiveSheet()->setCellValue('N' . ($key+3), date('m-d-Y h:ia', $values['modified']));
+          $objPHPExcel->getActiveSheet()->setCellValue('O' . ($key+3), $data['values']['Tickets'][0]['val']);
+          $objPHPExcel->getActiveSheet()->setCellValue('P' . ($key+3), $data['values']['Tickets'][1]['val']);
+          $objPHPExcel->getActiveSheet()->setCellValue('Q' . ($key+3), $data['values']['Tickets'][2]['val']);
+          $objPHPExcel->getActiveSheet()->setCellValue('R' . ($key+3), $data['values']['Tickets'][3]['val']);
+          $objPHPExcel->getActiveSheet()->setCellValue('S' . ($key+3), $data['values']['Tickets'][4]['val']);
+          $objPHPExcel->getActiveSheet()->setCellValue('T' . ($key+3), $data['values']['Tickets'][5]['val']);
+      }
+  }
+
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+  $objWriter->save($filename);
+}
+
+/**
+ *
+ * Export to Exel Online Ragister table
+ */
+function _online_register_xls_export($data, $filename){
+  require_once 'sites/all/libraries/export_xls/PHPExcel.php';
+
+  // Create new PHPExcel object
+  $objPHPExcel = new PHPExcel();
+
+  // Set properties
+  $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                 ->setLastModifiedBy("Maarten Balliauw")
+                 ->setTitle("Office 2007 XLSX Test Document")
+                 ->setSubject("Office 2007 XLSX Test Document")
+                 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                 ->setKeywords("office 2007 openxml php")
+                 ->setCategory("Test result file");
+
+      $objPHPExcel->setActiveSheetIndex(0);
+      $objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(112);
+
+      $objDrawing = new PHPExcel_Worksheet_Drawing();
+      $objDrawing->setName('Logo');
+      $objDrawing->setDescription('Logo');
+      //$objDrawing->setPath( url(path_to_theme() . '/images/oct-logo.png',array('absolute' => true )));
+      $objDrawing->setPath(drupal_get_path('module', 'oct_custom').'/images/oct-logo.png');
+      $objDrawing->setHeight(111);
+      $objDrawing->setWidth(551);
+      $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+
+      $objPHPExcel->getActiveSheet()->setCellValue('A2', t('Id'));
+      $objPHPExcel->getActiveSheet()->setCellValue('B2', t('Name/Contact name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('C2', t('Contact Name'));
+      $objPHPExcel->getActiveSheet()->setCellValue('D2', t('Phone'));
+      $objPHPExcel->getActiveSheet()->setCellValue('E2', t('Fax'));
+      $objPHPExcel->getActiveSheet()->setCellValue('F2', t('Email'));
+      $objPHPExcel->getActiveSheet()->setCellValue('G2', t('Adress'));
+      $objPHPExcel->getActiveSheet()->setCellValue('H2', t('City'));
+      $objPHPExcel->getActiveSheet()->setCellValue('I2', t('State'));
+      $objPHPExcel->getActiveSheet()->setCellValue('J2', t('Zip'));
+      $objPHPExcel->getActiveSheet()->setCellValue('K2', t('First & Last name(s) & age(s) of children in my party'));
+      $objPHPExcel->getActiveSheet()->setCellValue('L2', t('First & Last names of adults in my party'));
+      $objPHPExcel->getActiveSheet()->setCellValue('M2', t('Name of your sitter'));
+      $objPHPExcel->getActiveSheet()->setCellValue('N2', t('We wish to be seated with'));
+
+      $objPHPExcel->getActiveSheet()->setCellValue('O2', t("Adults Attending children's dinner"));
+      $objPHPExcel->getActiveSheet()->setCellValue('P2', t("Children Attending children's dinner"));
+      $objPHPExcel->getActiveSheet()->setCellValue('Q2', t("Children Attending adult's dinner"));
+      $objPHPExcel->getActiveSheet()->setCellValue('R2', t('Sitters Attending children’s dinner'));
+      $objPHPExcel->getActiveSheet()->setCellValue('S2', t('Sitters Attending adult’s dinner'));
+
+      $objPHPExcel->getActiveSheet()->setCellValue('T2', t('Total'));
+      $objPHPExcel->getActiveSheet()->setCellValue('U2', t('Handling Fee'));
+      $objPHPExcel->getActiveSheet()->setCellValue('V2', t('Total attendee cost'));
+      $objPHPExcel->getActiveSheet()->setCellValue('W2', t('Sponsorships'));
+      $objPHPExcel->getActiveSheet()->setCellValue('X2', t('Donate'));
+
+  if(!empty($data)){
+      $i = 3;
+      foreach ($data as $key => $values ) {
+          $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $key);
+          $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $values['name_company_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $values['contact_name']);
+          $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $values['phone']);
+          $objPHPExcel->getActiveSheet()->setCellValue('E' . $i, $values['fax']);
+          $objPHPExcel->getActiveSheet()->setCellValue('F' . $i, $values['email']);
+          $objPHPExcel->getActiveSheet()->setCellValue('G' . $i, $values['adress']);
+          $objPHPExcel->getActiveSheet()->setCellValue('H' . $i, $values['city']);
+          $objPHPExcel->getActiveSheet()->setCellValue('I' . $i, $values['state']);
+          $objPHPExcel->getActiveSheet()->setCellValue('J' . $i, $values['zip']);
+          if ( !empty($values['children_in_party'])){
+            $children_names = '';
+            foreach ($values['children_in_party']as $k => $v){ $children_names .= $v . '; '; }
+          }
+          $objPHPExcel->getActiveSheet()->setCellValue('K' . $i, $children_names);
+          if ( !empty($values['adults_in_party'])){
+            $adult_names = '';
+            foreach ($values['adults_in_party']as $k => $v){ $adult_names .= $v . '; '; }
+          }
+          $objPHPExcel->getActiveSheet()->setCellValue('L' . $i, $adult_names);
+          $objPHPExcel->getActiveSheet()->setCellValue('M' . $i, $values['name_sitter']);
+          $objPHPExcel->getActiveSheet()->setCellValue('N' . $i, $values['seat_with']);
+          $objPHPExcel->getActiveSheet()->setCellValue('O' . $i, $values['adult_qty'] . 'x ' . number_format($values['total_adult_cost'], 2));
+          $objPHPExcel->getActiveSheet()->setCellValue('P' . $i, $values['children_qty_children_dinner'] . 'x ' . number_format($values['total_child_cost_children_dinner'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('Q' . $i, $values['children_qty_adult_dinner'] . 'x ' . number_format($values['total_child_cost_children_dinner'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('R' . $i, $values['sitters_qty_children_dinner'] . 'x ' . number_format($values['total_sitters_cost_children_dinner'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('S' . $i, $values['sitters_qty_adult_dinner'] . 'x ' . number_format($values['total_sitters_cost_adult_dinner'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('T' . $i, number_format($values['total_cost'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('U' . $i, number_format($values['handling_fee'],2));
+          $objPHPExcel->getActiveSheet()->setCellValue('V' . $i, number_format($values['total_attendee_cost'],2));
+          if ( !empty($values['checkbox_amount'])){
+            $sponsorships = '';
+            foreach ($values['checkbox_amount']as $k => $v){
+              $sponsorships .= $v['checkbox_name'] .' '. number_format($v['checkbox_amount'],2) . '; ';
+            }
+          }
+          $objPHPExcel->getActiveSheet()->setCellValue('W' . $i, $sponsorships);
+          $objPHPExcel->getActiveSheet()->setCellValue('X' . $i, number_format($values['donate_amount'],2));
+          $i++;
+      }
+  }
+
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+  $objWriter->save($filename);
+}
+
+function checkout_user_form() {
+  $states = array(
+    "" => "",
+    "AL" => "Alabama",
+    "AK" => "Alaska",
+    "AZ" => "Arizona",
+    "AR" => "Arkansas",
+    "CA" => "California",
+    "CO" => "Colorado",
+    "CT" => "Connecticut",
+    "DE" => "Delaware",
+    "FL" => "Florida",
+    "GA" => "Georgia",
+    "HI" => "Hawaii",
+    "ID" => "Idaho",
+    "IL" => "Illinois",
+    "IN" => "Indiana",
+    "IA" => "Iowa",
+    "KS" => "Kansas",
+    "KY" => "Kentucky",
+    "LA" => "Louisiana",
+    "ME" => "Maine",
+    "MD" => "Maryland",
+    "MA" => "Massachusetts",
+    "MI" => "Michigan",
+    "MN" => "Minnesota",
+    "MS" => "Mississippi",
+    "MO" => "Missouri",
+    "MT" => "Montana",
+    "NE" => "Nebraska",
+    "NV" => "Nevada",
+    "NH" => "New Hampshire",
+    "NJ" => "New Jersey",
+    "NM" => "New Mexico",
+    "NY" => "New York",
+    "NC" => "North Carolina",
+    "ND" => "North Dakota",
+    "OH" => "Ohio",
+    "OK" => "Oklahoma",
+    "OR" => "Oregon",
+    "PA" => "Pennsylvania",
+    "RI" => "Rhode Island",
+    "SC" => "South Carolina",
+    "SD" => "South Dakota",
+    "TN" => "Tennessee",
+    "TX" => "Texas",
+    "UT" => "Utah",
+    "VT" => "Vermont",
+    "VA" => "Virginia",
+    "WA" => "Washington",
+    "WV" => "West Virginia",
+    "WI" => "Wisconsin",
+    "WY" => "Wyoming"
+  );
+
+  $form['user_info_purchaser'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Purchaser'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+  );
+  $form['user_info_first_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('First name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+    '#access' => false,
+  );
+  $form['user_info_last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Last name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+    '#access' => false,
+  );
+  $form['user_info_parent_of_guardian_first_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Parent or Guardian First name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+    '#access' => false,
+  );
+  $form['user_info_parent_of_guardian_last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Parent or Guardian Last name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+    '#access' => false,
+  );
+  $form['user_info_another_parent_of_guardian_first_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Another Parent or Guardian First name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    /*'#required' => true,*/
+    '#access' => false,
+  );
+  $form['user_info_another_parent_of_guardian_last_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Another Parent or Guardian Last name'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    /*'#required' => true,*/
+    '#access' => false,
+  );
+  $form['user_info_phone_number'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone Number'),
+    '#size' => 30,
+    '#maxlength' => 16,
+    '#required' => true,
+    /*'#description' => t('(555) 555-5555'),*/
+  );
+  $form['user_info_address'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Address'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+  );
+  $form['user_info_сity'] = array(
+    '#type' => 'textfield',
+    '#title' => t('City'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+  );
+
+  $form['user_info_state'] = array(
+    '#type' => 'select',
+    '#title' => t('State'),
+    '#options' => $states,
+    '#required' => true,
+    /*'#disabled' => false,*/
+  );
+  $form['user_info_zip'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Zip'),
+    '#size' => 30,
+    '#maxlength' => 5,
+    '#required' => true,
+    /*'#description' => t('55555'),*/
+  );
+  $form['user_info_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email address'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+    /*'#description' => t('your@email.com'),*/
+  );
+  $form['user_info_email_confirm'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Re-enter email address'),
+    '#size' => 30,
+    '#maxlength' => 64,
+    '#required' => true,
+  );
+  /*$form['submit'] = array('#type' => 'submit', '#value' => t('Save'));*/
+  return $form;
+}
+/**
+ *  Set cinfirm message to suggestion_box form
+ */
+function oct_custom_suggestion_box_form_submit(){
+  drupal_set_message(t('Your message has been sent.'));
+}
+
+/**
+ *  Set cinfirm message to subscribe form
+ */
+function oct_custom_subscribe_form_submit(){
+  drupal_set_message(t('Thank you for signing up.'));
+}
+
+function user_info_checkout_form_submit(&$form, &$form_state){
+  if ($_SESSION['do_review'] === TRUE) {
+
+      //get all buyed product
+    $query = "SELECT order_p.qty, order_p.nid, order_p.data FROM {uc_order_products} AS order_p
+              WHERE order_p.order_id = %d";
+    $result = db_query($query, $_SESSION['cart_order']);
+    while ($row = db_fetch_array($result)){
+      $data[] = array('attributes' => unserialize($row['data']),
+                      'nid' => $row['nid'],
+                      'qty'  => $row['qty']);
+    }
+    // check 'product' taxonomy
+    foreach($data as $value){
+      $query = "SELECT taxonomy.nid, taxonomy.tid FROM  {term_node} AS taxonomy
+                WHERE taxonomy.nid = %d;";
+      $result = db_query($query, $value['nid']);
+      while ($row = db_fetch_array($result)){
+        if ($row['tid'] == 1){
+          // get qty of ticket;
+          $query = "SELECT * FROM {content_type_product} AS product
+                    WHERE product.nid = %d";
+          $node_data = db_query($query, $value['nid']);
+          $product = db_fetch_array($node_data);
+          //auto decrement attribute qty tickets
+          /*$query = "UPDATE {content_type_product} AS product
+                      SET
+                      product.field_group_adult_quantity_to_value = %d,
+                      product.field_group_child_quantity_to_value = %d,
+                      product.field_children_quantity_to_value = %d,
+                      product.field_adult_quantity_to_value = %d,
+                      product.field_students_quantity_to_value = %d
+                      WHERE product.nid = %d;";
+            // remove from base already buyed ticket
+
+            $tickets['group_adult_to'] = $product['field_group_adult_quantity_to_value'] - ($value['attributes']['values']['Tickets'][4]['val'] * $value['qty']);
+            $tickets['group_child_to'] = $product['field_group_child_quantity_to_value'] - ($value['attributes']['values']['Tickets'][3]['val'] * $value['qty']);
+            $tickets['child_to'] = $product['field_children_quantity_to_value'] - ($value['attributes']['values']['Tickets'][2]['val'] * $value['qty']);
+            $tickets['adult_to'] = $product['field_adult_quantity_to_value'] - ($value['attributes']['values']['Tickets'][0]['val'] * $value['qty']);
+            $tickets['student_to'] = $product['field_students_quantity_to_value'] - ($value['attributes']['values']['Tickets'][1]['val'] * $value['qty']);
+
+            //check if ticket quantity negative (it will newer happend)
+            foreach($tickets as $key =>  $val){
+              if ($val < 0){
+                $tickets[$key] = 0;
+              }
+            }
+
+            db_query($query,
+                    $tickets['group_adult_to'],
+                    $tickets['group_child_to'],
+                    $tickets['child_to'],
+                    $tickets['adult_to'],
+                    $tickets['student_to'],
+                    $value['nid']);
+            */
+            cache_clear_all('content:'.$value['nid'].':'.$value['nid'],'cache_content');
+        }
+      }
+    }
+
+    // save left quantity ticket product node
+
+
+    $order_id = $_SESSION['cart_order'];
+    $query = "SELECT * FROM {uc_order_user_info} AS info WHERE info.order_id = %d";
+    $result = db_query($query ,$order_id);
+    $data = db_fetch_array($result);
+    //$form['customer']['primary_email'] = $form['panes']['#post']['panes']['oct_custom']['user_info_email'];
+    if (empty($data)){
+      $query = "INSERT INTO {uc_order_user_info} VALUE (%d,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');";
+      db_query($query,
+                $order_id,
+                $form['panes']['#post']['panes']['oct_custom']['user_info_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_purchaser'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_parent_of_guardian_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_parent_of_guardian_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_another_parent_of_guardian_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_another_parent_of_guardian_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_phone_number'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_address'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_сity'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_state'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_zip'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_email']
+      );
+    }else{
+      $query = "UPDATE {uc_order_user_info} AS user_i SET
+                user_i.first_name = '%s',
+                user_i.last_name = '%s',
+                user_i.purchaser = '%s',
+                user_i.parent_first_name = '%s',
+                user_i.parent_last_name = '%s',
+                user_i.parent_2_first_name = '%s',
+                user_i.parent_2_last_name = '%s',
+                user_i.phone_number = '%s',
+                user_i.address = '%s',
+                user_i.сity = '%s',
+                user_i.state = '%s',
+                user_i.zip = '%s',
+                user_i.email = '%s'
+                WHERE user_i.order_id = %d;";
+      db_query($query,
+                $form['panes']['#post']['panes']['oct_custom']['user_info_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_purchaser'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_parent_of_guardian_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_parent_of_guardian_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_another_parent_of_guardian_first_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_another_parent_of_guardian_last_name'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_phone_number'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_address'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_сity'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_state'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_zip'],
+                $form['panes']['#post']['panes']['oct_custom']['user_info_email'],
+                $order_id
+      );
+    }
+  }
+}
+function user_info_checkout_form_validate($form, &$form_state){
+    //validate befire review
+    if ((int)$form['panes']['#post']['panes']['oct_custom']['user_info_state'] == (int)0 && empty($form['panes']['#post']['panes']['oct_custom']['user_info_state'])){
+      form_set_error('uc_cart_checkout_form', t('Select State'));
+    }
+    if (!valid_email_address($form['panes']['#post']['panes']['oct_custom']['user_info_email'])){
+      form_set_error('uc_cart_checkout_form', t('The Email address wrong'));
+    }
+    if($form['panes']['#post']['panes']['oct_custom']['user_info_email'] != $form['panes']['#post']['panes']['oct_custom']['user_info_email_confirm']){
+      form_set_error('uc_cart_checkout_form', t('The Email address not equal'));
+    }
+  /*
+  if( strlen($form['panes']['#post']['cc_number']) > 16 || strlen($form['panes']['#post']['cc_number']) < 13 ){
+    form_set_error('uc_cart_checkout_form', t(''));
+  }*/
+}
+function custom_cart_validete($form, &$form_state){
+
+  foreach($form['items'] as $item_id =>  $val){
+    $title =  '';
+    if (!empty($form['#parameters'][2][$item_id]->title)){
+      $title = ' for "' . $form['#parameters'][2][$item_id]->title.'"';
+    }
+    if (is_array($val['nid'])){
+      $attributes = unserialize($val['nid']['#post']['items'][$item_id]['data']);
+      $qty = $val['nid']['#post']['items'][$item_id]['qty'];
+      $query = "SELECT * FROM {content_type_product} AS product
+                WHERE product.nid = %d";
+      $product = db_fetch_array(db_query($query, $val['nid']['#value']));
+      if ($product['field_group_adult_quantity_to_value'] < ($attributes['attributes'][12][55] * $qty)){
+        form_set_error('uc_cart_view_form', t('Not enough Group Adult ticket ' . $title ));
+      }
+      if ($product['field_group_child_quantity_to_value'] < ($attributes['attributes'][12][56] * $qty)){
+        form_set_error('uc_cart_view_form', t('Not enough Group Children ticket ' . $title ));
+      }
+      if ($product['field_children_quantity_to_value'] < ($attributes['attributes'][12][53] * $qty)){
+        form_set_error('uc_cart_view_form', t('Not enough Children ticket ' . $title ));
+      }
+      if ($product['field_adult_quantity_to_value'] < ($attributes['attributes'][12][52] * $qty)){
+        form_set_error('uc_cart_view_form', t('Not enough Adult ticket ' . $title ));
+      }
+      if ($product['field_students_quantity_to_value'] < ($attributes['attributes'][12][57] * $qty)){
+        form_set_error('uc_cart_view_form', t('Not enough Student ticket ' . $title ));
+      }
+    }
+  }
+}
+
+/**
+ * Online registration form step 1
+ */
+function online_registration_form_step_1(&$form_state, $extra_arg){
+  $form['online_registration_adult_qty'] = array(
+    '#type' => 'select',
+    '#title' => t('Adults x $150 each'),
+    '#weight' => -13,
+    '#options' => $extra_arg['ticket_qty'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">150</div>',
+  );
+  $form['online_registration_total_adult_cost'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total adult cost'),
+    '#weight' => -12,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  $form['online_registration_children_qty_children_dinner'] = array(
+    '#type' => 'select',
+    '#title' => t('Children x $50 each'),
+    '#weight' => -11,
+    '#options' => $extra_arg['ticket_qty'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">50</div>',
+  );
+  $form['online_registration_total_child_cost_children_dinner'] = array(
+    '#type' => 'textfield',
+    '#title' => t('	Total child cost'),
+    '#weight' => -10,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  $form['online_registration_children_qty_adult_dinner'] = array(
+    '#type' => 'select',
+    '#title' => t('Children x $125 each'),
+    '#weight' => -9,
+    '#options' => $extra_arg['ticket_qty'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">125</div>',
+  );
+  $form['online_registration_total_child_cost_adult_dinner'] = array(
+    '#type' => 'textfield',
+    '#title' => t('	Total child cost'),
+    '#weight' => -8,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  $form['online_registration_sitters_qty_children_dinner'] = array(
+    '#type' => 'select',
+    '#title' => t('	Sitters x $0'),
+    '#weight' => -7,
+    '#options' => $extra_arg['ticket_qty'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">0</div>',
+  );
+  $form['online_registration_total_sitters_cost_children_dinner'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total sitter cost'),
+    '#weight' => -6,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  $form['online_registration_sitters_qty_adult_dinner'] = array(
+    '#type' => 'select',
+    '#title' => t('Sitters x $125'),
+    '#weight' => -5,
+    '#options' => $extra_arg['ticket_qty'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">125</div>',
+  );
+  $form['online_registration_total_sitters_cost_adult_dinner'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total sitter cost'),
+    '#weight' => -4,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  //--------------------------------------------------------------------
+  $form['online_registration_coins'] = array(
+    '#type' => 'select',
+    '#title' => t('Coins x $25'),
+    '#weight' => -4.5,
+    '#options' => $extra_arg['coins_price_list'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">1</div>',
+  );
+  $form['online_registration_total_coins_cost'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total coins cost'),
+    '#weight' => -4.75,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  //--------------------------------------------------------------------
+  $form['online_registration_tweenball'] = array(
+    '#type' => 'select',
+    '#title' => t('Tween Ball x $75'),
+    '#weight' => -4.5,
+    '#options' => range(0, 10),
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#prefix' => '<div class="online-register-price hidden">75</div>',
+  );
+  $form['online_registration_total_tweenball_cost'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total tween cost'),
+    '#weight' => -4.75,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly', 'class' => 'count-form-text'),
+  );
+  //--------------------------------------------------------------------
+  $form['online_registration_total_cost'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total'),
+    '#weight' => -3,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly'),
+  );
+  $form['online_registration_handling_fee'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Handling Fee'),
+    '#weight' => -2,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly'),
+  );
+  $form['online_registration_total_attendee_cost'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Total attendee cost'),
+    '#weight' => -1,
+    '#value' => 0,
+    '#size' => 8,
+    '#attributes' => array('readonly' => 'readonly'),
+  );
+  //--------------------------------------------------------------------
+  // here will add radiobuttons with price
+  $form['online_registration_donate'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Unable to attend, but I wish to donate ',
+    '#weight' => 98,
+    '#attributes' => array('class' => 'checkbox styled'),
+  );
+
+  $form['online_registration_donate_amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t(' $'),
+    '#weight' => 99,
+    '#description' => '<div class="form-text-inline">' . t('to') . '</div>' .
+                      '<div class="form-text">' . t('Oklahoma Children’s Theatre') . '</div>',
+    '#value' => '',
+    '#size' => 8,
+    '#attributes' => array('class' => 'count-form-text'),
+  );
+  //--------------------------------------------------------------------
+  $post_2 = $extra_arg['post_2'];
+  /*
+  $post_2['step_1_previous_val'];
+  $values_2 = $post_2['submitted'];
+  if(!empty($post_2['step_1_previous_val'])){
+    $values_1 = unserialize($post_2['step_1_previous_val']);
+    if( !empty($values_1) && is_array($values_1)){
+      foreach ($values_1 as $key => $val){
+        foreach ($form as $f_key => $f_val){
+          if ($f_key == $key){
+            switch($f_val){
+              case 'textfield':
+                $form[$key]['#value'] = $val;
+                break;
+              case 'select':
+              case 'checkbox':
+                $form[$key]['#default_value'] = $val;
+                break;
+            }
+          }
+        }
+      }
+    }
+  }
+  */
+  $step_2_values = $post_2['online_registration_step_1_values'];
+  unset($post_2['online_registration_step_1_values']);
+
+  $form['online_registration_step_2_values'] = array(
+    '#type' => 'hidden',
+    '#value'=> json_encode($post_2),
+  );
+
+  // registration closed for now
+  $form['online_registration_form_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Next'),
+    '#weight' => 100,
+  );
+
+  $form['#theme'][] = 'online_register_form_step_1';
+  $form['#validate'][] = 'online_register_form_step_1_validate';
+  $form['#submit'][] = 'online_register_form_step_1_submit';
+  $form['#extra_arg']['sub_title'] = $extra_arg['sub_title'];
+  $form['#extra_arg']['sub_title_description'] = $extra_arg['sub_title_description'];
+  $form['#extra_arg']['coins_list'] = $extra_arg['coins_list'];
+  $form['#extra_arg']['online_coins_descr'] = $extra_arg['online_coins_descr'];
+
+  $step_1_previous_val = unserialize($step_2_values);
+  if (!empty($step_1_previous_val) && is_array($step_1_previous_val) ){
+    $form['#step_1_previous_val'] = $step_1_previous_val;
+  }
+
+  $step_2_previous_val = $post_2['submitted'];
+  if (!empty($step_2_previous_val) && is_array($step_2_previous_val) ){
+    $form['online_registration_step_2_values'] = array(
+      '#type' => 'hidden',
+      '#value'=> serialize($step_2_previous_val),
+    );
+  }
+  return $form;
+}
+
+/**
+ * Online registration form step 2
+ */
+// This form realized by webfor
+/*
+function online_registration_form_step_2(&$form_state, $extra_arg){
+  $form['online_registration_name_or_company'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name/Company Name'),
+    '#required' => true,
+    '#weight' => -9,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_contact_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Contact Name'),
+    '#required' => true,
+    '#weight' => -8,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone'),
+    '#required' => true,
+    '#weight' => -7,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_fax'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fax'),
+    '#required' => true,
+    '#weight' => -6,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Email'),
+    '#required' => true,
+    '#rules' => array('email'),
+    '#weight' => -5,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_adress'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Adress'),
+    '#required' => true,
+    '#weight' => -4,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_city'] = array(
+    '#type' => 'textfield',
+    '#title' => t('City'),
+    '#required' => true,
+    '#weight' => -3,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_state'] = array(
+    '#type' => 'select',
+    '#title' => t('State'),
+    '#required' => true,
+    '#options' => $extra_arg['states'],
+    '#attributes' => array('class' => 'enrollment-select'),
+    '#weight' => -2,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_zip'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Zip'),
+    '#required' => true,
+    '#weight' => -1,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  //----------- auto add another field ----------//
+  $form['online_registration_adult_first_name[]'] = array(
+    '#prefix' => '<div id="adult-firstname-list">',
+    '#suffix' => '</div>',
+    '#type' => 'textfield',
+    '#title' => t('First & Last names of adults in my party'),
+    '#weight' => 0,
+    '#size' => 8,
+    '#maxlength' => 255,
+    '#attributes' => array("autocomplete" =>"off" ),
+  );
+  $form['online_registration_children_first_name[]'] = array(
+    '#prefix' =>'<div id="children-firstname-list">',
+    '#suffix' => '</div>',
+    '#type' => 'textfield',
+    '#title' => t('First & Last name(s) & age(s) of children in my party'),
+    '#weight' => 0,
+    '#size' => 8,
+    '#maxlength' => 255,
+    '#attributes' => array("autocomplete" =>"off" ),
+  );
+  //---------------------------------------------//
+  $form['online_registration_name_sitter'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name of your sitter'),
+    '#weight' => 1,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $form['online_registration_seat_with'] = array(
+    '#type' => 'textfield',
+    '#title' => t('We wish to be seated with'),
+    '#weight' => 2,
+    '#size' => 8,
+    '#maxlength' => 255,
+  );
+  $post_1 = $extra_arg['post_1'];
+  $step_1_values = $post_1['online_registration_step_2_values'];
+  unset($post_1['online_registration_step_2_values']);
+  $form['online_registration_step_1_values'] = array(
+    '#type' => 'hidden',
+    '#value'=> json_encode($post_1),
+  );
+  $form['online_registration_form_back_to_step_1'] = array(
+    '#type' => 'button',
+    '#value' => t('Back'),
+    '#weight' => 99,
+  );
+  $form['online_registration_form_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Checkout'),
+    '#weight' => 100,
+  );
+  $form['#theme'][] = 'online_register_form_step_2';
+  $form['#validate'][] = 'online_register_form_step_2_validate';
+  $form['#submit'][] = 'online_register_form_step_2_submit';
+
+  $step_2_previous_val = json_decode($step_1_values);
+  if (!empty($step_2_previous_val)){
+    $form['#step_2_previous_val'] = $step_2_previous_val;
+  }
+  return $form;
+}
+*/
+
+/**
+ * User info tabe filter form
+ */
+function filter_user_info_form(&$form_state, $extra_arg){
+
+   /*
+   // search by concert name in user info form
+   $form['product_name'] = array(
+    '#type' => 'textfield',
+    '#value' => $extra_arg['concert_name'],
+    '#title' => t('Concert Name'),
+    '#size' => 14,
+    '#maxlength' => 64,
+    '#weight' => 0,
+  );
+  */
+  $form['name_sorter_product'] = array(
+    '#type' => 'select',
+    '#title' => t('Sort by name'),
+    '#weight' => 0,
+    '#multiple' => true,
+    '#options' => $extra_arg['all_product_names'],
+  );
+  //chosen_nids
+  $form['name_sorter_product']['#default_value'] = $extra_arg['chosen_nids'][0];
+
+  $form['data_sorter_user_info_from'] = array(
+    '#type' => 'textfield',
+    '#value' => $extra_arg['date_from'],
+    '#title' => t('Date from'),
+    '#size' => 14,
+    '#maxlength' => 64,
+    '#weight' => 1,
+  );
+  $form['data_sorter_user_info_to'] = array(
+    '#type' => 'textfield',
+    '#value' => $extra_arg['date_to'],
+    '#title' => t('to'),
+    '#size' => 14,
+    '#maxlength' => 64,
+    '#weight' => 2,
+  );
+  $form['user_info_type_table'] = array(
+    '#type' => 'hidden',
+    '#value' => $extra_arg['type'],
+  );
+  $form['now_page'] = array(
+    '#type' => 'hidden',
+    '#value' => $extra_arg['now_page'],
+  );
+  $form['data_sorter_user_info_apply_filter'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+    '#weight' => 3,
+  );
+  return $form;
+}
+
+/**
+ * Implementation theme_date_sorter_user_info()
+ */
+function theme_date_sorter_user_info($data = array()){
+  $output = drupal_get_form('filter_user_info_form', $data);
+  return $output;
+}
+
+
+/**
+ * Validate the 'Shopping cart' form preventing the addition of more items that
+ * the ones currently in stock.
+ *  copy of uc_out_of_stock_validate_form_cart
+ */
+function oct_custom_validate_form_cart($form, &$form_state) {
+  /*
+  $form_items = array();
+  if (is_array($form['#parameters'])){
+    foreach($form['#parameters'] as $key => $value){
+      if (is_array($value)){
+        foreach($value as $k => $val){
+          if(!empty($val->cart_item_id)){
+            //object item to array
+            foreach ($val as $param => $v){
+              $form_items[$k][$param] = $v;
+            }
+          }
+        }
+      }
+    }
+  }*/
+  $items = $form_state['values']['items'];
+  // unserialize data
+  oct_custom_validate_class_and_prouct_avaliable_to_sell($items);
+}
+
+/**
+ *
+ * @param <type> $form
+ * @param <type> $form_state
+ */
+function online_register_form_step_1_validate($form, &$form_state){
+
+}
+
+/**
+ *
+ * @param <type> $form
+ * @param <type> $form_state
+ */
+function online_register_form_step_1_submit($form, &$form_state){
+
+
+}
+
+/**
+ *
+ * @param <type> $form
+ * @param <type> $form_state
+ */
+
+function online_register_form_step_2_validate($form, &$form_state){
+  /*
+  if(!filter_var($form_state['values']['online_registration_email'], FILTER_VALIDATE_EMAIL)){
+    form_set_error('online_registration_email', t('Invalid Email Address'));
+  }
+  */
+}
+
+/**
+ *
+ * @param <type> $form
+ * @param <type> $form_state
+ */
+function online_register_form_step_2_submit($form, &$form_state){
+    //$form['#post']['first_last_names_ages_of_children_in_my_party'];
+    _oct_custom_move_array_value_to_str($form['#post']['first_last_names_ages_of_children_in_my_party'], $form['#post']['submitted']['first_last_names_ages_of_children_in_my_party']);
+    _oct_custom_move_array_value_to_str($form['#post']['first_last_names_of_adults_in_my_party'], $form['#post']['submitted']['first_last_names_of_adults_in_my_party']);
+
+    _oct_custom_move_array_value_to_str($form['#post']['first_last_names_ages_of_children_in_my_party'], $form_state['values']['submitted']['first_last_names_ages_of_children_in_my_party']);
+    _oct_custom_move_array_value_to_str($form['#post']['first_last_names_of_adults_in_my_party'], $form_state['values']['submitted']['first_last_names_of_adults_in_my_party']);
+
+    //$form_state['values']['submitted']['name_of_your_sitter'] = '';
+    $form_state['values']['submitted']['name_of_your_sitter'] = $form['#post']['name_of_your_sitter'];
+
+    //$form_state['values']['submitted']['we_wish_to_be_seated_with'] = '';
+    $form_state['values']['submitted']['we_wish_to_be_seated_with'] = $form['#post']['we_wish_to_be_seated_with'];
+
+    //first_last_names_of_adults_in_my_party
+
+    $_SESSION['register_online_step_1'] = unserialize($form['#parameters'][1]['post']['online_registration_step_1_values']);
+
+    $_SESSION['register_online_step_2'] = $form['#parameters'][1]['post']['submitted'];
+    $_SESSION['register_online_step_2']['first_last_names_ages_of_children_in_my_party'] = $form['#parameters'][1]['post']['first_last_names_ages_of_children_in_my_party'];
+    $_SESSION['register_online_step_2']['first_last_names_of_adults_in_my_party'] = $form['#parameters'][1]['post']['first_last_names_of_adults_in_my_party'];
+    $_SESSION['register_online_step_2']['name_of_your_sitter'] = $form['#parameters'][1]['post']['name_of_your_sitter'];
+    $_SESSION['register_online_step_2']['we_wish_to_be_seated_with'] = $form['#parameters'][1]['post']['we_wish_to_be_seated_with'];
+}
+
+/**
+ * Get from nid all taxonomy id
+ * @param <type> $nid
+ * @return <type>
+ */
+function _get_taxonomy_from_nid($nid){
+  $taxonomy = array();
+  $query = "SELECT taxonomy.nid, taxonomy.tid FROM  {term_node} AS taxonomy
+            WHERE taxonomy.nid = %d;";
+  $result = db_query($query, $nid);
+  while ($row = db_fetch_array($result)){
+    $taxonomy[] = $row['tid'];
+  }
+  return $taxonomy;
+}
+
+/**
+ * Set the product stock level.
+ * @param <type> $sku
+ * @param <type> $qty
+ * copy of uc_stock_set()
+ */
+function oct_custom_stock_set($sku, $qty) {
+  //db_query("UPDATE {uc_product_stock_custom} SET field_product_tickets_value = field_product_tickets_value + %d WHERE sku = '%s'", $qty, $sku);
+}
+/**
+ * Implementation of hook_uc_stock_adjusted()
+ */
+function oct_custom_uc_stock_adjusted($sku, $qty){
+  //oct_custom_stock_set($sku, $qty);
+}
+
+/**
+ * Get tid from nid
+ * @param <type> $nid
+ * @return <type>
+ */
+function get_taxonomy_by_nid($nid){
+
+  $query = "SELECT taxonomy.nid, taxonomy.tid FROM  {term_node} AS taxonomy
+            WHERE taxonomy.nid = %d;";
+  $result = db_query($query, $nid);
+  $taxonomy = array();
+  while ($row = db_fetch_array($result)){
+    $taxonomy[$row['nid']][] = $row['tid'];
+  }
+  return $taxonomy;
+}
+/**
+ * Like uc_out_of_stock_query()
+ * Ajax call tickets form data
+ */
+function oct_custom_stock_query(){
+
+  $response = array();
+  $attrs = array();
+
+  $nid = $_POST['nid'];
+  $oid =  $_POST['attr2'];
+  foreach ( $_POST as $key => $value ) {
+    if ( substr($key, 0, 4) == 'attr' ) {
+      $attrs[substr($key, 4)] = $value;
+    }
+  }
+  $stockinfo = oct_custom_get_qty_info_about_store($nid, $oid);
+  if ($stockinfo) {
+    $response = array();
+    $response['stock'] = $stockinfo['stock'];
+    if ( $stockinfo['stock'] <= 0 ) {
+      // if qty 0 set "Out of stock error
+      if (!empty($stockinfo['mes_sold'])){
+        $response['html'] = '<p><span style="color: red;">' . $stockinfo['mes_sold'] . '</span></p>';
+      }else{
+        $response['html'] = check_markup(variable_get('uc_out_of_stock_text', UC_OUT_OF_STOCK_DEFAULT_HTML), variable_get('uc_out_of_stock_format', FILTER_FORMAT_DEFAULT), FALSE);
+      }
+    }
+    if ( $stockinfo['is_sold'] == 1 ){
+      // if sold out. set store set qty 0 and "Out of stock" error
+      $response['stock'] = 0;
+      if (!empty($stockinfo['mes_sold'])){
+        $response['html'] = '<p><span style="color: red;">' . $stockinfo['mes_sold'] . '</span></p>';
+      }else{
+        $response['html'] = check_markup(variable_get('uc_out_of_stock_text', UC_OUT_OF_STOCK_DEFAULT_HTML), variable_get('uc_out_of_stock_format', FILTER_FORMAT_DEFAULT), FALSE);
+      }
+    }
+    if ($oid == 0) {
+      $response['html'] = '<p>Please, choose date and time</p>';
+    }
+  }
+
+  $not_avaliable = oct_custom_get_avaliable_status_store($nid, $oid);
+  if ( !empty($not_avaliable) ){
+    if ($not_avaliable['is_unvaliable'] == 1){
+      $response['stock'] = 0;
+      if (!empty($not_avaliable['mes_unvaliable'])){
+        $response['html'] .= '<p>' . $not_avaliable['mes_unvaliable'] . '</p>';
+      }else{
+        $response['html'] .= '<p>' . variable_get('unvaliable_message', '') . '</p>';
+      }
+    }
+  }
+
+  // if there is some response, print it
+  if (count($response)){
+    print implode('|', $response);
+  }
+}
+/**
+ *  like uc_out_of_stock_validate_form_addtocart()
+ */
+function oct_custom_stock_validate_form_addtocart($form, &$form_state){
+  //first validation if we dont have enough qty of that item we set error
+  $class = $form_state['clicked_button']['#attributes']['class'];
+  $items_in_cart = uc_cart_get_contents();
+
+
+  $add_item = array(
+    'nid' => $form_state['values']['nid'],
+    'qty' => $form_state['values']['qty'],
+    'data' => array(
+        'attributes' => $form_state['values']['attributes'],
+        'shippable' => 1,
+        'module' =>  'uc_product',
+     ),
+    'model' => $form_state['values']['node']->model,
+    'remove' => FALSE,
+  );
+
+  $items = array();
+  foreach($items_in_cart as $key => $value){
+    if(!empty($value->cart_item_id)){
+      //object item to array
+      foreach ($value as $param => $v){
+        $items[$key][$param] = $v;
+      }
+    }
+  }
+  // try to add new product
+  $items[] = $add_item;
+
+  oct_custom_validate_class_and_prouct_avaliable_to_sell($items);
+  // Uses the class of the add to cart button of both node view and catalog
+  // view to decide if we should validate stock or not
+  // i.e. If some other form_alter added another button, do nothing (uc_wishlist)
+  /*
+  if ($class == 'node-add-to-cart' || $class == 'list-add-to-cart') {
+    $attrs = $form_state['values']['attributes'];
+    $nid = $form_state['values']['nid'];
+
+    $error = oct_custom_out_of_stock_validate_addtocart($nid, $attrs);
+    if ($error !== FALSE) {
+      form_set_error('uc_out_of_stock', $error);
+    }
+  }
+  */
+}
+/**
+ * like uc_out_of_stock_validate_addtocart()
+ */
+function oct_custom_out_of_stock_validate_addtocart($nid, $attrs) {
+  $error = FALSE;
+  $oid = $attrs[AID_DATE_TIME] ;
+  $stockinfo = oct_custom_get_qty_info_about_store($nid, $oid);
+  if ($stockinfo) {
+    if ($stockinfo['stock'] <= 0) {
+      $error = _uc_out_of_stock_get_error('out_of_stock', $nid, $attrs, $stockinfo['stock']);
+    }
+    else {
+      $qty = 0;
+      $items = uc_cart_get_contents();
+      foreach ($items as $item) {
+        if ($item->nid == $nid && (!count($attrs) || count($attrs) && $item->data['attributes'] == $attrs || $stockinfo['model'] == $item->model)) {
+          $qty += $item->qty;
+        }
+      }
+
+      if ($stockinfo['stock'] - $qty <= 0) {
+        $error = _uc_out_of_stock_get_error('not_enough', $nid, $attrs, $stockinfo['stock'], $qty);
+      }
+    }
+  }
+
+  return $error;
+}
+
+/**
+ * like uc_out_of_stock_validate_form_checkout()
+ */
+function oct_custom_out_of_stock_checkout_form_validate($form, &$form_state) {
+  $items = uc_cart_get_contents();
+  oct_custom_validate_class_and_prouct_avaliable_to_sell($items);
+}
+/**
+ * like function uc_cart_checkout_review_form_submit()
+ */
+function oct_custom_cart_autodecrement_product($order_id) {
+  // auto decrement qty for product ticket;
+  $product_ticket_oid = array (OID_ADULT,
+                                OID_CHILDREN,
+                                OID_COMPLIMENTARY_ADULT,
+                                OID_GROUP_ADULT,
+                                OID_GROUP_CHILDREN,
+                                OID_STUDENT,);
+  //$items = uc_cart_get_contents();
+  $items = uc_order_load($order_id);
+   // TODO: remove custom debug
+  if(variable_get('uc_paypal_wps_debug_ipn', FALSE)){
+    watchdog('uc_paypal', 'Auto decrement for order: @order_id. <pre>@debug</pre>', array('@order_id' => $order_id, '@debug' => print_r($items, TRUE)));
+  }
+  if(isset($items->products)){
+    foreach ($items->products as $k => $item) {
+      $nid = $item->nid;
+      $tid = get_taxonomy_by_nid($nid);
+      if (!empty ($tid) && is_array($tid)){
+
+        if(in_array(PRODUCTS_TAXONOMY_ID, $tid[$nid])){
+          // decrement from field "Product"
+          if(!empty($item->data['attributes']['Date and time'])){
+            $oid = $item->data['values']['Date and time'][0]['oid'];
+            if(!empty($item->data['values']['Tickets'])){
+              // each qty attributes fields
+              foreach($item->data['values']['Tickets'] as $key => $val){
+                if(!empty($val['val']) && !empty($nid) && !empty($oid) ){
+                  $qty = $val['val'];
+                  if ($qty > 0){
+                    oct_auto_decrement_product_qty(PRODUCTS_TAXONOMY_ID, $qty, $nid, $oid);
+                    watchdog('uc_store', ' Decrement from order:' . $order_id . ' "Product" nid:'.$item->nid .' at date: ' . $item->data['attributes']['Date and time'][0] . ' qty:'. $qty);
+                  }
+                }
+              }
+            }
+          }
+        }
+        elseif (in_array(CLASSES_TAXONOMY_ID, $tid[$nid])){
+          // decrement from field "Class"
+          if(!empty($item->data['attributes']['Class date'])){
+            $oid = $item->data['values']['Class date'][0]['oid'];
+            $qty = $item->qty;
+            oct_auto_decrement_product_qty(CLASSES_TAXONOMY_ID, $qty, $nid, $oid);
+            watchdog('uc_store', ' Decrement from order:' . $order_id . ' "Class" nid:'.$item->nid .' qty:'.$qty);
+          }
+        }
+        elseif (in_array(CAMPS_TAXONOMY_ID, $tid[$nid])){
+          // decrement from field "Camps"
+          if(!empty($item->data['attributes']['Class date'])){
+            $oid = $item->data['values']['Class date'][0]['oid'];
+            $qty = $item->qty;
+            oct_auto_decrement_product_qty(CAMPS_TAXONOMY_ID, $qty, $nid, $oid);
+            watchdog('uc_store', ' Decrement from order:' . $order_id . ' "Class" nid:'.$item->nid .' qty:'.$qty);
+          }
+        }
+
+      }
+      cache_clear_all('content:'.$item->nid.':'.$item->nid,'cache_content');
+    }
+  }
+}
+
+/**
+ * Process variables for user-info.tpl.php.
+ *
+ * The $vars array contains the following arguments:
+ * - $data -
+ *
+ * @see user-info.tpl.php
+ */
+function template_preprocess_order_user_info(&$vars) {
+
+}
+
+/**
+ * Implementation of hook_views_pre_execute();
+ */
+function oct_custom_views_pre_execute(&$view){
+  
+}
+/**
+ * Implementation of hook_views_query_alter();
+ */
+function oct_custom_views_query_alter(&$view, &$query){
+   //STR_TO_DATE( node_data_field_class_date_from_field_class_date_from_value ,'%m/%d/%Y') DESC
+  switch ($view->name){
+    case 'camps_page_view':
+      $form_date = '%m/%d/%Y';
+      $order = $view->sort['field_class_date_from_value']->options['order'];
+      $field = $view->sort['field_class_date_from_value']->table . "_" . $view->sort['field_class_date_from_value']->field;
+      $view->query->where[0]['args'][2] = $form_date;
+      $view->query->orderby[0] = 'STR_TO_DATE( ' . $field . ', "%s" )' . $order;
+      //options
+      break;
+    case 'calendar':
+      // be carefully when you move "where clause" in views module
+      $query->where[1]['clauses'][1] .= 'AND node_data_field_show_in_calendar.delta = node_data_field_product_date.delta';
+
+      // date from get date from string field with datepicker "Class"
+      // old nonuse functional for add classes dates in calendar.
+      //$view->query->add_relationship('node_weights', new views_join('node_weights', 'nid', 'node', 'nid','LEFT'));
+      /*
+      $query->table_queue['node_data_field_class_date_from'] = array(
+        'table' => 'node_data_field_class_date_from',
+        'num' => 1,
+        'alias' => 'node_data_class_date_from',
+        'relationship' => 'node',
+      );
+      $join = new views_join;
+      $join->definition = array(
+            'table' => 'content_field_class_date_from',
+            'left_field' => 'vid',
+            'field' => 'vid',
+            'left_table' => 'node',
+          );
+      $join->extra_type = 'AND';
+      $join->table = 'content_field_class_date_from';
+      $join->left_table = 'node';
+      $join->left_field = 'vid';
+      $join->field = 'vid';
+      $join->type = 'LEFT';
+      $join->adjusted = TRUE;
+      $query->table_queue['node_data_field_class_date_from']['join'] = $join;
+
+      // date to
+      $query->table_queue['node_data_field_class_date_to'] = array(
+        'table' => 'node_data_field_class_date_to',
+        'num' => 1,
+        'alias' => 'node_data_class_date_to',
+        'relationship' => 'node',
+      );
+      $join = new views_join;
+      $join->definition = array(
+            'table' => 'content_field_class_date_to',
+            'left_field' => 'vid',
+            'field' => 'vid',
+            'left_table' => 'node',
+          );
+      $join->extra_type = 'AND';
+      $join->table = 'content_field_class_date_to';
+      $join->left_table = 'node';
+      $join->left_field = 'vid';
+      //$join->left = array('table' => 'node', 'field' => 'vid');
+      $join->field = 'vid';
+      $join->type = 'LEFT';
+      $join->adjusted = TRUE;
+      $query->table_queue['node_data_field_class_date_to']['join'] = $join;
+
+      // date no event
+      $query->table_queue['node_data_field_class_no_date'] = array(
+        'table' => 'node_data_field_class_no_date',
+        'num' => 1,
+        'alias' => 'node_data_class_no_date',
+        'relationship' => 'node',
+      );
+      $join = new views_join;
+      $join->definition = array(
+            'table' => 'content_field_class_no_dates',
+            'left_field' => 'vid',
+            'field' => 'vid',
+            'left_table' => 'node',
+          );
+      $join->extra_type = 'AND';
+      $join->table = 'content_field_class_no_dates';
+      $join->left_table = 'node';
+      $join->left_field = 'vid';
+      //$join->left = array('table' => 'node', 'field' => 'vid');
+      $join->field = 'vid';
+      $join->type = 'LEFT';
+      $join->adjusted = TRUE;
+      $query->table_queue['node_data_field_class_no_date']['join'] = $join;
+
+      // hack here!
+      $query->where['class_dates'] = array(
+        'clauses' => array(0 =>
+          "TRUE)
+          OR (DATE_FORMAT(STR_TO_DATE( node_data_class_date_from.field_class_date_from_value ,'%s'), '%Y-%m') <= '".$view->args[0]."' AND DATE_FORMAT(STR_TO_DATE( node_data_class_date_to.field_class_date_to_value ,'%s'), '%Y-%m') >= '".$view->args[0]."')
+          AND (TRUE"
+          ),
+        'type' => 'OR',
+        'args' => array(0 => "%m/%d/%Y",1 => "%m/%d/%Y"),
+      );
+
+      $query->tables['node']['node_data_field_class_date_from'] = array(
+        'count' => 1,
+        'alias' => 'node_data_field_class_date_from'
+      );
+      $query->tables['node']['node_data_field_class_date_to'] = array(
+        'count' => 1,
+        'alias' => 'node_data_field_class_date_to'
+      );
+
+      //dates from
+      $query->fields['node_data_class_date_from'] = array(
+        'field' => 'node_data_class_date_from.field_class_date_from_value' ,
+        'table' => '',
+        'alias' => 'node_data_field_class_date_from_field_class_date_from_value',
+      );
+      $query->fields['node_data_class_date_from_delta'] = array(
+        'field' => 'node_data_class_date_from.delta' ,
+        'table' => '',
+        'alias' => 'node_data_field_class_date_from_delta',
+      );
+
+      //dates to
+      $query->fields['node_data_class_date_to'] = array(
+        'field' => 'node_data_class_date_to.field_class_date_to_value' ,
+        'table' => '',
+        'alias' => 'node_data_field_class_date_to_field_class_date_to_value',
+      );
+      $query->fields['node_data_class_date_to_delta'] = array(
+        'field' => 'node_data_class_date_to.delta' ,
+        'table' => '',
+        'alias' => 'node_data_field_class_date_to_delta',
+      );
+
+      // no dates
+      $query->fields['node_data_class_no_event_date'] = array(
+        'field' => 'node_data_class_no_date.field_class_no_dates_value',
+        'table' => '',
+        'alias' => 'node_data_class_no_date_value',
+      );
+      $query->fields['node_data_class_no_event_date_delta'] = array(
+        'field' => 'node_data_class_no_date.delta' ,
+        'table' => '',
+        'alias' => 'node_data_class_no_date_delta',
+      );
+
+    $view->argument['date_argument']->options['date_fields']['field_class_date_from_value_'] = 'node_data_field_class_date_from_field_class_date_from_value';
+    */
+    break;
+  }
+}
+
+/**
+ * implementation of hook_editor()
+ */
+function oct_custom_wysiwyg_editor_settings_alter($settings, $context){
+  if ($context['profile']->editor == 'tinymce') {
+    $settings['theme_advanced_fonts'] = 'AtlasRegular=AtlasRegular;'.
+        'HumanaSansITC=HumanaSansITC';
+  }
+}
+
+/**
+ * This functiuon return html online fegistretion form step 1
+ */
+function call_online_registration_form_step_1($data = array()){
+  $options = get_coins_price_list();
+  $options['post_2'] = $_POST;
+  for($i =0; $i <= 10; $i++){
+    $options['ticket_qty'][] = $i;
+  }
+  $node = node_load(ONLINE_REGISTER_NID);
+  $options['sub_title'] = $node->field_registr_online_sub_title[0]['value'];
+  $options['sub_title_description'] = $node->field_registr_online_sub_descrip[0]['value'];
+  $options['online_coins_descr'] = $node->field_registr_online_coins_descr[0]['value'];
+  $output = drupal_get_form('online_registration_form_step_1', $options);
+  print $output;
+}
+
+/**
+ * This functiuon return html online fegistretion form step 2
+ */
+function call_online_registration_form_step_2($data = array()){
+  $node = node_load(ONLINE_REGISTER_STEP2_NID);
+  $output = drupal_get_form('webform_client_form_'.ONLINE_REGISTER_STEP2_NID, $node, null);
+  print $output;
+}
+
+function add_custom_string_data_field ($fields_list){
+  $new_hack_field_from = array(
+    'type' => 'date_format_short',
+    'sql_type' => 'datetime',
+    'label' => 'Custom date',
+    'granularity' => array(
+      'year' => 'year',
+      'month' => 'month',
+      'day' => 'day',
+      'hour' => 'hour',
+      'minute' => 'minute',
+    ),
+    'fullname' => 'field_class_date_from_value',
+    'table_name' => 'content_field_class_date_from',
+    'field_name' => 'field_class_date_from_value',
+    'query_name' => 'node_data_field_class_date_from_field_class_date_from_value',
+    'fromto' => array(
+      'field_class_date_from_value',
+      'field_class_date_to_value'
+      ),
+    'tz_handling' => 'none',
+    'offset_field' => '',
+    'timezone_field' => '',
+    'rrule_field' => '',
+    'related_fields' => array(
+      'field_class_date_from_value',
+      'field_class_date_to_value'
+      ),
+    'delta_field' => 'node_data_field_class_date_from_delta',
+    'real_field_name' => 'field_class_date_from_value',
+  );
+  $new_hack_field_to = $new_hack_field_from;
+  $new_hack_field_to['real_field_name'] = 'field_class_date_to_value';
+  $new_hack_field_to['fullname'] = 'field_class_date_to_value';
+  $new_hack_field_to['field_name'] = 'field_class_date_to_value';
+  $new_hack_field_to['query_name'] = 'node_data_field_class_date_to_field_class_date_to_value';
+  $new_hack_field_to['delta_field'] = 'node_data_field_class_date_to';
+
+  $fields_list['name']['node_data_field_class_date_from_field_class_date_from_value'] = $new_hack_field_from;
+  $fields_list['alias']['node_data_field_class_date_from_field_class_date_from_value'] = $new_hack_field_from;
+  $fields_list['name']['node_data_field_class_date_to_field_class_date_to_value'] = $new_hack_field_to;
+  $fields_list['alias']['node_data_field_class_date_to_field_class_date_to_value'] = $new_hack_field_to;
+
+  return $fields_list;
+}
+/**
+ * Custom check if enough qty of ticket for this node
+ */
+function oct_custom_get_qty_info_about_store($nid, $oid){
+  $stockinfo = array();
+  $tid = get_taxonomy_by_nid($nid);
+  if (!empty ($tid) && is_array($tid)){
+    if (in_array('3',$tid[$nid]) || in_array('2',$tid[$nid])){
+      // Class
+      // usual old uc check stock
+      //$stockinfo = uc_out_of_stock_getstockinfo($nid, $attrs);
+
+      // custom data ticket stock
+      $query = "SELECT
+                uc_product_ticket_dates.nid_product,
+                uc_product_ticket_dates.oid,
+                uc_product_ticket_dates.delta,
+                uc_products.model as sku ,
+                content_field_qty_class_ticket.field_qty_class_ticket_value as stock ,
+                content_field_class_sold.field_class_sold_value,
+                content_field_class_unvaliable_online.field_class_unvaliable_online_value,
+                content_type_product.field_product_sold_message_value
+                FROM  {uc_product_ticket_dates} AS uc_product_ticket_dates
+                INNER JOIN {content_field_qty_class_ticket} AS content_field_qty_class_ticket ON content_field_qty_class_ticket.nid = uc_product_ticket_dates.nid_product AND content_field_qty_class_ticket.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_field_class_sold} AS content_field_class_sold ON content_field_class_sold.nid = uc_product_ticket_dates.nid_product AND content_field_class_sold.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_field_class_unvaliable_online} AS content_field_class_unvaliable_online ON  content_field_class_unvaliable_online.nid = uc_product_ticket_dates.nid_product  AND content_field_class_unvaliable_online.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_type_product} AS content_type_product ON content_type_product.nid = uc_product_ticket_dates.nid_product
+                INNER JOIN {uc_products} AS uc_products ON uc_products.nid = uc_product_ticket_dates.nid_product
+                WHERE uc_product_ticket_dates.nid_product = %d
+                AND uc_product_ticket_dates.oid = %d";
+      $result = db_query($query, $nid, $oid);
+      $total_qty = 0;
+      $sku = null;
+      while($row = db_fetch_array($result)){
+        $total_qty = $row['stock'];
+        $sku = $row['sku'];
+        $mes_sold = $row['field_product_sold_message_value'];
+      }
+      $stockinfo = array('stock' => $total_qty,'model' => $sku, 'is_sold' => $sold, 'mes_sold' => $mes_sold);
+    //-------------------------------------------------------------------------
+    }elseif(in_array('1',$tid[$nid])){
+      // Product
+
+      // custom data ticket stock
+      $query = "SELECT uc_product_stock_custom.sku as sku ,
+                content_field_qty_product_ticket.field_qty_product_ticket_value as stock,
+                content_field_product_sold.field_product_sold_value,
+                content_type_product.field_product_sold_message_value
+                FROM  {uc_product_stock_custom} AS uc_product_stock_custom
+                INNER JOIN {content_field_qty_product_ticket} AS content_field_qty_product_ticket ON content_field_qty_product_ticket.nid = uc_product_stock_custom.nid_product AND content_field_qty_product_ticket.delta = uc_product_stock_custom.delta
+                INNER JOIN {content_field_product_sold} AS content_field_product_sold ON content_field_product_sold.nid = uc_product_stock_custom.nid_product AND content_field_product_sold.delta = uc_product_stock_custom.delta
+                INNER JOIN {content_type_product} AS content_type_product ON content_type_product.nid = uc_product_stock_custom.nid_product
+                WHERE uc_product_stock_custom.nid_product = %d
+                AND uc_product_stock_custom.oid_attribute = %d";
+
+      $result = db_query($query, $nid, $oid);
+      $total_qty = 0;
+      $sku = null;
+      $sold = 0;
+      while($row = db_fetch_array($result)){
+        $total_qty = $row['stock'];
+        $sku = $row['sku'];
+        $sold = $row['field_product_sold_value'];
+        $mes_sold = $row['field_product_sold_message_value'];
+      }
+      $stockinfo = array('stock' => $total_qty,'model' => $sku, 'is_sold' => $sold, 'mes_sold' => $mes_sold);
+    }
+  }
+  return $stockinfo;
+}
+
+/**
+ * Return unvaliable online status for field
+ */
+function oct_custom_get_avaliable_status_store($nid, $oid){
+  $unvaliable_info = array();
+  $tid = get_taxonomy_by_nid($nid);
+  if (!empty ($tid) && is_array($tid)){
+    if (in_array('3',$tid[$nid]) || in_array('2',$tid[$nid])){
+      // Class
+      $query = "SELECT NOT WORK YET!
+                uc_product_ticket_dates.nid_product,
+                uc_product_ticket_dates.oid,
+                uc_product_ticket_dates.delta,
+                uc_products.model as sku ,
+                content_field_qty_class_ticket.field_qty_class_ticket_value as stock ,
+                content_field_class_sold.field_class_sold_value,
+                content_field_class_unvaliable_online.field_class_unvaliable_online_value,
+                content_type_product.field_product_unvaliable_message_value
+                FROM  {uc_product_ticket_dates} AS uc_product_ticket_dates
+                INNER JOIN {content_field_qty_class_ticket} AS content_field_qty_class_ticket ON content_field_qty_class_ticket.nid = uc_product_ticket_dates.nid_product AND content_field_qty_class_ticket.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_field_class_sold} AS content_field_class_sold ON content_field_class_sold.nid = uc_product_ticket_dates.nid_product AND content_field_class_sold.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_field_class_unvaliable_online} AS content_field_class_unvaliable_online ON  content_field_class_unvaliable_online.nid = uc_product_ticket_dates.nid_product  AND content_field_class_unvaliable_online.delta = uc_product_ticket_dates.delta
+                INNER JOIN {content_type_product} AS content_type_product ON content_type_product.nid = uc_product_ticket_dates.nid_product
+                INNER JOIN {uc_products} AS uc_products ON uc_products.nid = uc_product_ticket_dates.nid_product
+                WHERE uc_product_ticket_dates.nid_product = %d
+                AND uc_product_ticket_dates.oid = %d";
+
+     //$result = db_query($query, $nid, $oid);
+     $unvaliable_info = array('is_unvaliable' => 0, 'mes_unvaliable' => 'no data' );
+    //-------------------------------------------------------------------------
+    }elseif(in_array('1',$tid[$nid])){
+      // Product
+      if (!empty($nid) && !empty($oid)){
+        $query = "SELECT node.nid,
+                  content_field_product_unvaliable_online.delta,
+                  uc_product_stock_custom.oid_attribute,
+                  content_field_product_unvaliable_online.field_product_unvaliable_online_value,
+                  content_type_product.field_product_unvaliable_message_value
+                  FROM {node} AS node
+                  LEFT JOIN {content_type_product} AS content_type_product ON content_type_product.nid = node.nid
+                  LEFT JOIN {uc_product_stock_custom} AS uc_product_stock_custom ON uc_product_stock_custom.nid_product = node.nid
+                  LEFT JOIN {content_field_product_unvaliable_online} AS content_field_product_unvaliable_online ON content_field_product_unvaliable_online.nid = node.nid AND content_field_product_unvaliable_online.delta = uc_product_stock_custom.delta
+                  WHERE node.nid = %d
+                  AND uc_product_stock_custom.oid_attribute = %d";
+        $result = db_query($query, $nid, $oid);
+        $not_avaliable = db_fetch_array($result);
+        $unvaliable_info = array('is_unvaliable' => $not_avaliable['field_product_unvaliable_online_value'], 'mes_unvaliable' => $not_avaliable['field_product_unvaliable_message_value'] );
+      }
+    }
+  }
+ return $unvaliable_info;
+}
+/**
+ *  Custom validate Class and Product. Is there left any ticket more ?
+ */
+function oct_custom_validate_class_and_prouct_avaliable_to_sell($items){
+  $items_qty= array();
+  // unserialize data
+  if( !empty($items) && is_array($items)){
+    foreach ($items as $k => $item) {
+
+      if(!is_array($item)){
+        $item = objectToArray($item);
+      }
+      // Validate unless the item was being removed
+      if (!$item['remove']) {
+        if(!empty($item['data'])){
+          if (!is_array($item['data'])){
+            $data = unserialize($item['data']);
+          }else{
+            $data = $item['data'];
+          }
+        }
+        // get item_qty info here by 'product' or 'class'
+        $tids = _get_taxonomy_from_nid($item['nid']);
+        $nid = $item['nid'];
+        if (in_array( 1 , $tids)){
+          // "Product"
+          //product_date oid
+          $oid = $data['attributes'][AID_DATE_TIME];
+          $stockinfo = oct_custom_get_qty_info_about_store($nid, $oid);
+          $product_ticket_oid = array (OID_ADULT,
+                                      OID_CHILDREN,
+                                      OID_COMPLIMENTARY_ADULT,
+                                      OID_GROUP_ADULT,
+                                      OID_GROUP_CHILDREN,
+                                      OID_STUDENT,);
+          $ticket_qty = 0;
+          foreach($data['attributes'][AID_TICKETS] as $key => $val){
+            if (in_array($key, $product_ticket_oid)){
+              $ticket_qty += $val;
+            }
+          }
+          $qty = $ticket_qty * $item['qty'];
+        }else{
+          // "Class" "Camp"
+          $oid = $data['attributes'][AID_CLASS_DATE];
+          $stockinfo = oct_custom_get_qty_info_about_store($item['nid'], $oid);
+          $qty = $item['qty'];
+        }
+        if ($stockinfo) {
+          $items_qty[$item['nid']][$oid]['arttr'] = $data['attributes'];
+          $items_qty[$item['nid']][$oid]['qty_left_in_stock'] = $stockinfo['stock'];
+          $items_qty[$item['nid']][$oid]['qty_want_buy'] += $qty;
+          $items_qty[$item['nid']][$oid]['item_num'] = $k;
+        }
+      }
+    }
+    foreach ($items_qty as $nid => $value){
+      foreach ($value as $oid => $val){
+        if ($val['qty_left_in_stock'] - $val['qty_want_buy'] < 0) {
+          $error = _uc_out_of_stock_get_error('not_enough', $nid, $val['attributes'], $val['qty_left_in_stock'], $val['qty_want_buy']);
+          form_set_error("items][".$val['item_num']."][qty", $error);
+        }
+      }
+    }
+  }
+}
+
+function objectToArray($object){
+  $array=array();
+    foreach($object as $member=>$data){
+      $array[$member]=$data;
+    }
+  return $array;
+}
+
+function _oct_custom_move_array_value_to_str( $from, &$where){
+  if (!empty($from) && is_array($from) ){
+    $length = count($from);
+    $i = 1;
+    $where = '';
+    foreach ($from as $key => $val){
+      if (($i != 1) && ($i <= ($length-1)) && !(empty($val)) ){
+        $where .=', ';
+      }
+      $where .= $val;
+      $i++;
+    }
+  }
+}
+/*
+ * returm coins array for registretion form 1
+ */
+function get_coins_price_list(){
+  $options['coins_price_list'] = array(
+      '0' => '0',
+      '25' => '1',
+      '50' => '2',
+      '75' => '3',
+      '100' => '4',
+      '125' => '5',
+      '150' => '6',
+      '175' => '7',
+      '200' => '8',
+      '225' => '9',
+      '200.00' => '10'
+  );
+  return $options;
+}
+
+
+/**
+ * Custom function for checking response from PayPal
+ * @param object $pay_activity
+ */
+function oct_custom_check_gateway_response($pay_activity) {
+  if (!empty($pay_activity->data['action']) && $pay_activity->data['action'] == 'complete') {
+
+    $data = oct_custom_get_order_info($pay_activity->pxid);
+    if (!empty($data['pxid'])) {
+
+      $admin_email = variable_get('site_mail', 'admin@mysite.com');
+
+      $params = array(
+        'subject' => t('Fairy Tale Ball Registration'),
+        'body' => theme('fairy_tale_ball_register_email', $data),
+      );
+      $receivers = variable_get('receiver_fairy_tale_ball_registration_email', '');
+      if (!empty($data['email'])) {
+        $receivers .= ', ' . $data['email'];
+      }
+      if (!empty($receivers) && !variable_get('uc_paypal_wps_debug_ipn', FALSE)) {
+          $result = drupal_mail("oct_custom", "samplemail_html_mail", $receivers, language_default(), $params, $admin_email);
+      }
+    }
+  }
+}
+
+/**
+ * Custom function for getting information about order from db
+ * @param int $pxid
+ *   order id
+ */
+function oct_custom_get_order_info($pxid) {
+
+  $query = 'SELECT *
+  FROM  `register_online_data`
+  WHERE pxid=%d';
+
+  $result = db_query($query, $pxid);
+  $output = db_fetch_array($result);
+  $query2 = 'SELECT *
+  FROM  `register_online_checkboxes`
+  WHERE pxid=%d';
+  $result2 = db_query($query2, $pxid);
+
+  while($row = db_fetch_array($result2)){
+    $output['checkboxes'][] = array('checkbox_amount' => $row['checkbox_amount'],
+      'checkbox_name' => $row['checkbox_name']);
+  }
+  $query3 = 'SELECT *
+  FROM  `register_online_adults_on_party`
+  WHERE pxid=%d';
+  $result3 = db_query($query3, $pxid);
+
+  while($row = db_fetch_array($result3)){
+    $output['adults_on_party'][] = $row['adults_in_party'];
+  }
+
+  $query4 = 'SELECT *
+  FROM  `register_online_childrens_on_party`
+  WHERE pxid=%d';
+  $result4 = db_query($query4, $pxid);
+  while($row = db_fetch_array($result4)){
+    $output['children_in_party'][] = $row['children_in_party'];
+  }
+  return $output;
+}
+
+/*
+ * Implementation of hook_mail()
+ */
+function oct_custom_mail($key, &$message, $params) {
+  /*
+    * This function is used to hook into drupal_mail function to send the mail
+    * Everytime drupal_mail is used, this function is called to setup the mail to be sent
+    */
+  $language = $message['language'];
+  switch ($key)
+  {
+    /*
+      * Here we will be switching the key values, therefore different mails can be sent differently using different keys.
+      * As demonstrated above, we have different keys for the admin and other users to send normal mail to admins, and html mails to users
+      */
+    case 'samplemail_html_mail':
+      /*
+        * Emails with this key will be HTML emails,
+        * we therefore cannot use drupal default headers, but set our own headers
+        */
+      /*
+        * $vars required even if not used to get $language in there since t takes in: t($string, $args = array(), $langcode = NULL)
+        */
+      $message['subject'] = t($params['subject'], $var, $language->language);
+      /* the email body is here, inside the $message array */
+      $body = "<html><body>
+        {$params['body']}
+        </body></html>";
+      $message['body'][] = $body;
+      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+        break;
+  }
+}
+
+function render_mobile_menu($mobile_menu){
+  foreach ($mobile_menu as $key => $value) {
+    if (!empty($value['below']) && is_array($value['below'])) {
+      $mobile_menu[$key]['link']['link_path'] = 'mobile-page/'.$value['link']['mlid'];
+    }
+  }
+  return $mobile_menu;
+}
+
+function oct_custom_paypal_redirect_submission($form, &$form_state){
+  watchdog('uc_submittion', 'submit paypal redirect payment');
+}
+
+function oct_custom_paypal_redirect_validate($form, &$form_state){
+  watchdog('uc_submittion', 'validate');
+}
+
+/**
+ * Decrement qty of any product or class.
+ */
+function oct_auto_decrement_product_qty($taxonomy, $qty_decrement, $nid, $oid){
+  // TODO: remove custom debug
+  if(variable_get('uc_paypal_wps_debug_ipn', FALSE)){
+    watchdog('uc_paypal', 'Call sql decrement. Remove from node: @nid , tid: @taxonomy  qty: @qty_decrement, oid: @oid', array('@taxonomy' => $taxonomy, '@qty_decrement' => $qty_decrement, '@nid' => $nid, '@oid' => $oid));
+  }
+  switch($taxonomy){
+    case PRODUCTS_TAXONOMY_ID:
+      $query = "UPDATE content_field_qty_product_ticket AS content_field_qty_product_ticket
+      LEFT JOIN uc_product_stock_custom AS uc_product_stock_custom ON uc_product_stock_custom.nid_product = content_field_qty_product_ticket.nid AND uc_product_stock_custom.delta = content_field_qty_product_ticket.delta
+      SET content_field_qty_product_ticket.field_qty_product_ticket_value = content_field_qty_product_ticket.field_qty_product_ticket_value - %d
+      WHERE content_field_qty_product_ticket.nid = %d
+      AND uc_product_stock_custom.oid_attribute = %d;";
+      $result = db_query($query, $qty_decrement, $nid, $oid);
+      break;
+    case CLASSES_TAXONOMY_ID:
+    case CAMPS_TAXONOMY_ID:
+      $query = "UPDATE content_field_qty_class_ticket AS content_field_qty_class_ticket
+      LEFT JOIN uc_product_ticket_dates AS uc_product_ticket_dates ON content_field_qty_class_ticket.nid = uc_product_ticket_dates.nid_product AND content_field_qty_class_ticket.delta = uc_product_ticket_dates.delta
+      SET content_field_qty_class_ticket.field_qty_class_ticket_value = content_field_qty_class_ticket.field_qty_class_ticket_value - %d
+      WHERE content_field_qty_class_ticket.nid = %d
+      AND uc_product_ticket_dates.oid = %d;";
+      $result = db_query($query, $qty_decrement, $nid, $oid);
+      break;
+  }
+}
+
+
+
+/**
+ * Implementation of ctools hook_ctools_plugin_dierctory().
+ *
+ * Let the system know we implement widget plugins.
+ */
+function oct_custom_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'vud') {
+    return $plugin;
+  }
+}
+
+
+function oct_custom_mail_alter(&$message) {
+  switch ($message['id']) {
+    case 'user_register_pending_approval_admin':
+      $message['to'] = implode(', ', array(
+        $message['to'],
+        variable_get('user_register_approval_emails', ''),
+      ));
+      unset($message['from']);
+      break;
+  }
+}
+
+
+function oct_custom_webform_submission_insert($node, $component) {
+  if ($node->title == "Online Rgister Step 2") {
+    $_SESSION['register_online_step_2']['sid'] = $component->sid;
+  } 
+}
+
+
+
+function oct_custom_preprocess_webform_submission(&$vars) {
+
+  $sid = $vars['submission']->sid;
+
+  $query = 'SELECT *
+  FROM  `register_online_data`
+  WHERE sid=%d';
+
+  $result = db_query($query, $sid);
+  $output['register_online_data'] = db_fetch_array($result);
+  $pxid = $output['register_online_data']['pxid'];
+
+  $query = 'SELECT *
+  FROM  `register_online_adults_on_party`
+  WHERE pxid=%d';
+  $result = db_query($query, $pxid);
+
+  while($row = db_fetch_array($result)){
+    $output['register_online_adults_on_party'][] = $row;
+  }
+
+
+  $query = 'SELECT *
+  FROM  `register_online_checkboxes`
+  WHERE pxid=%d';
+  $result = db_query($query, $pxid);
+  while($row = db_fetch_array($result)){
+    $output['register_online_checkboxes'][] = $row;
+  }
+
+  $query = 'SELECT *
+  FROM  `register_online_childrens_on_party`
+  WHERE pxid=%d';
+  $result = db_query($query, $pxid);
+   while($row = db_fetch_array($result)){
+    $output['register_online_childrens_on_party'][] = $row;
+  }
+
+  $query = 'SELECT *
+  FROM  `pay_transaction`
+  WHERE pxid=%d';
+  $result = db_query($query, $pxid);
+   while($row = db_fetch_array($result)){
+    $output['pay_transaction'][] = $row;
+  }
+  
+  $query = 'SELECT *
+  FROM  `pay_activity`
+  WHERE pxid=%d';
+  $result = db_query($query, $pxid);
+   while($row = db_fetch_array($result)){
+    $output['pay_activity'][] = $row;
+  }
+
+  $vars['pay_info'] = $output;
+}
+
+
+/**
+ * Implementation of hook_ca_condition().
+ */
+function oct_custom_ca_condition() {
+  $conditions = array();
+
+  $conditions['oct_custom_product_has_tshirt'] = array(
+    '#title' => t('Order has a product with selected t-shirt attribute.'),
+    '#description' => t('Order has a product with selected t-shirt attribute.'),
+    '#category' => t('Custom'),
+    '#callback' => 'oct_custom_product_has_tshirt',
+    '#arguments' => array(
+      'order' => array('#entity' => 'uc_order', '#title' => t('Order')),
+    ),
+  );
+
+  return $conditions;
+}
+
+/**
+ * Return TRUE if a product has selected t-shirt.
+ *
+ */
+function oct_custom_product_has_tshirt($order, $settings) {
+
+  $result = FALSE;
+
+  foreach ($order->products as $product) {
+    if (!isset($product->data['attributes'])) {
+      continue;
+    }
+
+    $attributes = $product->data['attributes'];
+
+    // Once the order is made, the attribute data is changed to just the names.
+    // If we can't find it by ID, check the names.
+    if (is_int(key($attributes))) {
+      if (!empty($attributes[AID_T_SHORTS])) {
+        $result = TRUE;
+        break;
+      }
+    }
+    else {
+      // Load the attribute data once, only if we need it.
+
+          $attribute = uc_attribute_load(AID_T_SHORTS);
+
+      if ($attribute) {
+        if (isset($attributes[$attribute->name])) {
+          $result = TRUE;
+          break;
+        }
+      }
+    }
+  }
+
+  return $result;
+}
+
+/**
+ * Implements hook_uc_fee_calculate_fees_alter().
+ * Extend default fee calculation. Calculate t-shirt fee for each child.
+ */
+function oct_custom_uc_fee_calculate_fees_alter(&$order) {
+  static $t_shirts_attribute = NULL; //cache atribute in static variable, to prevent loading each time
+
+  if(!empty($order->fees[TSHIRTS_FEESID])) {
+    $count_children_with_tshirts = 0;
+    //group products by children
+    $children_products = oct_discounts_get_classes_by_children($order->products);
+    if(empty($t_shirts_attribute)) {
+      $t_shirts_attribute = uc_attribute_load(AID_T_SHORTS);
+    }
+
+    foreach ($children_products as $child) {
+      foreach ($child['products'] as $product) {
+        if(!empty($product->data['attributes'][AID_T_SHORTS]) || !empty($product->data['attributes'][$t_shirts_attribute->name])) {
+          $count_children_with_tshirts++;
+          break;
+        }
+      }
+    }
+
+    if(!empty($count_children_with_tshirts)) {
+      $order->fees[TSHIRTS_FEESID]->amount = $order->fees[TSHIRTS_FEESID]->amount * $count_children_with_tshirts;
+    } else {
+      unset($order->fees[TSHIRTS_FEESID]);
+    }
+  }
+
+}

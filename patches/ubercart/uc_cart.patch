@@ -1,0 +1,13 @@
+diff --git a/uc_cart.module b/uc_cart.module
+index 691aca8..76973c1 100644
+--- a/uc_cart.module
++++ b/uc_cart.module
+@@ -1107,7 +1107,7 @@ function uc_cart_view_table($table) {
+       'cell' => '',
+       'weight' => 2,
+     ),
+-    'qty' => array(
++    'qty_show' => array(
+       'cell' => t('Qty.'),
+       'weight' => 3,
+     ),

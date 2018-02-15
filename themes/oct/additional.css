@@ -1,0 +1,1717 @@
+body.body {
+  color: #3B5F94;
+  min-width: 1280px;
+  position: relative;
+}
+body.admin-menu {
+  margin-top: 0px !important;
+}
+.ui-datepicker-inline{
+  display: none;
+}
+
+.edit-field-product-date-datepicker{
+  width: 150px!important;
+}
+
+#nav ul li{
+  list-style-type:none;
+  list-style-image:none;
+}
+
+/** accordion for node edit **/
+#field_camps_at_values, #field_camps_ad_values{
+   width:45%;
+   float:left;
+}
+
+#field-camps-at-items .warning{
+  display: none;
+}
+
+#field-camps-at-items .content-add-more{
+  position: absolute;
+  left:-9999px;
+  top:-9999px;
+}
+
+#field_camps_at_values tr td, #field_camps_ad_values tr td{
+  height:150px;
+}
+
+#field_camps_at_values .content-multiple-drag a, #field_camps_ad_values .content-multiple-drag a{
+  display: none;
+}
+
+/* sponsors slider*/
+#slider{
+  margin-left: 25px;
+}
+#slider ul, #slider li{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+#slider, #slider li{
+	width:165px;
+	height:70px;
+	overflow:hidden;
+}
+
+.b-sponsors a {
+  padding-top: 0px!important;
+  text-decoration: none;
+  cursor: default;
+}
+.b-sponsors a:hover{
+  text-decoration: none;
+}
+
+
+.b-type-register div p{
+  margin: 0px;
+  padding: 0px;
+  display: inline;
+  color: #3B5F94;
+  font: 17px 'HumanaSansITC';
+}
+
+.b-register-links ul li{
+  float: left;
+  margin-left: 25px!important;
+}
+
+.productions .b-article p.product-theatre-descr{
+  color: #af3e41;
+  font-size: 18px;
+  font-family: HumanaSansITC;
+}
+.product-date-period{
+  margin-bottom: 0px!important;
+}
+#nav ul ul li a.active{
+  background-color: #92292f;
+}
+.b-fairy-tale-inner ul li strong, .b-fairy-tale-inner p strong {
+    color: #AB5B00;
+    font-size: 13px;
+}
+
+#admin-page ul.logout-button li a,
+#admin-page ul.discount-button li a,
+#page ul.logout-button li a,
+#page ul.discount-button li a{
+  color: #FBFFB2;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: -2px 2px #99570B;
+}
+.wysiwyg-toggle-wrapper{
+  display: none;
+}
+.node-fun_night_event .event-time,
+.node-fun_night_event .event-date{
+  font-size: 16px;
+  font-weight: bold;
+}
+.node-fun_night_event .imagecache-fun_night_full_event_preset{
+  display: block;
+  border: 2px solid #FCEA79;
+}
+.node-fun_night_event .border-img {
+  border: 8px solid #D7A625;
+  width: 404px;
+  margin: 10px auto;
+}
+#content-area p{
+  margin: 0px;
+  padding: 5px;
+}
+#content-area b-info p{
+  padding: 5px;
+}
+.touring .b-article .b-info h2,
+.productions .b-article .b-info h2 {
+  line-height: 28px;
+  margin-bottom: 0px;
+}
+#content-inner .site-map ul li {
+  padding-bottom: 5px;
+}
+#content-inner .site-map ul li.expanded {
+  list-style-type: circle;
+  list-style-image: none;
+}
+#content-inner .site-map li ul li {
+  padding-bottom: 0;
+  padding-top: 5px;
+}
+#content-inner .site-map ul a {
+  color: #3B5F94;
+  font: 14px Verdana,Arial,FreeSans,sans-serif;
+}
+.body-field-wrapper #edit-teaser-include-wrapper{
+  display: none;
+}
+
+/*
+#edit-taxonomy-4-wrapper,
+#edit-body-wrapper,
+#edit-field-quantity-of-seats-0-value-wrapper,
+.group-classes,
+.group-productions{
+  display: none;
+}
+*/
+
+#edit-field-fun-night-date-0-value-wrapper label,
+#edit-field-fun-night-date-0-value2-wrapper label,
+#edit-field-fun-night-date-0-value2-datepicker-popup-0-wrapper{
+  display: none;
+}
+.date-clear-block {
+    display: inline-block;
+}
+.body .b-register-classes {
+  background-size: 590px 100%;
+  height: auto;
+}
+.membership #content-area .membership-top h2{
+  font-family: 'AtlasRegular' !important;
+  font-size: 22px !important;
+  font-weight: normal !important;
+}
+
+#page-inner #edit-field-adult-price-0-value-wrapper,
+#page-inner #edit-field-adult-quantity-to-value-wrapper,
+#page-inner #edit-field-students-price-0-value-wrapper,
+#page-inner #edit-field-students-quantity-to-value-wrapper,
+#page-inner #edit-field-children-price-0-value-wrapper,
+#page-inner #edit-field-children-quantity-to-value-wrapper,
+#page-inner #edit-field-group-children-price-0-value-wrapper,
+#page-inner #edit-field-group-child-quantity-from-value-wrapper,
+#page-inner #edit-field-group-child-quantity-to-value-wrapper,
+#page-inner #edit-field-group-adult-price-0-value-wrapper,
+#page-inner #edit-field-group-adult-quantity-from-value-wrapper,
+#page-inner #edit-field-group-adult-quantity-to-value-wrapper{
+  float:left;
+  width: auto;
+  margin-right: 15px;
+}
+#page-inner #edit-field-adult-price-0-value-wrapper,
+#page-inner #edit-field-students-price-0-value-wrapper,
+#page-inner #edit-field-children-price-0-value-wrapper,
+#page-inner #edit-field-group-children-price-0-value-wrapper,
+#page-inner #edit-field-group-adult-price-0-value-wrapper{
+  width: 170px;
+}
+#page-inner #edit-field-adult-price-0-value-wrapper,
+#page-inner #edit-field-students-price-0-value-wrapper,
+#page-inner #edit-field-children-price-0-value-wrapper,
+#page-inner #edit-field-group-children-price-0-value-wrapper,
+#page-inner #edit-field-group-adult-price-0-value-wrapper{
+  clear: both;
+}
+#uc-cart-view-form .tableHeader-processed {
+    background-color: #E6BC3A;
+    height: 25px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+#uc-cart-view-form .tableHeader-processed th {
+    color: #CF760F;
+    font-size: 14px;
+    padding-left: 10px;
+    text-align: left;
+}
+#cart-form-products .sticky-table td {
+    font: 14px/23px 'HumanaSansITC';
+    height: 38px;
+    padding: 10px 0 0 10px;
+    position: relative;
+    text-align: left;
+}
+#cart-form-products td.subtotal {
+  text-align: right;
+}
+#cart-form-products table tr td.desc p{
+  padding: 0px;
+}
+#edit-update {
+  background: url("images/update_cart.png") no-repeat;
+  width:130px;
+  height:31px;
+  margin-right: 10px;
+  text-indent: -9999px;
+  border: none;
+}
+#edit-checkout {
+  background: url("images/checkout.png") no-repeat;
+  width:110px;
+  height:32px;
+  text-indent: -9999px;
+  border: none;
+}
+.sticky-table tbody {
+  background-color: #ffffff !important;/*eec951*/
+}
+
+#uc-product-add-to-cart-form input.node-add-to-cart{
+  background:url(images/tickets-submit.png) no-repeat 0 0 transparent;
+  border: none;
+  height: 31px;
+  width: 128px;
+  float: right;
+  text-indent: -9999px;
+  cursor: pointer;
+}
+#uc-product-add-to-cart-form{
+  padding-bottom: 40px;
+}
+
+/*
+body .b-article .b-img {
+    height: 155px;
+    width: 155px;
+}
+
+body .b-article .b-img img {
+  height: auto;
+  width: auto;
+}
+*/
+
+.b-subscribe-field .form-text {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #FBFFB2;
+    border-color: #C47500;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    font-size: 14px;
+    /*height: 17px;*/
+    letter-spacing: -1px;
+    margin-right: 6px;
+    padding: 3px;
+    vertical-align: middle;
+    width: 158px;
+}
+.b-subscribe-field .form-submit {
+    background: url("images/but-submit.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    cursor: pointer;
+    height: 30px;
+    vertical-align: middle;
+    width: 30px;
+    text-indent: -9999px;
+}
+.b-subscribe-field #webform-component-send-mail-oct-updater{
+  float: left;
+}
+#form-enrollment .bottom{
+  margin-top: 30px;
+}
+.add-to-cart-left-col {
+  float: left;
+  margin-right: 70px;
+}
+.form-uc-attribute-quantity-grid{
+  border-bottom: 2px solid #E6BC3A;
+  margin-bottom: 20px;
+}
+/* start custom */
+ul.primary li a,
+ul.primary li.active a {
+  background-color: #eb9823;
+  border: 2px solid #fabb3e;
+  color: #FCEA79;
+  font: 13px 'HumanaSansITC';
+}
+ul.primary li.active a {
+  background-color: #fcea79;
+  color: #a93b43;
+}
+ul.primary {
+  border: none;
+}
+ul.primary li a:hover {
+  background-color: #eec951;
+  border: 2px solid #fcea79;
+}
+ul.edit-sponsor-tab li a,
+ul.edit-sponsor-tab li a:hover{
+  background-color: #3B5F94;
+  border: 2px solid #608FCC;
+  border-radius: 6px 6px 6px 6px;
+  /*color: #2C3C67;*/
+}
+ul.edit-sponsor-tab li a:hover{
+  color: #ffffff;
+}
+ul.edit-sponsor-tab li a{
+  color: #2C3C67;
+}
+.contact-us .contact-left{
+  width: 250px;
+  float: left;
+}
+.contact-us .contact-right{
+  width: 315px;
+  float: left;
+}
+.messages ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.messages{
+  background-color: #DDDDFF;
+  border: 5px solid #608fcc;
+  color: #3b5f94;
+  font: 13px 'HumanaSansITC';
+  margin: 10px 0px 10px 15px;
+  padding: 5px 5px 5px 15px;
+}
+div.error{
+  border: 5px solid #DD7777;
+  color: #A93B43;
+  padding: 5px 5px 5px 15px;
+  display: none;
+}
+div.warning{
+  border: 5px solid #F0C020;
+  color: #CF760F;
+  padding: 5px 5px 5px 15px;
+  background-color: #FBFFB2;
+}
+.contact-us #content-area{
+  font: 16px 'HumanaSansITC';
+  color: #3b5f94;
+ }
+ .contact-us #content-area .contact-left p,
+ .contact-us #content-area .contact-right p{
+   padding: 0px;
+   margin: 0px
+ }
+.contact-us #content-area .contact-left {
+   font-size: 17px;
+}
+.contact-us #content-area .contact-body a,
+.contact-us #content-area .contact-right a{
+  color: #a93b43;
+  border-bottom: 1px dashed;
+}
+.contact-us #content-bot{
+   padding-bottom: 19px;
+}
+h2.season + .b-article{
+  background: none;
+}
+.satff-list-item,
+.board-of-director-list{
+  clear: both;
+}
+ul.add-staff-tab,
+ul.add-person-tab{
+  padding-left: 15px;
+}
+ul.edit-staff-tab,
+ul.edit-person-tab{
+  margin: 0px;
+  padding: 0px;
+}
+.first-artist{
+  background: none;
+  padding-top: 0px;
+}
+/* end custom */
+
+div.krumo-root{
+  text-align: left;
+}
+
+.logout-button{
+    position: absolute;
+    right: -140px;
+    top: 20px;
+    width: 120px;
+}
+.discount-button{
+    position: absolute;
+    right: -200px;
+    top: 50px;
+    width: 180px;
+}
+#header ul.logout-button li,
+#header ul.discount-button li{
+  display: block;
+  line-height: 30px;
+}
+
+/* admin discounts*/
+
+.uc-order-history a,
+#uc-discounts-search-form a,
+.content-admin a{
+    color: #A93B43;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+table.uc-discounts a{
+    font-size: 12px;
+    color: black;
+}
+
+#uc-discounts-form{
+    background-color: white;
+    color: black;
+    padding: 20px;
+}
+
+/* end admin discounts*/
+
+.content-admin{
+    width: 900px!important;
+}
+
+.content-admin table{
+    width: 100%;
+}
+#uc-cart-checkout-form fieldset{
+  border: 4px solid #D7A625;
+}
+#uc-cart-checkout-form legend,
+#uc-cart-checkout-form legend a{
+  color: #CF760F;
+  font-size: 14px;
+  font-weight: bold;
+}
+table.order-review-table tbody{
+  background-color: #fff;
+}
+table.order-review-table tr.review-button-row,
+table.order-review-table tr.pane-title-row,
+table.cart-review th{
+  color: #CF760F;
+  font-size: 14px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+table.order-review-table .row-border-top{
+  border-top: 2px solid #E6BC3A;
+}
+
+table.cart-review{
+  border: none;
+  border-bottom: 2px solid #E6BC3A;
+}
+table.order-review-table,
+table.order-review-table tr.review-button-row,
+table.order-review-table tr.pane-title-row{
+  border: 0px;
+}
+table.order-review-table tr.review-button-row,
+table.order-review-table tr.pane-title-row,
+table.cart-review .tableHeader-processed tr{
+  height: 25px;
+  background-color: #E6BC3A;
+}
+table.order-review-table #uc-cart-checkout-review-form div{
+  text-align: right;
+  margin: 5px;
+}
+table.order-review-table,
+table.cart-review tr{
+  background: none;
+}
+table.cart-review tr td {
+  font: bold 14px/23px 'HumanaSansITC';
+  height: 38px;
+  padding-left: 10px;
+  text-align: left;
+}
+#uc-cart-checkout-form #line-items-div{
+  border: none !important;
+}
+#uc-cart-checkout-form #payment_details,
+#uc-cart-checkout-form #checkout-form-bottom{
+  border: none;
+}
+table.order-review-table #edit-back{
+  height: 31px;
+  background: url(images/back.png) no-repeat 0 0 transparent;
+  width: 80px;
+  text-indent: -9999px;
+  border: none;
+}
+
+table.order-review-table #edit-submit{
+  height: 31px;
+  background: url(images/submit.png) no-repeat 0 0 transparent;
+  width: 140px;
+  text-indent: -9999px;
+  border: none;
+  cursor: pointer;
+}
+table.order-review-table  tr.review-button-row td{
+  background: #ffffff;
+}
+
+#uc-cart-checkout-form #edit-cancel{
+  height: 31px;
+  background: url(images/cansel.png) no-repeat 0 0 transparent;
+  width: 95px;
+  text-indent: -9999px;
+  border: none;
+}
+#uc-cart-checkout-form #edit-continue{
+  height: 31px;
+  background: url(images/review.png) no-repeat 0 0 transparent;
+  width: 95px;
+  text-indent: -9999px;
+  border: none;
+}
+
+.edit-sponsor-tab{
+   margin-left: -14px!important;
+   margin-top: -20px!important;
+   position: absolute;
+   width: 55px;
+}
+.node-form .container-inline-date #edit-field-class-early-birds-date-0-value-ampm-wrapper label,
+.node-form .container-inline-date #edit-field-class-early-birds-date-0-value2-ampm-wrapper label{
+  display: inline;
+}
+.node-form .container-inline-date #edit-field-class-early-birds-date-0-value-ampm-wrapper,
+.node-form .container-inline-date #edit-field-class-early-birds-date-0-value2-ampm-wrapper{
+  line-height: 52px;
+}
+#edit-field-class-early-birds-date-0-value2-wrapper .date-hour,
+#edit-field-class-early-birds-date-0-value2-wrapper .date-minute{
+  float: left;
+}
+.uc-discounts-cart-pane-container table{
+  border-bottom: 3px solid #E6BC3A;
+}
+.uc-discounts-cart-pane-container{
+  border: none;
+}
+.uc-discounts-cart-pane-table td,
+#cart-form-products td.subtotal{
+  padding-right: 10px;
+  font:  14px/23px 'HumanaSansITC';
+}
+
+/* calendar */
+.calendar .calendar-calendar div.date-nav{
+    background: none;
+    border: none;
+}
+
+.calendar #content-area .calendar-calendar .date-next a, .calendar #content-area .calendar-calendar .date-prev a{
+    font-size: 0px;
+}
+
+
+.calendar #content-area .calendar-calendar .date-next{
+  left: 473px;
+}
+
+.calendar #content-area .calendar-calendar .date-next a{
+    width: 110px;
+}
+
+.calendar #content-area .calendar-calendar .date-heading {
+    height: 60px;
+}
+
+.calendar #content-area .calendar-calendar .date-heading h3{
+    font: 20px/50px 'AtlasRegular';
+}
+
+.calendar .calendar-calendar th.days {
+    background-color: #D7A625;
+    color: #FCEA79;
+    font-size: 11px;
+    line-height: 20px;
+    text-transform: uppercase;
+    border: 0px;
+}
+
+.calendar .calendar-calendar td {
+    border: 1px solid #F7EE87;
+}
+
+.calendar .calendar-calendar td .inner div, .calendar-calendar td .inner div a{
+    background: none;
+}
+
+.calendar .calendar-calendar td div.day{
+    border: 0px;
+    float: none;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    text-align: left;
+
+}
+
+.calendar .calendar-calendar td .inner div.calendar div, .calendar-calendar td .inner div.calendar div a{
+    background: none;
+    color: #B45552;
+    font-size: 9px;
+}
+
+.calendar .calendar-calendar td .inner .view-item-calendar div.monthview{
+    margin-bottom: 10px;
+}
+
+.calendar .link1,
+.calendar .link2,
+.calendar .link3,
+.calendar .link4,
+.calendar .link5{
+  display: block!important;
+  padding-top: 15px!important;
+}
+
+.calendar .link1 {
+    background: url("images/calendar-link1.png") left top no-repeat !important;
+}
+.calendar .link2 {
+  background: url('images/calendar-link2.png') left top no-repeat !important;
+}
+.calendar .link3 {
+  background: url('images/calendar-link3.png') left top no-repeat !important;
+}
+.calendar .link4 {
+  background: url('images/calendar-link4.png') left top no-repeat !important;
+}
+.calendar .link5 {
+  background: url('images/calendar-link5.png') left top no-repeat !important;
+}
+body#tinymce{
+  background: #fff;
+}
+.oct-cart-block a {
+  color: #A93B43;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: 'HumanaSansITC';
+}
+.oct-cart-block a:hover{
+  text-decoration: underline;
+}
+.oct-cart-block{
+  border: 3px solid #F5AF35;
+  padding: 20px;
+  background-color: #EB9823;
+  margin: 3px 0px 0px 0px;
+  padding: 10px;
+  width: 202px;
+}
+a.back-button{
+  border: 2px solid #FABB3E;
+  background-color: #CF760F;
+  padding: 2px 13px 2px 13px;
+  color: #FBFFB2;
+  /*display: inline-block;*/
+  font-family: 'AtlasRegular';
+  font-size: 14px;
+}
+.product-message{
+  clear: both;
+  padding: 15px;
+}
+#group_product_session_time_values fieldset{
+  clear: both;
+}
+.view-id-products .view-content tbody tr.unpublished {
+  background-color: #ddd;
+}
+#views-exposed-form-products-page-1 #edit-submit-products {
+  position: relative;
+  top: -7px;
+}
+/*#group_product_session_time_values td .field-class-date-list{
+  clear: both;
+}*/
+.ui-icon-circle-triangle-e{
+  font-size: 0px;
+}
+/*.b-article{*/
+  /*min-height: 260px;*/
+/*}*/
+.b-article .b-img {
+  height: 155px;
+  width: 155px;
+}
+.b-article .b-img img {
+  width: auto;
+  height: auto;
+
+}
+#form-enrollment .select-outline div.select-text span {
+  /*width: 250px !important;*/
+}
+.clear-both{
+  clear: both;
+}
+.float-left{
+  float: left;
+}
+.dotted{
+  height: 5px;
+  background: url('./images/dots.gif') 0 0 repeat-x transparent;
+  display: block;
+  margin: 10px 0px;
+}
+#content-area .camp-decsription,
+#content-area .view-id-summer_camps_products,
+#content-area .view-camps-page-view{
+  color: #3B5F94;
+}
+#content-area .view-id-summer_camps_products p,
+#content-area .view-camps-page-view  p{
+  padding: 0px;
+}
+#content-area .view-id-summer_camps_products .b-buts-panel,
+#content-area .view-camps-page-view .b-buts-panel{
+  float: right;
+}
+#content-area .view-id-summer_camps_products .b-article,
+#content-area .view-camps-page-view .b-article{
+  min-height: auto;
+}
+#content-area .view-id-summer_camps_products .b-buts-panel,
+#content-area .view-camps-page-view .b-buts-panel {
+  float: right;
+  margin: 15px 0px 10px 10px;
+}
+#content-area .view-id-summer_camps_products a.enroll,
+#content-area .view-camps-page-view a.enroll {
+  background: url("images/but-enroll.png") no-repeat scroll 0 0 transparent;
+  width: 131px;
+  height: 44px;
+  display: block;
+}
+#content-area .view-summer-camp-description .b-info h2,
+#content-area .view-summer-camp-list .b-info h2{
+  margin-left: 10px;
+}
+
+#content-area .view-summer-camp-description .views-row {
+  padding: 10px 0 10px 0;
+}
+
+#content-area .view-summer-camp-description .views-row h2 {
+  margin-left: 5px;
+}
+
+#content-area .view-id-summer_camps_products .b-info h2 a{
+  font: bold 20px/25px Georgia,serif;
+  color: #CF6E00;
+}
+#content-area .view-summer-camp-description .b-info h2,
+#content-area .view-summer-camp-list .b-info h2,
+#content-area .view-camps-page-view .b-info h2 a {
+  font: bold 24px/25px Georgia,serif;
+  color: #CF6E00;
+}
+#content-area .camp-decsription a {
+    border-bottom: 1px dashed #B2366A;
+    color: #B2366A;
+    text-decoration: none;
+    white-space: nowrap;
+}
+#content-area .top-text{
+  text-align: center;
+}
+#content-area .camp-body{
+  padding: 10px 0;
+}
+#content-area .camp-body p{
+  padding: 10px 0;
+}
+#content-area .view-camps-page-view .b-info{
+  margin: 10px 0px;
+}
+#oct_custom-pane .form-item label {
+  float: left;
+  width: 130px;
+}
+#oct_custom-pane .form-item label.error {
+  float: none;
+  width: 400px;
+  margin-left: 130px;
+}
+#oct_custom-pane .form-item{
+  clear: both;
+}
+#user-info-page-content,
+#online-register-page-content{
+  overflow: auto;
+  width: 1160px;
+}
+.online-register-table tbody,
+.user-info-table tbody{
+ background-color: #FFFFFF;
+ font-size: 12px;
+}
+.table-pager{
+  list-style-type: none;
+}
+.table-pager a{
+  font-size: 10px;
+  font-weight: normal;
+}
+.excel-link{
+background: url(images/icoExcel.png) no-repeat 0 0 transparent;
+padding-left: 20px;
+}
+
+.paypal-donate-form{
+  display: none;
+}
+.user-info-wrapper{
+  background: none no-repeat scroll 17px 9px #CF760F;
+  margin-left: 20px;
+  padding-right: 15px;
+  width: auto !important;
+  padding-left: 0 !important;
+}
+#user-login .description{
+  color: #AB879F;
+}
+.order-pane {
+  background-color: #EEC951;
+  border: 4px solid #FCEA79;
+}
+.uc-order-history{
+  width: 500px
+}
+#views-exposed-form-summer-camps-products-default .views-exposed-widgets .sub-select,
+.enrollment #content .sub-select {
+  position: absolute;
+  top: 26px;
+  left: -2px;
+  border: 2px solid #C47500;
+  border-bottom: 1px solid #C47500;
+  width: auto;
+  max-height: none;
+  min-width: 284px;
+}
+.enrollment #content .form-field-date .sub-select {
+  max-height: 384px;
+  min-width: none;
+  min-width: 79px;
+}
+
+#admin-page #header,
+#admin-page #footer{
+  margin: 0 auto;
+}
+#admin-page #nav {
+  background: none;
+  height: 0px;
+  margin: 0px auto;
+  /*z-index: 30;*/
+}
+#admin-page #footer{
+  background: url("images/bg-footer_big.png") no-repeat scroll 0px 0px transparent;
+  margin: 0 auto;
+}
+#admin-page #main{
+  background: none;
+  width: 1200px;
+  margin: -14px auto -17px;
+}
+#admin-page #main-head{
+  background: url("images/bg-top_big.png") no-repeat scroll 1px 0px transparent;
+  height: 24px;
+}
+#admin-page #main-footer{
+  background: url("images/bg-center-footer.png") no-repeat scroll 1px 0 transparent;
+  height: 34px;
+}
+#admin-page #main #main-inner{
+  background: url("images/bg-main_big.png") repeat-y scroll 0 0 transparent;
+}
+#admin-page  .footer-left{
+  position: absolute;
+  z-index: 70;
+}
+#admin-page {
+    text-align: left;
+}
+.session-time-title{
+  display: block;
+  width: 150px;
+}
+.online-register-table td,
+.user-info-table td{
+  border-left: 2px solid #E6BC3A;
+}
+#admin-page #content{
+  clear: both;
+}
+
+#cart-form-products tr.even{
+  background-color: #eee;
+}
+tr.even{
+  background-color: #ddd;
+}
+
+
+/* start node edit form */
+.node-form .admin .options fieldset{
+  border: none;
+  padding: 0px;
+}
+.node-form .admin .options legend{
+  display: none;
+}
+/* end node edit form */
+
+/* start homepage node */
+.node-home_page .b-purchase-ticket{
+  margin-bottom: 30px;
+}
+/* end homepage node */
+
+/* start homepage product list */
+.home-page .b-article .b-info {
+    margin-left: 201px;
+}
+/* end homepage product list */
+
+/* start product edit form */
+
+#group_product_date_values fieldset .container-inline-date:last-child .form-item{
+  display: none;
+}
+#group_product_date_values fieldset .container-inline-date:last-child .form-item:last-child{
+  display: block;
+}
+#group_product_date_values fieldset .container-inline-date:last-child > .form-item{
+  margin-top: 14px;
+}
+#group_product_date_values fieldset .container-inline-date:last-child label{
+  display: none;
+}
+#group_product_date_values fieldset{
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+#group_product_date_values td > fieldset,
+#group_product_date_values td > .form-item{
+  /*float: left;*/
+}
+#group_product_date_values td > .form-item{
+  /*margin-left: 30px;*/
+}
+#group_product_date_values td > fieldset legend{
+  display: none;
+}
+.content-multiple-table .form-item label {
+  font-size: 12px;
+}
+/* end product edit form */
+/* start store order list page */
+.content-admin .item-list ul.pager li{
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #777777;
+  margin-right: 3px;
+  padding: 0 6px;
+  text-decoration: none;
+}
+.content-admin .item-list ul.pager li a{
+  color: #A93B43;
+  font-size: 12px;
+  padding: 0;
+}
+/* end order list page */
+/* start view order page */
+.order-pane-table tr td p{
+  margin: 0px;
+}
+/* end view order page */
+/* start view checkout page */
+#content .order-review-table .product-description p,
+#content .cart-review td.products .product-description p{
+  padding: 0px;
+}
+/* end view checkout page */
+/* start fun night header */
+#content .node-fun_night_event h1 {
+  background: url("/sites/all/themes/oct/images/bg-h1_big.png") no-repeat scroll 0 0 transparent;
+  height: auto;
+  padding: 0 25px;
+  width: 340px;
+}
+/* end fun night header */
+/* start camp bottom yellow block */
+.b-register-camps{
+  background: url("./images/bg-register-classes.png") no-repeat scroll 0 0 transparent;
+  margin: 10px 0 15px -14px;
+  padding: 10px 20px 0 32px;
+  text-align: center;
+  width: 543px;
+  background-size: 590px 100%;
+  height: auto;
+}
+.b-register-camps h2{
+    color: #D7A625;
+    font: 22px 'AtlasRegular';
+    margin: 0 0 10px;
+    text-align: center;
+}
+.b-register-camps p {
+    color: #3B5F94;
+    font: 14px 'HumanaSansITC';
+}
+/* end camp bottom yellow block */
+
+/* main  menu */
+#nav ul ul li a {
+   padding: 6px 0px;
+   width: 100%;
+}
+#nav ul ul li a b{
+  padding: 0px 15px;
+}
+/* end main  menu */
+
+/* auction tabs , gen-info tabs */
+ul.edit-gen-info-item,
+ul.add-order-gen-info-tab,
+ul.add-order-auction-tab{
+  margin-left: 0px;
+  padding: 0px;
+}
+/* end auction tabs*/
+/* auction items */
+.view-auction-items p{
+    color: #3B5F94;
+    font: 14px 'HumanaSansITC';
+}
+/* end auction items */
+/* stretch titles */
+h2.stretch-title {
+  height: 59px;
+  margin: 0px auto 10px auto;
+  text-align: center;
+}
+h2.stretch-title span.stretch-title-bg{
+  background: url('./images/bg-stretchy-titles-center.png') repeat-x;
+  display: inline-block;
+  height: 59px;
+  position: relative;
+
+  color: #FBFFB2;
+  font: 22px/55px 'AtlasRegular';
+  text-shadow: -2px 2px 0 #A65E0C;
+}
+h2.stretch-title span.stretch-title-bg span.left{
+  display:block;
+  background: url('./images/bg-stretchy-titles.png') no-repeat 0px 0px;
+  height: 59px;
+  width: 20px;
+  position: absolute;
+  left: -20px;
+  top: 0;
+}
+h2.stretch-title span.stretch-title-bg span.right{
+  display:block;
+  background: url('./images/bg-stretchy-titles.png') no-repeat -19px 0px;
+  height: 59px;
+   width: 26px;
+  position: absolute;
+  right: -26px;
+  top: 0;
+}
+/* end stretch titles */
+
+/* general info page */
+h2.gen-info-title{
+  text-align: center;
+}
+h2.gen-info-title span{
+  font: 20px 'AtlasRegular';
+  color: #c89716;
+  text-transform: uppercase;
+}
+.general-info-subtitle{
+  background: url('./images/bg-big-title.png') no-repeat 0 0 transparent;
+  height: 139px;
+  width: 590px;
+  padding: 10px 15px 15px 10px;
+  color: #FBFFB2 !important;
+  font: 22px/55px 'AtlasRegular';
+  text-shadow: -2px 2px 0 #A65E0C;
+  line-height: 17px;
+  text-align: center
+}
+.general-info-subtitle p span{
+  text-align: center;
+  color: #FBFFB2 !important;
+  font-size: 22px !important;
+}
+.gen-info-image {
+  border: 8px solid #D7A625;
+  float: left;
+  margin-right: 20px;
+}
+.gen-info-image img{
+  border: 2px solid #FCEA79;
+}
+.gen-info-text{
+  color: #3B5F94;
+  font: 14px 'HumanaSansITC';
+}
+.gen-info-text span {
+  font-size: 18px !important;
+}
+/* end general info page */
+/* online register step 1 page */
+h2.online-reg-title span{
+  font: 16px 'AtlasRegular';
+  color: #ce770e;
+  text-align: center;
+}
+.online-register-bottom_desc{
+  font: 16px 'HumanaSansITC';
+  font-style: italic;
+  text-align: center;
+}
+/* end online register step 1 page */
+/* register online step 1 selects */
+#content div.sub-select,
+#content div.sub-select .sub-option,
+#content div.select-text span {
+  color: #D47E14;
+  font: 14px/28px 'HumanaSansITC';
+}
+#content div.select-text span{
+  padding-left: 10px
+}
+#content .camps-page-exposed-form .enrollment-select div.select-text span {
+    width: 230px !important;
+}
+#content #form-enrollment div.select-text span{
+  padding-left: 0px;
+  width: 240px !important;
+}
+#content #online-registration-form-step-1 .select-outline{
+  background: url("images/tickets-select-small-bg.png") no-repeat scroll left top transparent;
+  height: 28px;
+  width: 80px;
+}
+#uc-product-add-to-cart-form #edit-attributes-2-wrapper .stext-inner{
+  width: 200px;
+}
+/*
+#content #form-enrollment .form-field .select-outline .stext-inner{
+  width: 250px !important;
+}*/
+
+#product-form .select-outline div.select-text {
+  width: 200px;
+}
+#form-enrollment .select-outline div.select-text {
+  width: 240px;
+}
+
+#form-enrollment .form-field-date .select-outline div.select-text {
+  width: 32px;
+}
+
+#content .sub-select {
+  width: 74px;
+  background-color: #FBFFB2;
+  border-bottom: 3px solid #C47500;
+  border-left: 3px solid #C47500;
+  border-right: 3px solid #C47500;
+  left: 0;
+  position: relative;
+  top: -3px;
+  max-height: 232px;
+}
+#content #online-registration-form-step-1 .form-item input.form-text {
+    background-color: #FBFFB2;
+    border-color: #C47500;
+    border-style: solid solid none none;
+    border-width: 2px 2px 0 0;
+    color: #D47E14;
+    display: block;
+    font: 14px/20px 'HumanaSansITC';
+    height: 24px;
+    padding: 0 5px;
+    width: 60px;
+    text-align: right;
+}
+
+#content #online-registration-form-step-1 div.form-item .select-outline div.select-text{
+  width: 30px;
+}
+#online-registration-form-step-1 .form-item label,
+#online-registration-form-step-1 div.form-text{
+  font: 16px/28px 'HumanaSansITC';
+}
+#online-registration-form-step-1 div.form-help-text{
+  text-transform: uppercase;
+  font:16px 'HumanaSansITC';
+  font-weight: bold;
+  margin-left: 90px;
+  margin-bottom: 10px;
+}
+#online-registration-form-step-1 div.label-description{
+  color: #CE770E;
+  font:16px 'HumanaSansITC';
+  font-style: italic;
+  margin-left: 90px;
+  margin-bottom: 10px;
+}
+#edit-online-registration-total-attendee-cost-wrapper label{
+  text-transform: uppercase;
+}
+/* end radiobutton oct theme */
+input.styled.special-themed-checkbox {
+  display: none !important;
+}
+
+#online-registration-form-step-1 div.register-form-row.total-form-right div.form-item{
+  width: auto;
+}
+#online-registration-form-step-1 div.register-form-row.total-form-right  div.form-item .form-text{
+  /*float: left;*/
+}
+#online-registration-form-step-1 div.register-form-row.total-form-right div.form-item label{
+  float: left;
+}
+
+#online-registration-form-step-1 div.register-form-row div.form-item{
+  width: 265px;
+  float: left;
+}
+#online-registration-form-step-1 div.form-item input.form-text,
+#online-registration-form-step-1 div.form-item span.form-select{
+  float: left;
+  margin-right: 10px;
+}
+#online-registration-form-step-1 div.form-symbols{
+  float: left;
+  height: 28px;
+  line-height: 28px;
+  width: 25px;
+  margin-right: 10px;
+  text-align: right;
+  font: 16px/28px 'HumanaSansITC';
+}
+#online-registration-form-step-1 div.form-text{
+  font: 14px 'HumanaSansITC';
+}
+#online-registration-form-step-1 div.form-text ul.description-list{
+  list-style-image: url("./images/list_dot.png");
+}
+#online-registration-form-step-1 div.form-text ul.description-list li{
+  line-height: 20px;
+}
+#online-registration-form-step-1 div.form-subtitle-text{
+  font: 14px 'HumanaSansITC';
+  font-style: italic;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#online-registration-form-step-1 div.register-form-row{
+  margin-bottom: 10px;
+}
+#online-registration-form-step-1 div.total-form-right{
+  /*margin-left: 265px;*/
+}
+#online-registration-form-step-1 div.register-form-row.total-form-right .form-symbols{
+  margin-left: 265px;
+}
+#online-registration-form-step-1  #edit-online-registration-form-submit{
+  background: url("images/next-button.png") no-repeat scroll 0 0 transparent;
+  border: medium none;
+  cursor: pointer;
+  height: 31px;
+  text-indent: -9999px;
+  font-size: 0px;
+  display: block;
+  width: 91px;
+  float: right;
+  padding: 0;
+}
+#content #online-registration-form-step-1 #edit-online-registration-donate-amount-wrapper .description .form-text-inline{
+  font: 16px/28px 'HumanaSansITC';
+  display: block;
+}
+#content #online-registration-form-step-1 #edit-online-registration-donate-wrapper{
+  float: left;
+}
+#content #online-registration-form-step-1 #edit-online-registration-donate-amount-wrapper label{
+  float: left;
+  margin: 0 10px;
+}
+#content #online-registration-form-step-1 #edit-online-registration-donate-amount-wrapper .description .form-text{
+  margin-left: 12px;
+  margin-top: 15px;
+}
+/* end register step 1 online  selects */
+/* register step 2 online  selects */
+#webform-client-form-182 .form-item input.form-text{
+  background: none repeat scroll 0 0 #FBFFB2;
+  border-color: #C47500;
+  border-style: solid;
+  border-width: 2px 2px 0 0;
+  font-size: 14px;
+  /*height: 17px;*/
+  letter-spacing: -1px;
+  margin-right: 6px;
+  padding: 3px;
+  width: 229px;
+
+  color: #D47E14;
+  font: 14px/20px 'HumanaSansITC';
+  height: 24px;
+  padding: 0 5px;
+}
+.select-outline,
+#content #webform-client-form-182 .select-outline{
+  background: url("images/tickets-select-bg.png") no-repeat scroll left top transparent;
+  height: 28px;
+  width: 241px;
+}
+#content #webform-client-form-182 div.form-item .select-outline div.select-text{
+  width: 192px;
+  color: #D47E14;
+  display: block;
+}
+#content #webform-client-form-182  .sub-select {
+  width: 235px;
+}
+#content #webform-client-form-182 .form-item label{
+    float: left;
+    line-height: 26px;
+    width: 200px;
+}
+#content #webform-client-form-182 .form-item{
+  margin-bottom: 10px;
+  clear: both;
+}
+#content #webform-client-form-182 .first-last-names-of-children label,
+#content #webform-client-form-182 .first-last-names-of-adult label{
+  float: none;
+  width: 100%;
+}
+#content #webform-client-form-182 .first-last-names-of-children input.form-text,
+#content #webform-client-form-182 .first-last-names-of-adult input.form-text{
+  margin: 0px 0px 10px 200px;
+}
+
+#content #webform-client-form-182 #edit-actions{
+  height: 35px;
+}
+#content #webform-client-form-182 #edit-actions #edit-back{
+  background: url("images/back.png") no-repeat scroll 0 0 transparent;
+  border: medium none;
+  cursor: pointer;
+  height: 31px;
+  text-indent: -9999px;
+  font-size: 0px;
+  display: block;
+  width: 80px;
+  padding: 0;
+  float: left;
+}
+#content #webform-client-form-182 #edit-actions #edit-submit{
+  background: url("images/checkout.png") no-repeat scroll 0 0 transparent;
+  border: medium none;
+  cursor: pointer;
+  height: 32px;
+  text-indent: -9999px;
+  font-size: 0px;
+  display: block;
+  width: 110px;
+  padding: 0;
+  margin-left: 246px;
+  float: left;
+}
+#content #webform-client-form-182 #form-control{
+  float: right;
+}
+#content #webform-client-form-182 label.error{
+  font-weight: normal;
+  margin-left: 200px;
+  width: auto;
+}
+#webform-component-pay-info{
+  display: none;
+}
+/* end register step 2 online  selects */
+/* radiobutton oct theme */
+span.checkbox {
+	width: 22px;
+	height: 21px;
+	padding: 0 5px 0 0;
+  background: url(./images/oct_radio_buttons.png) no-repeat;
+	display: block;
+	clear: left;
+	float: left;
+}
+/* end radiobutton oct theme */
+/* dotted line */
+.dot-line{
+  background: url("images/dots.gif") repeat-x scroll 0 0 transparent;
+  margin: 10px 0px;
+  height: 5px;
+  clear: both;
+}
+.solid-line{
+  border-top: 1px solid #e7bc3a;
+  margin: 10px 0px;
+  clear: both;
+}
+/* end dotted line */
+
+#nav a.menu-tabs{
+  border: medium none;
+  color: #FFFFFF;
+  min-width: 0;
+  padding: 3px 6px;
+  position: absolute;
+  right: 0;
+  top: 7px;
+  width: auto;
+  z-index: 200;
+}
+#admin-page #nav-bcg{
+  background: url("/sites/all/themes/oct/images/bg-menu_big.png") no-repeat scroll 1px 0 transparent;
+  height: 56px;
+  width: 944px;
+  margin: 0 auto;
+}
+
+.enrollment #content .messages ul{
+  margin: 0px ;
+}
+.enrollment #content p.red.first {
+
+}
+.enrollment #content p.red.second {
+    padding-top: 20px;
+}
+.enrollment #content p.t-shirt-fee {
+    padding-top:0;
+    padding-left: 27px;
+}
+
+.enrollment #content .form-field textarea#enrollment_food_allergy {
+    border: 2px solid #c47500;
+    border-left: 0;
+    border-bottom: 0;
+
+    display: block;
+    font: normal 14px/20px 'HumanaSansITC';
+    background-color: #fbffb2;
+    color: #d47e14;
+    padding: 0 5px;
+}
+
+/* anya */
+#group_product_session_time_values td .field-class-date-list{
+  clear: none;
+}
+/*
+div.weekdays + div.field-class-date-list{
+	clear:both;
+}*/
+.custom-edit-node-button{
+  color: #6D8CBA !important;
+  font-size: 9px;
+  font-weight: bold;
+  /*position: absolute;
+  right: 10px;*/
+  float: right;
+}
+
+#footer-message{
+  width: 440px;
+}
+
+.sponsor-logos{
+  padding-top: 15px;
+}
+
+#edit-submit-summer-camps-products {
+  background: url("images/apply_button.png") no-repeat;
+  width:85px;
+  height:31px;
+  cursor: pointer;
+  margin-right: 10px;
+  text-indent: -9999px;
+  border: none;
+}
+
+.views-exposed-widgets .views-widget {
+  padding: 8px 0 10px 0px;
+}
+
+.views-exposed-form #edit-submit-summer-camps-products{
+  margin: 19px 0px 0px 10px;
+}
+
+#views-exposed-form-summer-camps-products-default div.select-text{
+  width: 237px;
+}
+#views-exposed-form-summer-camps-products-default .views-exposed-widgets .select-outline {
+    background: url("images/enrollment-select-bg.png") no-repeat scroll right top #F2B031;
+    border-bottom: 2px solid #C47500;
+    border-left: 2px solid #C47500;
+    height: 26px;
+    width: 286px;
+}
+
+.backtrage-message{
+  width:672px;
+}
+
+.header .title-header::before, .header .title-header::after {
+  z-index: -1;
+}
+
+em {
+  font-style: italic;
+}
+strong {
+  font-weight: bold;
+}
+
+.checkout_complete #content {
+    color: #FBFFB2;
+    font-size: 16px;
+    padding-left: 30px;
+    padding-top: 18px;
+}
+
+.checkout_complete #content p{
+    margin-bottom: 10px;
+}
+
+.checkout_complete #content p a{
+    color: #FBFFB2;
+    font-weight: bold;
+
+}
+.checkout_complete #content p a:hover{
+    text-decoration: underline;
+}
+
+.oct-ftb-pic {
+  background: url("images/7823897849723.jpg") no-repeat;
+  width: 613px;
+  height: 329px;
+  margin-left: -22px;
+  margin-top: -20px;
+  margin-bottom: 75px;
+}
+
+.pay-info .row {
+  height: 20px;
+}
+.pay-info .row .center {
+  text-align: center;
+}
+
+.pay-info .row  .pay-name {
+  width: 150px;
+}
+
+.pay-info .row  .pay-num {
+  text-align: right;
+  width: 50px;
+}
+
+.pay-info .row  .pay-amount {
+  text-align: right;
+  width: 75px;
+}
+
+.pay-info .row div{
+  float: left; 
+}
+
+#content .pay-info h1 {
+  margin: 15px;
+  font: normal 20px/48px 'AtlasRegular';
+}
+
+.pay-info-total {
+  margin-top: 20px;
+}
+body.mceContentBody {
+  background: none;
+}
+.b-article .b-buts-panel a.stugy_guide  {
+    background: url(images/study-guide.png) no-repeat 0 0;
+    width: 231px;
+    margin-top: 20px;
+}
+.b-article .b-buts-panel a.tickets {
+   float:left;
+}
+
+.buy-ticets-here a {
+  position: absolute;
+  display: block;
+  top: 340px;
+  left: 50%;
+  margin-left: -173px;
+  background: url("images/buy-1.png") no-repeat;
+  width: 346px;
+  height: 54px;
+  text-indent: -9999px;
+}
+
+.buy-ticets-here a:hover {
+  background: url("images/buy-2.png") no-repeat;
+}
+
+.oct-ftb-pic {
+  position: relative;
+}
+.b-article.views-row-first {
+    min-height: 0;
+}
+#content-area .camps-top-image {
+    margin-left: -22px;
+    margin-top: -20px;
+    padding-bottom: 15px;
+}
+
+#page.classes .b-article{
+    min-height: 0;
+}
+
+.home-page .b-article .b-info{
+    float: left;
+    width: auto;
+    margin-left: 30px;
+}
+
+
+.b-article .b-img{
+    width: auto;
+    max-width: 155px;
+}
+

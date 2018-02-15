@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+
+/** body **/
+body {
+
+}
+
+#page, #closure-blocks {
+
+}
+
+#page-inner {
+  
+}
+
+#navigation-top, #navigation {
+  position: absolute; /* Take the named anchors out of the doc flow    */
+  left: -10000px;     /* and prevent any anchor styles from appearing. */
+}
+
+#skip-to-nav {
+  float: right;
+  margin: 0 !important;
+  font-size: 0.8em;
+}
+
+#skip-to-nav a:link, #skip-to-nav a:visited {
+  color: #fff; /* Same as background color of page */
+}
+
+#skip-to-nav a:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+#header-blocks {
+  clear: both; /* Clear the logo */
+}
+
+#content-inner {
+  margin: 0;
+  padding: 0;
+}
+
+#navbar ul {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+#navbar li {
+  padding: 0;
+}
+
+/** sidebar-left **/
+#sidebar-left {
+  padding: 0; /* DO NOT CHANGE. Add padding or margin to #sidebar-left-inner. */
+}
+
+/** sidebar-right **/
+#sidebar-right {
+  padding: 0; /* DO NOT CHANGE. Add padding or margin to #sidebar-right-inner. */
+}
+
+#sidebar-right-inner {
+  margin: 0;
+  padding: 0;
+}
+
+/** Prevent overflowing content **/
+#header, #content, #navbar, #sidebar-left, #sidebar-right, #footer, #closure-blocks {
+  overflow: visible;
+  word-wrap: break-word;
+}

@@ -1,0 +1,54 @@
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #FFF url('../images/bg/bg-body.png') 0 0 repeat;
+}
+
+.button-go-page {
+  position: absolute;
+  right: 0;
+  top: 200px;
+  a {
+    display: block;
+    text-indent: -9999px;
+    width: 153px;
+    height: 186px;
+    background: sprite($icons, button-go-page) no-repeat;
+  }
+}
+.main {
+  @include clear-box;
+  margin: -72px auto 0;
+  width: 1000px;
+  &.form-register-outer {
+    margin-top: 0;
+  }
+}
+.main-content {
+  float: left;
+  ul {
+    &.manager-links {
+      background: none;
+    }
+  }
+  .item-messages-wrapp,
+  .item-name-wrapp {
+    .pager {
+      margin: 0;
+      padding: 20px 0;
+      li, a {
+        font-size: 18px;
+        font-family: 'HumanaSansITC';
+        color: #fab300;
+      }
+    }
+  }
+  .item-name-wrapp {
+    .item-list {
+      background: url("../images/bg/bg-item-bottom-last.png") 47px 100% no-repeat;
+    }
+  }
+}

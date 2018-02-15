@@ -1,0 +1,239 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function paypal_install() {
+  // Create my tables.
+  drupal_install_schema('paypal');
+}
+
+/**
+* Implementation of hook_uninstall().
+*/
+function paypal_uninstall() {
+  // Drop my tables.
+  drupal_uninstall_schema('paypal');
+}
+
+/**
+* Implementation of hook_enable().
+*/
+function paypal_enable() {
+
+}
+
+/**
+* Implementation of hook_disable().
+*/
+function paypal_disable() {
+
+}
+
+/**
+* Implementation of hook_schema().
+*/
+function paypal_schema() {
+  $schema['register_online_data'] = array(
+    'description' => t('Table for user info form online registration form.'),
+    'fields' => array(
+      'pxid' => array(
+        'description' => t('The primary identifier for payment.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'name_company_name' => array(
+        'description' => t('Name or Company name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,),
+      'contact_name' => array(
+        'description' => t('The Contact name'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => ''),
+      'phone' => array(
+        'description' => t('The phone number'),
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => ''),
+      'fax' => array(
+        'description' => t('The fax number'),
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => ''),
+      'email' => array(
+        'description' => t('The email'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,),
+      'adress' => array(
+        'description' => t('The address'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => ''),
+      'city' => array(
+        'description' => t('The city'),
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => ''),
+      'state' => array(
+        'description' => t('The state'),
+        'type' => 'varchar',
+        'length' => 8,
+        'default' => ''),
+      'zip' => array(
+        'description' => t('The state'),
+        'type' => 'varchar',
+        'length' => 32,
+        'default' => ''),
+      'name_sitter' => array(
+        'description' => t('The Sitter Name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => ''),
+      'seat_with' => array(
+        'description' => t('The name wish to be seated with'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => ''),
+
+      //------------------
+      'adult_qty' => array(
+        'description' => t('Adults qty'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'default' => 0,),
+      'total_adult_cost' => array(
+        'description' => t('Adults Cost'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+
+      'children_qty_children_dinner' => array(
+        'description' => t("Children qty Attending children's dinner"),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'default' => 0,),
+      'total_child_cost_children_dinner' => array(
+        'description' => t('Total child cost'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      //------------------
+      'children_qty_adult_dinner' => array(
+        'description' => t("Children qty Attending adult's dinner"),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'default' => 0,),
+      'total_child_cost_adult_dinner' => array(
+        'description' => t('Total child cost'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      //------------------
+      'sitters_qty_children_dinner' => array(
+        'description' => t("Sitters qty Attending children's dinner"),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'default' => 0,),
+      'total_sitters_cost_children_dinner' => array(
+        'description' => t('Total child cost'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      //------------------
+      'sitters_qty_adult_dinner' => array(
+        'description' => t("Sitters qty Attending adult's dinner"),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'default' => 0,),
+      'total_sitters_cost_adult_dinner' => array(
+        'description' => t('Total child cost'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      //------------------
+      'total_cost' => array(
+        'description' => t('Total'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      'handling_fee' => array(
+        'description' => t('Handling Fee '),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      'total_attendee_cost' => array(
+        'description' => t('Total Attendee cost '),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+
+      'donate_amount' => array(
+        'description' => t('Total donate'),
+        'type' => 'float',
+        'length' => 32,
+        'default' => 0),
+      ),
+    'indexes' => array(
+        'pxid' => array('pxid'),
+      ),
+    'primary key' => array('pxid'),
+  );
+
+  $schema['register_online_childrens_on_party'] = array(
+    'description' => t('First Last name age children in party'),
+    'fields' => array(
+      'pxid' => array(
+        'description' => t('The primary identifier for payment.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'children_in_party' => array(
+        'description' => t('Childrens first last names ages'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',),
+      
+    )
+  );
+  
+  $schema['register_online_adults_on_party'] = array(
+    'description' => t('First Last name age adult in party'),
+    'fields' => array(
+      'pxid' => array(
+        'description' => t('The primary identifier for payment.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'adults_in_party' => array(
+        'description' => t('Adults first last names ages'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',),
+    )
+  );
+
+  $schema['register_online_checkboxes'] = array(
+    'description' => t('Price checkbox'),
+    'fields' => array(
+      'pxid' => array(
+        'description' => t('The primary identifier for payment.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'checkbox_amount' => array(
+        'description' => t('Amount checkbox'),
+        'type' => 'float',
+        'default' => 0,),
+      'checkbox_name' => array(
+        'description' => t('Name checkbox'),
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',),
+    )
+  );
+
+  return $schema;
+}

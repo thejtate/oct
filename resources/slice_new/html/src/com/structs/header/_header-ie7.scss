@@ -1,0 +1,60 @@
+.header {
+  .title-header {
+    before: ' ';
+    after: ' ';
+    suffix: -item;
+    .before-item,
+    .after-item {
+      position: absolute;
+      display: block;
+      top: 23px;
+      height: 186px;
+    }
+    .before-item {
+      width: 297px;
+      left: 0;
+      background: sprite($icons, bg-decor-left) no-repeat;
+    }
+    .after-item {
+      width: 313px;
+      right: 0;
+      background: sprite($icons, bg-decor-right) no-repeat;
+    }
+  }
+  .decor-title  {
+    @include clear-box;
+    width: 100%;
+    zoom: 1;
+    before: ' ';
+    after: ' ';
+    suffix: -item;
+
+    .before-item,
+    .after-item {
+      display: block;
+      top: 0;
+      width: 46%;
+      position: absolute;
+      height: 94px;
+    }
+    .before-item {
+      background: url(../images/bg/bg-title-decor-left.png) 100% 0 repeat-x;
+      //left: -5000px;
+      left: 0;
+      //display: none;
+    }
+    .after-item {
+      background: url(../images/bg/bg-title-decor-right.png) 0 0 repeat-x;
+      //right: -5000px;
+      right: 0;
+    }
+  }
+  .decor-title-images {
+    z-index: 100;
+    width: 708px !important;
+    //margin-left: -10px;
+    position: relative;
+    background: url('../images/img/title-header-decor-m.png') 50% 50% no-repeat !important;
+
+  }
+}

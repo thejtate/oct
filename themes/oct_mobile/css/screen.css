@@ -1,0 +1,502 @@
+/* line 1, ../scss/partials/_common.scss */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 6, ../scss/partials/_common.scss */
+body {
+  width: 100%;
+  min-width: 320px;
+  font: 14px 'HumanaSansITC',sans-serif;
+  background: #ecc75b;
+}
+
+/* line 14, ../scss/partials/_common.scss */
+hr {
+  display: block;
+  border: 0 none;
+  clear: both;
+  height: 0px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+/* line 25, ../scss/partials/_common.scss */
+a {
+  color: blue;
+  outline: none;
+  text-decoration: none;
+}
+/* line 29, ../scss/partials/_common.scss */
+a:hover {
+  text-decoration: none;
+}
+
+/* line 34, ../scss/partials/_common.scss */
+img {
+  border: none;
+}
+
+/* line 37, ../scss/partials/_common.scss */
+ul {
+  list-style: none;
+}
+
+/* line 3, ../scss/partials/_header.scss */
+.header {
+  background: #ecc75b url("../images/bg-header.jpg") repeat-x 0 0;
+  height: 126px;
+  width: 100%;
+  position: relative;
+  padding-top: 0.1em;
+  overflow: hidden;
+}
+
+/* line 11, ../scss/partials/_header.scss */
+.logo_OKT {
+  width: 308px;
+  height: 31px;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* line 18, ../scss/partials/_header.scss */
+.header-logo {
+  height: 31px;
+  padding-top: 13px;
+  margin-bottom: 21px;
+}
+
+/* line 24, ../scss/partials/_header.scss */
+.header-title h2 {
+  text-align: center;
+  vertical-align: middle;
+  color: #9dc1f2;
+  text-shadow: #192b2f 1px 1px 2px, #192b4d -3px 5px 9px;
+  font-size: 1.7em;
+  display: table-cell;
+  font-family: 'HumanaSansITC';
+  width: 100%;
+}
+/* line 34, ../scss/partials/_header.scss */
+.header-title a:first-child {
+  height: 39px;
+  width: 40px;
+  min-width: 40px;
+  display: table-cell;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url("../images/sprite.png") no-repeat;
+  vertical-align: middle;
+  background-position: 0 0;
+}
+/* line 38, ../scss/partials/_header.scss */
+.header-title h2 + a {
+  height: 39px;
+  width: 40px;
+  min-width: 40px;
+  display: table-cell;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url("../images/sprite.png") no-repeat;
+  vertical-align: middle;
+  background-position: -40px 0;
+}
+
+/* line 3, ../scss/partials/_middle.scss */
+.wrapper {
+  margin: 0 auto;
+  min-height: 100%;
+  width: 100%;
+  float: left;
+  background: url("../images/bg-middle-main.jpg") repeat 0 0;
+  padding-bottom: 20px;
+}
+
+/* line 12, ../scss/partials/_middle.scss */
+.middle {
+  width: 320px;
+  margin: 0 auto;
+}
+
+/* line 17, ../scss/partials/_middle.scss */
+.block-buttons {
+  margin: 0 auto;
+  text-align: center;
+}
+/* line 20, ../scss/partials/_middle.scss */
+.block-buttons a {
+  min-width: 234px;
+  width: auto;
+  height: 49px;
+  display: table;
+  margin: 0 auto 10px;
+  color: #FFC6B2;
+  text-shadow: 1px 1px 2px #7f2c32, -3px 5px 9px #7f2c32;
+  font-size: 1.6em;
+}
+/* line 29, ../scss/partials/_middle.scss */
+.block-buttons a:first-child {
+  margin-top: 13px;
+}
+/* line 33, ../scss/partials/_middle.scss */
+.block-buttons a span {
+  display: table-cell;
+  height: 49px;
+}
+/* line 37, ../scss/partials/_middle.scss */
+.block-buttons a span.first, .block-buttons a span.last {
+  width: 9px;
+  background: url("../images/sprite.png") no-repeat;
+}
+/* line 41, ../scss/partials/_middle.scss */
+.block-buttons a span.first {
+  background-position: -83px 0;
+}
+/* line 44, ../scss/partials/_middle.scss */
+.block-buttons a span.last {
+  background-position: -98px 0;
+}
+/* line 47, ../scss/partials/_middle.scss */
+.block-buttons a span.medium {
+  min-width: 216px;
+  padding-bottom: 6px;
+  height: 43px;
+  background: url("../images/bg-bordo-button.png") repeat-x 0 0;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* line 62, ../scss/partials/_middle.scss */
+.middle-title {
+  position: relative;
+  height: 55px;
+  margin: 0 auto 22px;
+}
+/* line 68, ../scss/partials/_middle.scss */
+.middle-title .first,
+.middle-title .middle,
+.middle-title .last {
+  float: left;
+  height: 55px;
+}
+/* line 72, ../scss/partials/_middle.scss */
+.middle-title .first {
+  width: 78px;
+  background: lime;
+  background: url("../images/sprite.png") no-repeat -112px 0;
+}
+/* line 77, ../scss/partials/_middle.scss */
+.middle-title .middle {
+  width: auto;
+  background: pink;
+  background: url("../images/bg-title.png") repeat-x 0 1px;
+}
+/* line 82, ../scss/partials/_middle.scss */
+.middle-title .last {
+  width: 73px;
+  background: url("../images/sprite.png") no-repeat -204px 0;
+}
+/* line 86, ../scss/partials/_middle.scss */
+.middle-title h1 {
+  position: absolute;
+  color: #fafdb5;
+  text-shadow: 1px 1px 2px #a35e1c, -3px 5px 9px #a35e1c;
+  height: 45px;
+  padding-top: 10px;
+  padding-left: 5px;
+  width: width- 5px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* line 101, ../scss/partials/_middle.scss */
+.camps .middle-title {
+  width: 236px;
+}
+/* line 103, ../scss/partials/_middle.scss */
+.camps .middle-title .middle {
+  width: 85px;
+}
+/* line 106, ../scss/partials/_middle.scss */
+.camps .middle-title h1 {
+  width: 236px;
+}
+
+/* line 112, ../scss/partials/_middle.scss */
+.classes .middle-title {
+  width: 301px;
+}
+/* line 114, ../scss/partials/_middle.scss */
+.classes .middle-title .middle {
+  width: 150px;
+}
+/* line 117, ../scss/partials/_middle.scss */
+.classes .middle-title h1 {
+  width: 301px;
+}
+
+/* line 125, ../scss/partials/_middle.scss */
+.contact p img {
+  vertical-align: bottom;
+}
+
+/* line 132, ../scss/partials/_middle.scss */
+p br {
+  margin-bottom: 5px;
+}
+
+/* line 138, ../scss/partials/_middle.scss */
+.norm p {
+  font-style: normal !important;
+}
+
+/* line 143, ../scss/partials/_middle.scss */
+.productions .middle-title {
+  width: 161px;
+}
+/* line 145, ../scss/partials/_middle.scss */
+.productions .middle-title .middle {
+  width: 10px;
+}
+/* line 148, ../scss/partials/_middle.scss */
+.productions .middle-title h1 {
+  width: 156px;
+}
+
+/* line 154, ../scss/partials/_middle.scss */
+.middle-content {
+  width: 285px;
+  margin: 0 auto;
+  color: #515894;
+}
+/* line 158, ../scss/partials/_middle.scss */
+.middle-content strong {
+  font-size: 1.4em;
+}
+/* line 161, ../scss/partials/_middle.scss */
+.middle-content p {
+  font-size: 1.2em;
+  margin-bottom: 13px;
+  font-style: italic;
+}
+/* line 165, ../scss/partials/_middle.scss */
+.middle-content p strong {
+  font-style: normal;
+}
+
+/* line 170, ../scss/partials/_middle.scss */
+.middle-item {
+  height: auto;
+  background: url("../images/dotted_line.png") no-repeat 50% 100%;
+  padding: 0px 16px 10px 10px;
+  margin-bottom: 30px;
+}
+/* line 175, ../scss/partials/_middle.scss */
+.middle-item.first {
+  padding-top: 17px;
+}
+/* line 178, ../scss/partials/_middle.scss */
+.middle-item.last {
+  background: none;
+}
+/* line 181, ../scss/partials/_middle.scss */
+.middle-item h2 {
+  font-size: 1.9em;
+  color: #cc7623;
+  line-height: 36px;
+  margin-bottom: 10px;
+}
+/* line 187, ../scss/partials/_middle.scss */
+.middle-item h3 {
+  color: #cf760f;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+/* line 193, ../scss/partials/_middle.scss */
+.middle-item h4 {
+  color: #a93b43;
+  font-size: 1.06em;
+}
+
+/* line 199, ../scss/partials/_middle.scss */
+.actor {
+  width: 167px;
+  height: 168px;
+  background: #d7a625;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+/* line 206, ../scss/partials/_middle.scss */
+.actor img {
+  border: 2px solid #fcea79;
+}
+
+/* line 211, ../scss/partials/_middle.scss */
+div.actor + h2 {
+  margin-top: 21px;
+}
+
+/* line 215, ../scss/partials/_middle.scss */
+.membership {
+  width: 294px;
+  background: url("../images/yellow-bg.png") no-repeat 0 0;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  padding-top: 30px;
+  height: 121px;
+  margin-left: -32px;
+  margin-bottom: 20px;
+}
+/* line 229, ../scss/partials/_middle.scss */
+.membership h2 {
+  font-size: 1.4em;
+  margin-bottom: 0;
+  line-height: 14px !important;
+}
+/* line 234, ../scss/partials/_middle.scss */
+.membership p {
+  font-size: 1em;
+}
+
+/* line 242, ../scss/partials/_middle.scss */
+.member .middle-content:first-child,
+.contact .middle-content:first-child {
+  padding-top: 17px;
+}
+
+/* line 248, ../scss/partials/_middle.scss */
+.contact {
+  font-size: 1.05em !important;
+}
+/* line 250, ../scss/partials/_middle.scss */
+.contact p {
+  color: #3b5f94;
+}
+/* line 252, ../scss/partials/_middle.scss */
+.contact p strong {
+  color: #1a4280;
+  font-size: 1em !important;
+}
+/* line 257, ../scss/partials/_middle.scss */
+.contact li {
+  margin-bottom: 33px;
+}
+/* line 259, ../scss/partials/_middle.scss */
+.contact li p {
+  margin-bottom: 5px;
+}
+/* line 262, ../scss/partials/_middle.scss */
+.contact li h4 {
+  margin-bottom: 30px;
+}
+/* line 266, ../scss/partials/_middle.scss */
+.contact .middle-item {
+  padding: 0 0 10px;
+}
+/* line 269, ../scss/partials/_middle.scss */
+.contact .middle-item.last h4 {
+  font-size: 1.2em;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("../fonts/itc_humana_sans--lt_70717-webfont.eot");
+  src: url("../fonts/itc_humana_sans--lt_70717-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/itc_humana_sans--lt_70717-webfont.woff") format("woff"), url("../fonts/itc_humana_sans--lt_70717-webfont.ttf") format("truetype"), url("../fonts/itc_humana_sans--lt_70717-webfont.svg#HumanaSansITCMediumRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("../fonts/itc_humana_sans--lt_70718-webfont.eot");
+  src: url("../fonts/itc_humana_sans--lt_70718-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/itc_humana_sans--lt_70718-webfont.woff") format("woff"), url("../fonts/itc_humana_sans--lt_70718-webfont.ttf") format("truetype"), url("../fonts/itc_humana_sans--lt_70718-webfont.svg#HumanaSansITCMediumItalic") format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("../fonts/itc_humana_sans--lt_70713-webfont.eot");
+  src: url("../fonts/itc_humana_sans--lt_70713-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/itc_humana_sans--lt_70713-webfont.woff") format("woff"), url("../fonts/itc_humana_sans--lt_70713-webfont.ttf") format("truetype"), url("../fonts/itc_humana_sans--lt_70713-webfont.svg#HumanaSansITCLightBold") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("../fonts/itc_humana_sans--lt_70714-webfont.eot");
+  src: url("../fonts/itc_humana_sans--lt_70714-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/itc_humana_sans--lt_70714-webfont.woff") format("woff"), url("../fonts/itc_humana_sans--lt_70714-webfont.ttf") format("truetype"), url("../fonts/itc_humana_sans--lt_70714-webfont.svg#HumanaSansITCLightBoldItalic") format("svg");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AtlasRegular';
+  src: url("../fonts/atlas-webfont.eot");
+  src: url("../fonts/atlas-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/atlas-webfont.woff") format("woff"), url("../fonts/atlas-webfont.ttf") format("truetype"), url("../fonts/atlas-webfont.svg#AtlasRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RoskellRegular';
+  src: url("../fonts/roskell-webfont.eot");
+  src: url("../fonts/roskell-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/roskell-webfont.woff") format("woff"), url("../fonts/roskell-webfont.ttf") format("truetype"), url("../fonts/roskell-webfont.svg#RoskellRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("../fonts/atadminister-bold-webfont.eot");
+  src: url("../fonts/atadminister-bold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/atadminister-bold-webfont.woff") format("woff"), url("../fonts/atadminister-bold-webfont.ttf") format("truetype"), url("../fonts/atadminister-bold-webfont.svg#ATAdministerBold") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("../fonts/atadminister-book-webfont.eot");
+  src: url("../fonts/atadminister-book-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/atadminister-book-webfont.woff") format("woff"), url("../fonts/atadminister-book-webfont.ttf") format("truetype"), url("../fonts/atadminister-book-webfont.svg#ATAdministerRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("../fonts/atadminister-bookitalic-webfont.eot");
+  src: url("../fonts/atadminister-bookitalic-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/atadminister-bookitalic-webfont.woff") format("woff"), url("../fonts/atadminister-bookitalic-webfont.ttf") format("truetype"), url("../fonts/atadminister-bookitalic-webfont.svg#ATAdministerItalic") format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* line 1, ../scss/partials/_footer.scss */
+.footer {
+  height: 46px;
+  background: #36588f url("../images/bg-footer.jpg") repeat-x 0 0;
+  float: left;
+  width: 100%;
+  margin-top: 0 auto;
+  position: relative;
+  width: 100%;
+}
+/* line 9, ../scss/partials/_footer.scss */
+.footer p {
+  width: 320px;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 46px;
+  color: #9dc1f2;
+  text-shadow: 1px 1px 2px #172744, -3px 5px 9px #172744;
+  font-size: 1.15em;
+}

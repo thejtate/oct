@@ -1,0 +1,64 @@
+.hidden {
+  display: none;
+}
+.group-productions .form-item label,
+.group-classes .form-item label{
+  /*float: left;*/
+}
+#edit-field-adult-price-0-value-wrapper,
+#edit-field-students-price-0-value-wrapper,
+#edit-field-children-price-0-value-wrapper,
+#edit-field-group-children-price-0-value-wrapper,
+#edit-field-group-adult-price-0-value-wrapper,
+#edit-field-group-adult-quantity-from-value-wrapper,
+#edit-field-group-child-quantity-to-value-wrapper{
+  /*float: left;*/
+  width: 300px;
+}
+.group-productions .form-item{
+  
+  /*clear: both;*/
+}
+#field_product_date_values .container-inline-date{
+  float: left;
+  clear: none;
+}
+#field_product_date_values .container-inline-date:last-child .form-item .form-item{
+  display: none;
+}
+#field_product_date_values .container-inline-date:last-child .form-item .form-item:last-child {
+  display: block;
+}
+
+ul.table-pager li{
+  text-decoration: none;
+  border: 1px solid #777777;
+  background: #fff;
+  padding: 0px 6px;
+  float: left;
+  margin-right: 3px;
+}
+
+#field-sponsorship-list-items tr td div.form-item input.form-text{
+  width: 620px;
+}
+span.password-title,
+span.password-confirm{
+  color: #C9C579;
+  line-height: 32px;
+}
+span.password-strength,
+span.password-confirm,
+.password-description{
+  font-family: 'HumanaSansITC';
+}
+div.password-description.warning,
+div.password-description.error{
+  margin-right: 10px;
+}
+.item-messages .user-name a, .item-messages .user-name .author-name {
+  font-weight: bold;
+}
+#oct-custom-admin-settings fieldset.collapsible{
+  margin: 20px;
+}

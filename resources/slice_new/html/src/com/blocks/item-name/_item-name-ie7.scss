@@ -1,0 +1,72 @@
+.item-name {
+  zoom: 1;
+  .button {
+    before: ' ';
+    after: ' ';
+    suffix: -item;
+    .before-item,
+    .after-item {
+      display: block;
+      top: 0;
+      position: absolute;
+      height: 35px;
+      width:7px;
+      padding: 0 !important;
+    }
+
+    .before-item {
+      left: -7px;
+      background: sprite($icons, butt-left) no-repeat;
+    }
+    .after-item {
+      right: -7px;
+      background: sprite($icons, butt-right) no-repeat;
+    }
+    &.button-visit {
+      span {
+        before: ' ';
+        suffix: -item-but-vis;
+        .before-item-but-vis {
+          display: block;
+          top: 5px;
+          position: absolute;
+        }
+      }
+    }
+    &.button-download {
+      span {
+        before: ' ';
+        suffix: -item-but;
+        .before-item-but {
+          display: block;
+          top: 5px;
+          position: absolute;
+          padding: 0;
+        }
+      }
+    }
+    &.button-download {
+      span {
+        padding: 0 5px 0 35px;
+        .before-item-but {
+          background: sprite($icons, ico-dw) no-repeat;
+          width: 18px;
+          height: 16px;
+          left: 8px;
+        }
+      }
+    }
+    &.button-visit {
+      span {
+        padding: 0 5px 0 42px;
+        .before-item-but-vis {
+          background: sprite($icons, ico-vz) no-repeat;
+          width: 21px;
+          height: 18px;
+          left: 10px;
+          padding: 0;
+        }
+      }
+    }
+  }
+}

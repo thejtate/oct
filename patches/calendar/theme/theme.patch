@@ -1,0 +1,14 @@
+diff --git a/theme.inc b/theme.inc
+index c89a0c0..888cf55 100644
+--- a/theme.inc
++++ b/theme.inc
+@@ -114,6 +114,9 @@ function template_preprocess_calendar(&$vars) {
+   // handlers in the theme functions.
+   $items = array();
+   $calendar_fields = date_api_fields($view->base_table);
++  //------------------ PATCH -------------------------
++  $calendar_fields = add_custom_string_data_field($calendar_fields);
++  //---------------- END PATCH -----------------------
+   $calendar_fields = array_keys($calendar_fields['alias']);
+   
+   foreach ($result as $num => $row) {

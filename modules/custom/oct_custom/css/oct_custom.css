@@ -1,0 +1,63 @@
+#edit-field-class-early-birds-date-0-value-wrapper, #edit-field-class-early-birds-date-0-value2-wrapper{
+    width:200px;
+}
+#edit-panes-uc-discounts-uc-discounts-codes{
+    height:20px;
+}
+
+.weekdays{
+    /*width: 100px;*/
+    float:left;
+}
+
+.field-class-date-list{
+    width: 130px;
+    float: left;
+}
+.node-form .field-class-date-list input{
+    width:100px;
+}
+.field-class-time-list{
+    width: 130px;
+    float:left;
+}
+.node-form .field-class-time-list input{
+    width:100px;
+}
+/*
+#group_product_session_time_values td .form-item.field-class-date-list:first-child{
+  background-color: #f00;
+}
+*/
+/*
+#group_product_session_time_values td .form-item.field-class-date-list{
+  background-color: #ff0;
+}*/
+.headerSortUp .arrow-sorter{
+  background: url(/misc/arrow-desc.png) no-repeat 0 0 transparent;
+  height: 13px;
+  width: 13px;
+  display: block;
+}
+.headerSortDown .arrow-sorter{
+  background: url(/misc/arrow-asc.png) no-repeat 0 0 transparent;
+  height: 13px;
+  width: 13px;
+  display: block;
+}
+.bottom-control{
+  height: 28px;
+  margin: 0 300px;
+}
+/* start datepicker */
+#ui-datepicker-div{
+  padding-right: 2px;
+}
+/* end datepicker */
+#filter-user-info-form div.form-item{
+  float: left;
+  margin-right: 10px
+}
+#filter-user-info-form #edit-data-sorter-user-info-apply-filter{
+  margin-top: 14px
+}

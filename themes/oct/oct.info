@@ -1,0 +1,39 @@
+; $Id: zen.info,v 1.8.2.1 2009/12/12 15:31:54 johnalbin Exp $
+
+name        = OCT
+screenshot = screenshot.png
+core   = 6.x
+version = "6.x-1.0"
+engine = phptemplate
+
+
+stylesheets[all][]  =  system/defaults.css
+stylesheets[all][]  =  system/system.css
+stylesheets[all][]  =  system/system-menus.css
+
+stylesheets[all][]  = html-elements.css
+stylesheets[all][]  = layout.css
+stylesheets[all][]  = zen.css
+
+stylesheets[all][]  =  styles.css
+stylesheets[all][]  =  css/screen.css
+
+stylesheets[all][]  =  additional.css
+
+scripts[] = js/easySlider1.7.js
+scripts[] = jquery.tablesorter.min.js
+scripts[] = js/jquery.validate.js
+scripts[] = js/jquery.maskedinput-1.3.js
+
+scripts[] = js/cufon-yui.js
+scripts[] = js/cufon-replace.js
+scripts[] = js/js.js
+scripts[] = js/custom-form-elements.js
+scripts[] = js/theme.js
+
+regions[content_top]    = Content top
+regions[content_bottom] = Content bottom
+regions[page_closure]   = Page closure
+regions[right]    = Right Sidebar
+
+plugins[vud][widgets] = widgets

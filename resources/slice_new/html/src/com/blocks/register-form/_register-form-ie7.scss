@@ -1,0 +1,43 @@
+.form-register-wrapper {
+
+
+
+  .form-item {
+    .description {
+      display: block;
+      span {
+        display: block;
+        z-index: expression(runtimeStyle.zIndex = 1, this == ((32/2)-parseInt(offsetHeight)/2) <0 ? style.marginTop="0" : style.marginTop=(32/2)-(parseInt(offsetHeight)/2) +'px');
+      }
+    }
+  }
+  .button-submit {
+    .form-item {
+      display: inline;
+      before: ' ';
+      after: ' ';
+      suffix: -item;
+
+      .before-item,
+      .after-item {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        height: 35px;
+        width: 7px;
+      }
+      .before-item {
+        left: 0;
+        background: sprite($icons, but-input-left-l) no-repeat;
+      }
+      .after-item {
+        right: 0;
+        background: sprite($icons, but-input-right-l) no-repeat;
+      }
+    }
+    .form-submit {
+      overflow: visible;
+    }
+  }
+}

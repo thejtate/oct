@@ -1,0 +1,38 @@
+.sidebar-block {
+  &.sidebar-suggestion {
+    .sidebar-title {
+      background: sprite($icons, box-title) no-repeat;
+      width: 282px;
+      height: 73px;
+      margin-bottom: 15px;
+    }
+    .sidebar-content {
+      background: sprite($icons, bg-suggestion) no-repeat;
+      width: 311px;
+      height: 344px;
+      position: relative;
+      margin-left: 2px;
+      .button-submit {
+        position: absolute;
+        right: 56px;
+        bottom: 140px;
+      }
+    }
+    .form-textarea {
+      font-family: 'HumanaSansITC';
+      border: none;
+      resize: none;
+      display: block;
+      width: 160px;
+      height: 130px;
+      padding: 5px;
+      background: none;
+      position: absolute;
+      top: 20px;
+      right: 62px;
+      font-size: 15px;
+      color: #368099;
+    }
+  }
+}
+

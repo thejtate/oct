@@ -1,0 +1,121 @@
+
+.contact .norm p a {
+  color: #A93B43;
+  font-size: 15px;
+  font-weight: 700;
+}
+.contact .norm div span {
+  color: #3B5F94;
+  font-weight: 400;
+}
+.contact .last a {
+  font-size: 17px !important;
+}
+.clr:after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+.b-article {
+  background: url("/sites/all/themes/oct_mobile/images/dots.gif") repeat-x scroll 0 0 transparent;
+  padding: 30px 0 24px;
+  min-height: 260px;
+}
+
+.b-article .b-img {
+  border: 8px solid #D7A625;
+  height: 152px;
+  width: 151px;
+}
+
+.b-article .b-img {
+  height: 155px;
+  width: 155px;
+}
+
+.first-artist {
+  background: none repeat scroll 0 0 transparent;
+  padding-top: 0;
+}
+
+.home-page .b-article .b-info {
+  margin-left: 201px;
+}
+
+.b-article .b-info h2 {
+  color: #CF6E00;
+  font: bold 24px/25px Georgia,serif;
+  margin: 5px 0 10px;
+}
+
+.artists #content-area {
+  color: #3B5F94;
+}
+
+.artists #content-area p {
+  margin: 0;
+  padding: 5px 5px 5px 0;
+}
+
+.b-about dl dt {
+  clear: both;
+  color: #515894;
+  font: 19px/120% Georgia;
+  padding: 4px 0;
+  width: 190px;
+}
+
+.b-about dl dd {
+  color: #A93B43;
+  float: left;
+  font: 12px/27px Verdana;
+  margin-right: -10px;
+  padding: 4px 0;
+  text-transform: uppercase;
+  word-wrap: break-word;
+}
+
+.b-about dl {
+  background: url("/sites/all/themes/oct/images/dots.gif") repeat-x scroll 0 100% transparent;
+  margin: 0;
+  padding: 10px 0 35px 20px;
+}
+
+.b-about h2 {
+  color: #CF760F;
+  font: italic bold 16px/120% Georgia;
+  margin: 0;
+  padding: 25px 0 0 20px;
+}
+
+.b-about dl.last {
+  background: none repeat scroll 0 0 transparent;
+}
+.ftb .middle-item {
+  margin-bottom: 0px;
+  padding: 0 16px 10px 10px;
+
+}
+.ftb .middle-item.first {
+  font-weight: 700;
+  width: 287px;
+
+}
+.ftb .b-article {
+  padding-top: 20px;
+  background: none repeat scroll 0 0 transparent;
+}
+
+.member .membership {
+  margin-left: -15px;
+}
+
+.camps-views-content p {
+  font-style: normal;
+  font-size: 23px;
+  font-weight: 700;
+  width: 295px;
+}

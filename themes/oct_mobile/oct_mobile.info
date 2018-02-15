@@ -1,0 +1,21 @@
+; $Id$
+
+name        = OCT Mobile
+description = Oklahoma Children Theatre Mobile theme.
+screenshot  = screenshot.png
+core   = 6.x
+version = "6.x-1.0"
+engine = phptemplate
+
+stylesheets[all][]  =  css/screen.css
+stylesheets[all][]  =  css/additional.css
+stylesheets[all][]  =  css/mobile.css
+
+regions[header] = Header
+regions[header_mobile] = Header Mobile
+regions[content_mobile] = Content Mobile
+regions[footer_mobile] = Footer Mobile
+
+scripts[] = js/jquery.cookie.js
+scripts[] = js/easySlider1.7.js
+scripts[] = js/additional.js

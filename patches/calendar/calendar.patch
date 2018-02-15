@@ -1,0 +1,100 @@
+diff --git a/calendar.module b/calendar.module
+index aa83ed1..1c7e533 100644
+--- a/calendar.module
++++ b/calendar.module
+@@ -621,6 +621,9 @@ function calendar_build_nodes(&$view, &$items) {
+   $type_names = node_get_types('names');
+   $datefields = array();
+   $fields = date_api_fields($view->base_table);
++  //------------------ PATCH -------------------------
++  $fields = add_custom_string_data_field($fields);
++  //---------------- END PATCH -----------------------
+   if (!empty($view->filter['date_filter'])) {
+     $date_filter = $view->filter['date_filter'];
+     foreach ($view->filter['date_filter']->options['date_fields'] as $name) {
+@@ -657,7 +660,7 @@ function calendar_build_nodes(&$view, &$items) {
+     if (strstr($view->current_display, '_ical')) {
+       $split_dates = FALSE;
+     }
+-   
++    
+     // If there is no field for this item, just default to the site format.
+     if (!isset($view->field[$field_name])) {
+       $format = variable_get('date_format_short', 'm/d/Y - H:i');
+@@ -701,6 +704,12 @@ function calendar_build_nodes(&$view, &$items) {
+     $rrule_processed = array();
+     foreach ($items as $pos => $item) {
+       $delta = !empty($field['delta_field']) && !empty($item->{$field['delta_field']}) ? $item->{$field['delta_field']} : 0;
++      if ($alias == 'node_data_field_class_date_from_field_class_date_from_value'){
++        if( !(($item->node_data_field_class_date_from_delta == $delta) && ($item->node_data_field_class_date_to_delta == $delta)) ){
++          continue;
++        }
++      }
++            
+       $real_field = $field_name;
+       if (substr($field['type'], 0, 3) == 'cck') {
+         $real_field = str_replace(array('_value2', '_value'), '', $field_name);
+@@ -718,14 +727,21 @@ function calendar_build_nodes(&$view, &$items) {
+           continue;
+         }
+       }
+-     
++
+       if (!in_array($id, $processed) && !empty($item->calendar_fields->$alias)) {
+-       
++
+         // Create from and to date values for each item, adjusted to
+         // the correct timezone.
+         $values[0] = !empty($item->calendar_fields->$fromto[0]) ? $item->calendar_fields->$fromto[0] : $item->calendar_fields->$alias;
+         $values[1] = !empty($item->calendar_fields->$fromto[1]) ? $item->calendar_fields->$fromto[1] : $item->calendar_fields->$alias;
+-              
++        
++        if ($alias == 'node_data_field_class_date_from_field_class_date_from_value'){
++            $date_from = split('/', $item->node_data_field_class_date_from_field_class_date_from_value);
++            $values[0] = $date_from[2] . '-' . $date_from[0] . '-' . $date_from[1] . ' 00:00:00';
++            $date_to = split('/',$item->node_data_field_class_date_to_field_class_date_to_value);
++            $values[1] = $date_to[2] . '-' . $date_to[0] . '-' . $date_to[1] . ' 23:59:59';
++        }
++        
+         $db_tz   = date_get_timezone_db($tz_handling, isset($item->$tz_alias) ? $item->$tz_alias : $display_timezone_name);
+         $to_zone = date_get_timezone($tz_handling, isset($item->$tz_alias) ? $item->$tz_alias : $display_timezone_name);
+        
+@@ -734,7 +750,7 @@ function calendar_build_nodes(&$view, &$items) {
+         // For now, use the date fields's timezone for the day splitting.
+         $display_timezone_name = $to_zone;
+         $values_display = array();
+-       
++ 
+         // Start date
+         $date = date_make_date($values[0], $db_tz, $field['sql_type']);
+         if ($db_tz != $to_zone) {
+@@ -763,7 +779,7 @@ function calendar_build_nodes(&$view, &$items) {
+         else {
+           $values_display[1] = $values[1];
+         }
+-              
++
+         // Now $values contain start and end date of a node,
+         // expressed as strings in the display (local) timezone.
+         // $values_utc does the same in UTC timezone.
+@@ -889,7 +905,19 @@ function calendar_build_nodes(&$view, &$items) {
+           if (!empty($all_day_field) && !empty($item->$all_day_field)) {
+             $node->calendar_all_day = TRUE;
+           }
+-         
++          
++          if ($alias == 'node_data_field_class_date_from_field_class_date_from_value'){
++            foreach ($items as $key => $val ){
++              if($val->nid == $node->nid){
++                if ($val->node_data_field_class_date_from_delta == $delta && $val->node_data_field_class_date_to_delta == $delta ){
++                  if(!empty($val->node_data_class_no_date_value) && $val->node_data_class_no_date_value == $node->calendar_start){
++
++                    unset($node);
++                  }
++                }
++              }
++            }
++          }
+           unset($node->calendar_fields);
+           if (isset($node) && (empty($node->calendar_start))) {
+             // if no date for the node and no date in the item

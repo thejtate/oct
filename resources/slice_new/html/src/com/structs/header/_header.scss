@@ -1,0 +1,67 @@
+.header {
+  //background: red;
+  @include clear-box;
+  height: 304px;
+  .decor-title {
+    //background: url(../images/bg/bg-header-decor.png) 50% 50% repeat-x;
+    //@include clear-box;
+    width: 100%;
+    min-width: 800px;
+    height: 94px;
+    margin-top: 18px;
+    position: relative;
+    text-align: center;
+
+    //img {
+    //  padding: 10px;
+    //}
+    .decor-title-images {
+      position: relative;
+      width: 685px;
+      margin: 0 auto;
+      background: url('../images/img/title-header-decor-md.png') 0 0 no-repeat;
+      height: 94px;
+      &:before,
+      &:after {
+        content: '';
+        display: block;
+        top: 0;
+        width: 5000px;
+        position: absolute;
+        height: 94px;
+      }
+      &:before {
+        background: url(../images/bg/bg-title-decor-left-n.png) 100% 0 repeat-x;
+        left: -5000px;
+      }
+      &:after {
+        background: url(../images/bg/bg-title-decor-right-n.png) 0 0 repeat-x;
+        right: -5000px;
+      }
+    }
+  }
+
+  .title-header {
+    text-align: center;
+    position: relative;
+    margin: -36px 0 0 -22px;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      top: 23px;
+      height: 186px;
+    }
+    &:before {
+      width: 297px;
+      left: 0;
+      background: sprite($icons, bg-decor-left) no-repeat;
+    }
+    &:after {
+      width: 313px;
+      right: 0;
+      background: sprite($icons, bg-decor-right) no-repeat;
+    }
+  }
+}

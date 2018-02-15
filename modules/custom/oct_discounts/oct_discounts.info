@@ -1,0 +1,9 @@
+name = OCT Discounts
+description = OCT Discounts functionality
+package = OCT
+core = 6.x
+version = "6.x-1"
+core = "6.x"
+project = "OCT"
+dependencies[] = "views"
+dependencies[] = "content"

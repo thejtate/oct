@@ -1,0 +1,6 @@
+[09-Oct-2014 15:58:53 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Worksheet.php on line 37
+[09-Oct-2014 20:13:15 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/RichText.php on line 37
+[15-Oct-2014 03:24:30 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Comment.php on line 37
+[18-Oct-2014 21:26:19 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Worksheet.php on line 37
+[19-Oct-2014 06:38:44 America/Los_Angeles] PHP Fatal error:  Class 'PHPExcel_Shared_ZipStreamWrapper' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Autoloader.php on line 29
+[19-Oct-2014 23:57:30 America/Los_Angeles] PHP Fatal error:  Interface 'PHPExcel_IComparable' not found in /home/oklah9/oct/trunk/sites/all/libraries/export_xls/PHPExcel/Style.php on line 37

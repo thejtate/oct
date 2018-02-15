@@ -1,0 +1,10 @@
+@mixin title-link{
+	height:39px;
+	width:40px;
+	min-width:40px;
+	display:table-cell;
+	text-indent:-9999px;
+	overflow:hidden;
+	background: url('../images/sprite.png') no-repeat;
+  vertical-align:middle;
+}

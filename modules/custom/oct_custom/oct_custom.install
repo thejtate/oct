@@ -1,0 +1,272 @@
+<?php
+
+/**
+ * @file
+ * Install file for the link module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function oct_custom_install() {
+  // Create my tables.
+  drupal_install_schema('oct_custom');
+}
+
+/**
+* Implementation of hook_uninstall().
+*/
+function oct_custom_uninstall() {
+  // Drop my tables.
+  drupal_uninstall_schema('oct_custom');
+}
+
+/**
+* Implementation of hook_enable().
+*/
+function oct_custom_enable() {
+
+}
+
+/**
+* Implementation of hook_disable().
+*/
+function oct_custom_disable() {
+
+}
+
+/**
+* Implementation of hook_schema().
+*/
+function oct_custom_schema() {
+  $schema['uc_order_user_info'] = array(
+    'description' => t('The base table for user info form in checkout.'),
+    'fields' => array(
+      'order_id' => array(
+        'description' => t('The primary identifier for a order.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'first_name' => array(
+        'description' => t('The product first name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'last_name' => array(
+        'description' => t('The product last name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'purchaser' => array(
+        'description' => t('The class purchaser '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'parent_first_name' => array(
+        'description' => t('The class parent of guardian first name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'parent_last_name' => array(
+        'description' => t('The class parent of guardian last name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'parent_2_first_name' => array(
+        'description' => t('The class another parent of guardian first name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'parent_2_last_name' => array(
+        'description' => t('The class another parent of guardian last name '),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'phone_number' => array(
+        'description' => t('The phone number'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'address' => array(
+        'description' => t('The address'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'сity' => array(
+        'description' => t('The city'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'state' => array(
+        'description' => t('The state'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'zip' => array(
+        'description' => t('The state'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'email' => array(
+        'description' => t('The email'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      ),
+    'indexes' => array(
+        'order_id' => array('order_id'),
+      ),
+    'primary key' => array('order_id'),
+  );
+
+  $schema['uc_product_stock_custom'] = array(
+    'description' => t('The base table for user info form in checkout.'),
+    'fields' => array(
+      'sku' => array(
+        'description' => t('SKU or Model unic id'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'nid_product' => array(
+        'description' => t('Node id'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'oid_attribute' => array(
+        'description' => t('Attribute option id'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'delta' => array(
+        'description' => t('Link with quantity of ticket in field node and oid attribut'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+    )
+  );
+
+  $schema['uc_product_ticket_dates'] = array(
+    'description' => t('The base table for user info form in checkout.'),
+    'fields' => array(
+      'nid_product' => array(
+        'description' => t('Node id'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'oid' => array(
+        'description' => t('Attribute option id'),
+        'type' => 'int',
+        'unsigned' => TRUE),
+      'min_birth_date' => array(
+        'description' => t('Min Date of start Class or Camp'),
+        'type' => 'datetime'),
+      'max_birth_date' => array(
+        'description' => t('Max Date of start Class or Camp'),
+        'type' => 'datetime')
+    )
+  );
+
+  return $schema;
+}
+
+/**
+ * Add table for link date and oid.
+ */
+function oct_custom_update_6001() {
+  
+  $schema = oct_custom_schema();
+  $ret = array();
+  db_create_table($ret, 'uc_product_ticket_dates', $schema['uc_product_ticket_dates']);
+  return $ret;
+
+}
+/**
+ *  Add another delta fied for connection betwen "date", "sold out", "unvaliable"
+ */
+function oct_custom_update_6002() {
+  $ret = array();
+  db_add_field($ret, 'uc_product_ticket_dates', 'delta', array(
+    'description' => 'delta',
+    'type' => 'int',
+    'length' => 10,
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ));
+  return $ret;
+}
+
+/**
+ * Add big weight to module 
+ */
+function oct_custom_update_6003() {
+  $query = "UPDATE {system} SET weight = %d
+            WHERE type = 'module' AND name = '%s'";
+  db_query($query, 20, 'oct_custom');
+  return array();
+}
+
+/**
+ *  Add field coins to registration form 1
+ */
+function oct_custom_update_6005() {
+  $ret = array();
+  db_add_field($ret, 'register_online_data', 'coins_price', array(
+    'description' => 'Coins',
+    'type' => 'int',
+    'length' => 10,
+    'default' => '0',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ));
+  return $ret;
+}
+
+/**
+ *  Add fields Tween ball count and total price to registration form 1
+ */
+function oct_custom_update_6006() {
+  $ret = array();
+  db_add_field($ret, 'register_online_data', 'tween_ball_count', array(
+    'description' => 'Tween Ball Count',
+    'type' => 'int',
+    'length' => 10,
+    'default' => '0',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ));
+  db_add_field($ret, 'register_online_data', 'tween_ball_price', array(
+    'description' => 'Tween Ball Price',
+    'type' => 'int',
+    'length' => 10,
+    'default' => '0',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ));
+  return $ret;
+}
+
+function oct_custom_update_6007() {
+  $ret = array();
+  db_add_field($ret, 'register_online_data', 'sid', array(
+    'description' => 'sid',
+    'type' => 'int',
+    'length' => 10,
+    'default' => '0',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ));
+  return $ret;
+}

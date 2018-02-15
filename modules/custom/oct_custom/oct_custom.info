@@ -1,0 +1,11 @@
+name = OCT module
+description = OCT default functionality
+package = OCT
+core = 6.x
+version = "6.x-1"
+core = "6.x"
+project = "OCT"
+dependencies[] = "views"
+dependencies[] = "content"
+files[] = oct_custom.module
+files[] = oct_custom.install

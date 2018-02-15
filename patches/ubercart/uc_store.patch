@@ -1,0 +1,15 @@
+diff --git a/uc_store.module b/uc_store.module
+index 9a63cc5..c81e849 100644
+--- a/uc_store.module
++++ b/uc_store.module
+@@ -1711,7 +1711,9 @@ function uc_store_email_from() {
+   if (variable_get('uc_store_email_include_name', TRUE)) {
+     $store = variable_get('uc_store_name', '');
+     if (!empty($store)) {
+-      $email_from = '"'. $store .'" <'. $email_from.'>';
++      //------------------------ patch ------------------------------------
++      $email_from = $store . '<' . $email_from . '>';
++      //------------------------ end patch --------------------------------
+     }
+   }
+ 

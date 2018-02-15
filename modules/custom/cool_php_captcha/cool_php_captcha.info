@@ -1,0 +1,6 @@
+name = Cool PHP Captcha
+description = Add cool-php-captcha to forms
+package = Volcano
+core = 6.x
+files[] = cool_php_captcha.module
+configure = admin/config/people/coolphpcaptcha

@@ -1,0 +1,66 @@
+/* line 1, ../scss/MAIN-page.scss */
+body {
+  background: #36588f;
+}
+
+/* line 5, ../scss/MAIN-page.scss */
+.header {
+  height: 72px;
+  background: url("../images/bg-header-main.jpg") repeat-x 0 0;
+}
+
+/* line 11, ../scss/MAIN-page.scss */
+.block-buttons {
+  width: 300px;
+  margin: 0 auto;
+}
+/* line 14, ../scss/MAIN-page.scss */
+.block-buttons a {
+  min-width: 134px;
+  font-size: 1.15em;
+  margin: 0 !important;
+  height: auto;
+}
+/* line 20, ../scss/MAIN-page.scss */
+.block-buttons li {
+  margin-bottom: 4px;
+}
+/* line 23, ../scss/MAIN-page.scss */
+.block-buttons .left {
+  float: left;
+  clear: both;
+}
+/* line 26, ../scss/MAIN-page.scss */
+.block-buttons .left .medium {
+  min-width: 116px;
+}
+/* line 30, ../scss/MAIN-page.scss */
+.block-buttons .right {
+  float: right;
+}
+/* line 32, ../scss/MAIN-page.scss */
+.block-buttons .right .medium {
+  min-width: 126px;
+}
+/* line 38, ../scss/MAIN-page.scss */
+.block-buttons .right.last .first,
+.block-buttons .right.last .medium,
+.block-buttons .right.last .last {
+  background: none;
+}
+/* line 41, ../scss/MAIN-page.scss */
+.block-buttons .right.last a {
+  float: left;
+  color: #9dc1f2;
+  text-shadow: 1px 1px 2px #172744, -3px 5px 9px #172744;
+  min-width: 1px !important;
+  margin: 0;
+}
+/* line 47, ../scss/MAIN-page.scss */
+.block-buttons .right.last a img {
+  margin-top: 5px;
+}
+/* line 51, ../scss/MAIN-page.scss */
+.block-buttons .right.last .first {
+  margin-top: 13px !important;
+}

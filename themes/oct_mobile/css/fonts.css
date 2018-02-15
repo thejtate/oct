@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("fonts/itc_humana_sans--lt_70717-webfont.eot");
+  src: url("fonts/itc_humana_sans--lt_70717-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/itc_humana_sans--lt_70717-webfont.woff") format("woff"), url("fonts/itc_humana_sans--lt_70717-webfont.ttf") format("truetype"), url("fonts/itc_humana_sans--lt_70717-webfont.svg#HumanaSansITCMediumRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("fonts/itc_humana_sans--lt_70718-webfont.eot");
+  src: url("fonts/itc_humana_sans--lt_70718-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/itc_humana_sans--lt_70718-webfont.woff") format("woff"), url("fonts/itc_humana_sans--lt_70718-webfont.ttf") format("truetype"), url("fonts/itc_humana_sans--lt_70718-webfont.svg#HumanaSansITCMediumItalic") format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("fonts/itc_humana_sans--lt_70713-webfont.eot");
+  src: url("fonts/itc_humana_sans--lt_70713-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/itc_humana_sans--lt_70713-webfont.woff") format("woff"), url("fonts/itc_humana_sans--lt_70713-webfont.ttf") format("truetype"), url("fonts/itc_humana_sans--lt_70713-webfont.svg#HumanaSansITCLightBold") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HumanaSansITC';
+  src: url("fonts/itc_humana_sans--lt_70714-webfont.eot");
+  src: url("fonts/itc_humana_sans--lt_70714-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/itc_humana_sans--lt_70714-webfont.woff") format("woff"), url("fonts/itc_humana_sans--lt_70714-webfont.ttf") format("truetype"), url("fonts/itc_humana_sans--lt_70714-webfont.svg#HumanaSansITCLightBoldItalic") format("svg");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AtlasRegular';
+  src: url("fonts/atlas-webfont.eot");
+  src: url("fonts/atlas-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/atlas-webfont.woff") format("woff"), url("fonts/atlas-webfont.ttf") format("truetype"), url("fonts/atlas-webfont.svg#AtlasRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RoskellRegular';
+  src: url("fonts/roskell-webfont.eot");
+  src: url("fonts/roskell-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/roskell-webfont.woff") format("woff"), url("fonts/roskell-webfont.ttf") format("truetype"), url("fonts/roskell-webfont.svg#RoskellRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("fonts/atadminister-bold-webfont.eot");
+  src: url("fonts/atadminister-bold-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/atadminister-bold-webfont.woff") format("woff"), url("fonts/atadminister-bold-webfont.ttf") format("truetype"), url("fonts/atadminister-bold-webfont.svg#ATAdministerBold") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("fonts/atadminister-book-webfont.eot");
+  src: url("fonts/atadminister-book-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/atadminister-book-webfont.woff") format("woff"), url("fonts/atadminister-book-webfont.ttf") format("truetype"), url("fonts/atadminister-book-webfont.svg#ATAdministerRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATAdminister';
+  src: url("fonts/atadminister-bookitalic-webfont.eot");
+  src: url("fonts/atadminister-bookitalic-webfont.eot?#iefix") format("embedded-opentype"), url("fonts/atadminister-bookitalic-webfont.woff") format("woff"), url("fonts/atadminister-bookitalic-webfont.ttf") format("truetype"), url("fonts/atadminister-bookitalic-webfont.svg#ATAdministerItalic") format("svg");
+  font-weight: normal;
+  font-style: italic;
+}

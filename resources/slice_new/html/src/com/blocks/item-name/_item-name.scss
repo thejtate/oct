@@ -1,0 +1,159 @@
+//bg-item.jpg
+.main-content {
+  //padding: 20px 0 0 0;
+
+}
+
+
+.item-name-wrapp {
+  width: 657px;
+  //background: url(../images/bg/bg-item.png) 0 0 repeat;
+  background: url(../images/bg/bg-repeat-y.png) 16px 0 repeat-y;
+  position: relative;
+  padding: 0;
+  ul {
+    ///padding: 18px 0 0 0;
+    display: block;
+    padding: 18px 25px 0 52px;
+    background:  url('../images/bg/bg-item-wrapp.png') 0 0 repeat-y;
+  }
+  .title-images-wrapp {
+    //position: absolute;
+    font-family: 'HumanaSansITC';
+    width: 657px;
+    height: 26px;
+    top: 0;
+    background: url(../images/bg/bg-top-title.png) 0 0 no-repeat;
+    .title-images {
+      text-indent: -9999px;
+      position: absolute;
+      left: 50%;
+      top: -17px;
+      margin: 0 0 0 -137px;
+      display: block;
+      width: 307px;
+      height: 53px;
+      img {
+        display: block;
+      }
+    }
+  }
+}
+
+li.item-name {
+  position: relative;
+  width: 574px;
+  @include clear-box;
+  //margin: 0 25px 12px 52px;
+  background: url('../images/bg/bg-item-bottom.png') 0 100% no-repeat;
+  padding: 0 0 35px 0;
+  h3 {
+    @include text-shadow(-3px 2px 0px #4d2e0f);
+    font-family: 'HumanaSansITC';
+    font-weight: normal;
+    font-size: 25px;
+    color: #8dd2d9;
+    margin-bottom: 10px;
+  }
+  p {
+    @include text-shadow(-3px 2px 0px #4d2e0f);
+    font-family: 'HumanaSansITC';
+    font-weight: normal;
+    font-size: 20px;
+    color: #e6c973;
+    line-height: 23px;
+    margin-bottom: 27px;
+  }
+  .button {
+    @include text-shadow(-2px 2px 0px #d1861d);
+    font-family: 'HumanaSansITC';
+    font-size: 20px;
+    color: #fffbc7;
+    text-decoration: none;
+    height: 35px;
+    line-height: 29px;
+    display: block;
+    float: right;
+    position: relative;
+    background: sprite($horiz, but-bg) repeat-x;
+    margin: 0 7px;
+    &:hover {
+      @include text-shadow(0 0 0 #d1861d);
+    }
+    &:before, 
+    &:after {
+      content: '';
+      display: block;
+      top: 0;
+      position: absolute;
+      height: 35px;
+      width:7px;
+    }
+    &:before {
+      left: -7px;
+      background: sprite($icons, butt-left) no-repeat;
+    }
+    &:after {
+      right: -7px;
+      background: sprite($icons, butt-right) no-repeat;
+    }
+    &.button-download,
+    &.button-visit {
+      span {
+        display: block;
+        &:before {
+          content: '';
+          display: block;
+          top: 5px;
+          position: absolute;
+
+        }
+      }
+    }
+    &.button-download {
+      span {
+        padding: 0 5px 0 35px;
+        &:before {
+          background: sprite($icons, ico-dw) no-repeat;
+          width: 18px;
+          height: 16px;
+          left: 8px;
+        }
+      }
+    }
+    &.button-visit {
+      span {
+        padding: 0 5px 0 42px;
+        &:before {
+          background: sprite($icons, ico-vz) no-repeat;
+          width: 21px;
+          height: 18px;
+          left: 10px;
+        }
+      }
+    }
+  }
+  .content-item {
+    width: 332px;
+    margin: 0 37px 0 0;
+    float: right;
+    padding: 8px 0 0 0;
+  }
+  .images {
+    background: sprite($icons, bg-foto) no-repeat;
+    width: 173px;
+    height: 182px;
+    float: left;
+    img {
+      display: block;
+      padding: 17px 9px 20px 16px;
+    }
+  }
+  .item-name-content {
+    @include clear-box;
+    padding: 9px 0 0 12px;
+  }
+  &.last-item {
+    background: url('../images/bg/bg-item-bottom-last.png') 0 100% no-repeat;
+  }
+}

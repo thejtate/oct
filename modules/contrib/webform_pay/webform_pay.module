@@ -1,0 +1,381 @@
+<?php
+
+/**
+ * @file
+ * Provides integration between Webform and Pay modules.
+ */
+
+/**
+ * Implements hook_webform_component_info().
+ */
+function webform_pay_webform_component_info() {
+  $components = array();
+
+  $components['pay'] = array(
+    'label' => t('Payment information'),
+    'description' => t('Accepts credit card information.'),
+    'features' => array(
+      'conditonal' => FALSE,
+      'title_inline' => FALSE,
+    ),
+    'file' => 'webform_pay.component.inc',
+  );
+
+  return $components;
+}
+
+/**
+ * Implements hook_webform_component_info_alter().
+ */
+function webform_pay_webform_component_info_alter(&$components) {
+  // Allow components of these types to be used as a price field.
+  $components['textfield']['features']['price'] = TRUE;
+  $components['select']['features']['price'] = TRUE;
+  $components['hidden']['features']['price'] = TRUE;
+}
+
+/**
+ * Implements hook_pay_form_handler_info().
+ */
+function webform_pay_form_handler_info() {
+  return array(
+    'webform_pay' => array(
+      'title' => t('Webform'),
+      'description' => t('A form embedding payment information into webforms.'),
+      'handler' => 'webform_pay',
+      'path' => drupal_get_path('module', 'webform_pay'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_webform_component_presave().
+ */
+function webform_pay_webform_component_presave(&$component) {
+  // Register a pay_form entry for this pay component.
+  if ($component['type'] == 'pay') {
+    $pfid = $component['extra']['pfid'];
+    $pmid = $component['extra']['pmid'];
+    $node = node_load($component['nid']);
+    $pay = pay_form_load($pfid ? $pfid : 'webform_pay');
+    $pay->uid = $node->uid;
+    $pay->title = $node->title;
+    $pay->menu_path = 'node/' . $node->nid;
+    $pay->pay_methods = array($pmid => $pmid);
+    $pay->save();
+
+    // Update the component pay form ID.
+    $component['extra']['pfid'] = $pay->pfid;
+  }
+}
+
+/**
+ * Implements hook_webform_component_delete().
+ */
+function webform_pay_webform_component_delete($component) {
+  // Disable the matching pay_form entry for this pay component.
+  if ($component['type'] == 'pay' && $component['extra']['pfid']) {
+    if ($pay = pay_form_load($component['extra']['pfid'])) {
+      $pay->disable();
+    }
+  }
+}
+
+/**
+ * Implements hook_nodeapi().
+ */
+function webform_pay_nodeapi(&$node, $op) {
+  if (!in_array($node->type, webform_variable_get('webform_node_types'))) {
+    return;
+  }
+
+  if ($op == 'load') {
+    webform_pay_node_load($node);
+    $additions = array();
+    if (isset($node->webform_pay_cid)) {
+      $additions['webform_pay_cid'] = $node->webform_pay_cid;
+    }
+    return $additions;
+  }
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function webform_pay_node_load(&$node) {
+  $additions = array();
+  $pay_cid = db_result(db_query("SELECT cid FROM {webform_component} WHERE type = 'pay' AND nid = %d", $node->nid));
+  $node->webform_pay_cid = $pay_cid;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function webform_pay_form_alter(&$form, &$form_state, $form_id) {
+  if (preg_match('/^webform_client_form_\d+$/', $form_id) && isset($form['#node']->webform_pay_cid)) {
+    $node = $form['#node'];
+    if (empty($node->webform_pay_cid)) {
+      return;
+    }
+    $pay_cid = $node->webform_pay_cid;
+    $component = $node->webform['components'][$pay_cid];
+
+    // Check if the pay component is on this page of the webform.
+    $parent_keys = webform_component_parent_keys($node, $component);
+    $element = $form['submitted'];
+    foreach ($parent_keys as $form_key) {
+      if (isset($element[$form_key])) {
+        $element = $element[$form_key];
+      }
+      else {
+        $element = FALSE;
+        break;
+      }
+    }
+
+    // Initialize the form for the selected payment method.
+    if ($element && $pay_form = pay_form_load($component['extra']['pfid'])) {
+      $form['#pre_render'][] = 'webform_pay_prerender';
+      $form['#validate'][] = 'webform_pay_validate';
+      $pay_form->form($form, $form_state, 'webform');
+      $form['#after_build'][] = 'webform_pay_after_build';
+    }
+  }
+}
+
+/**
+ * After build function for webform pay fields.
+ *
+ * Remove the extra fields that are not collected by Pay module directly.
+ */
+function webform_pay_after_build($form) {
+  $node = $form['#node'];
+  $pay_cid = $node->webform_pay_cid;
+  $component = $node->webform['components'][$pay_cid];
+
+  // Get the pay form information.
+  $pay_form = pay_form_load($component['extra']['pfid']);
+  $pay_handler = $pay_form->handler();
+
+  // Remove fields that have replacements provided by Webform.
+  foreach ($component['extra']['other_components'] as $key => $cid) {
+    if ($cid) {
+      foreach ($form[$pay_handler]['pay_method'] as $method_key => $method_element) {
+        if (is_numeric($method_key) && isset($form[$pay_handler]['pay_method'][$method_key][$key])) {
+          unset($form[$pay_handler]['pay_method'][$method_key][$key]);
+        }
+      }
+    }
+  }
+
+  // If editing a submission, do NOT reprocess payment information. This
+  // information becomes display-only.
+  if (!empty($form['#submission']->sid)) {
+    $submit_index = array_search('pay_submit', $form['#submit']);
+    $validate_index = array_search('pay_validate', $form['#validate']);
+    if ($submit_index !== FALSE) {
+      unset($form['#submit'][$submit_index]);
+    }
+    if ($validate_index !== FALSE) {
+      unset($form['#validate'][$validate_index]);
+    }
+  }
+
+  return $form;
+}
+
+/**
+ * Pre-render function for webform pay fields.
+ *
+ * Move the payment form from the form root to the proper component location.
+ */
+function webform_pay_prerender($form) {
+  $node = $form['#node'];
+  $pay_cid = $node->webform_pay_cid;
+  $component = $node->webform['components'][$pay_cid];
+
+  // Drill down to the element.
+  $parent_keys = webform_component_parent_keys($node, $component);
+  $element = &$form['submitted'];
+  foreach ($parent_keys as $form_key) {
+    $element = &$element[$form_key];
+  }
+
+  // Pre-render functions may get called twice if theming the form, prevent
+  // attempts to move the pay form twice.
+  if (!isset($element['#webform_pay_moved'])) {
+    // Get the pay form information.
+    $pay_form = pay_form_load($component['extra']['pfid']);
+    $pay_handler = $pay_form->handler();
+
+    // Prepopulate basic payment information if editing a submission.
+    // Payments cannot be charged by editing a submission.
+    if (!empty($form['#submission']->sid)) {
+      if (!empty($element['#value']['pmid'])) {
+        $pmid = $element['#value']['pmid'];
+        $value = $element['#value'];
+        if ($value['payment_type'] == 'cc') {
+          $form[$pay_handler]['pay_method'][$pmid]['cc_number']['#value'] = $value['cc_number'];
+          $form[$pay_handler]['pay_method'][$pmid]['cc_number']['#description'] = t('Note that credit card payments cannot be charged again by editing this submission.');
+          $form[$pay_handler]['pay_method'][$pmid]['cc_type'][$value['cc_type']]['#value'] = $value['cc_type'];
+          $form[$pay_handler]['pay_method'][$pmid]['cc_exp_month']['#value'] = $value['cc_exp_month'];
+          $form[$pay_handler]['pay_method'][$pmid]['cc_exp_year']['#value'] = $value['cc_exp_year'];
+          unset($form[$pay_handler]['pay_method'][$pmid]['cc_ccv2']);
+        }
+      }
+    }
+
+    // Move the pay form from the root level to the appropriate location.
+    $element = array_merge($form[$pay_handler], $element);
+    $element['#webform_pay_moved'] = TRUE;
+    $element['#value'] = NULL;
+    unset($form[$pay_handler]);
+  }
+
+  return $form;
+}
+
+/**
+ * Validation function for webforms that accept payment information.
+ *
+ * This is responsible for finding all the price fields within the webform and
+ * adding up all the totals. Currently either textfields or select lists may
+ * be used for prices.
+ */
+function webform_pay_validate(&$form, &$form_state) {
+  $node = $form['#node'];
+  $pay_cid = $node->webform_pay_cid;
+  $component = $node->webform['components'][$pay_cid];
+
+  // Add up all the components that contain price values.
+  $total = NULL;
+  foreach ($component['extra']['price_components'] as $cid => $enabled) {
+    if ($enabled && isset($node->webform['components'][$cid])) {
+      $price_component = $node->webform['components'][$cid];
+
+      // Find the price value if on the current page.
+      $price_value = _webform_pay_component_value($node, $price_component, $form_state['values']['submitted'], TRUE);
+      // Find the price value from any previous pages.
+      if ($price_value === FALSE && isset($form_state['storage']['submitted'])) {
+        $price_value = _webform_pay_component_value($node, $price_component, $form_state['storage']['submitted']);
+      }
+      $price_parents = webform_component_parent_keys($node, $price_component);
+
+      // If the value is an array, add up the values.
+      if (is_array($price_value)) {
+        $price_value = array_filter($price_value);
+        $component_total = 0;
+        foreach ($price_value as $sub_value) {
+          if (is_numeric($sub_value)) {
+            $component_total += $sub_value;
+          }
+          else {
+            // Exit the for loop if we get a non-numeric value in the array.
+            // Set the total back to the original value.
+            $component_total = $price_value;
+            break;
+          }
+        }
+        $price_value = $component_total;
+      }
+      if (!empty($price_value) && !is_numeric($price_value)) {
+        form_set_error('submitted][' . implode('][', $price_parents), t('The value for @name needs to be a valid amount.', array('@name' => $price_component['name'])));
+      }
+      else {
+        $total += (float) $price_value;
+      }
+    }
+  }
+
+  // Loop through extra components and collect their information.
+  $other_values = array();
+  foreach ($component['extra']['other_components'] as $key => $cid) {
+    if (isset($node->webform['components'][$cid])) {
+      $other_component = $node->webform['components'][$cid];
+      // Find the component value from the current page.
+      $other_value = _webform_pay_component_value($node, $other_component, $form_state['values']['submitted'], TRUE);
+      // Find the component value from any previous pages.
+      if ($other_value === FALSE && isset($form_state['storage']['submitted'])) {
+        $other_value = _webform_pay_component_value($node, $other_component, $form_state['storage']['submitted']);
+      }
+      // TODO: Find a cleaner way of separating out billing information?
+      if (in_array($key, array('street1', 'street2', 'city', 'state', 'zip', 'country', 'phone'))) {
+        $other_values['billto'][$key] = $other_value;
+      }
+      else {
+        $other_values[$key] = $other_value;
+      }
+    }
+  }
+
+  // Get the pay form information.
+  $pay_form = pay_form_load($component['extra']['pfid']);
+  $pay_handler = $pay_form->handler();
+
+  // Get the pay method information.
+  $pay_methods = $pay_form->pay_methods();
+  $pay_method = $pay_methods[$component['extra']['pmid']];
+
+  // Set the total for the payment. This total is the grand total of all payment
+  // systems together. The pay_form class may validate this total.
+  $form_state['values'][$pay_handler]['total'] = $total;
+
+  // Set the total for the payment method. This total is validated by the
+  // payment method handler.
+  $form_state['values'][$pay_handler]['pay_method'][$pay_method->pmid]['total'] = $total;
+  $form_state['values'][$pay_handler]['pay_method'][$pay_method->pmid]['pmid'] = $pay_method->pmid;
+
+  // Add in extra properties for the payment handler from other components.
+  $form_state['values'][$pay_handler]['pay_method'][$pay_method->pmid] = array_merge($form_state['values'][$pay_handler]['pay_method'][$pay_method->pmid], $other_values);
+
+  // Drill down to the pay form element.
+  $parent_keys = webform_component_parent_keys($node, $component);
+  $element = &$form['submitted'];
+  foreach ($parent_keys as $form_key) {
+    $element = &$element[$form_key];
+  }
+
+  // Set the component value so that it gets saved into the Webform table.
+  form_set_value($element, $form_state['values'][$pay_handler]['pay_method'][$pay_method->pmid], $form_state);
+}
+
+/**
+ * Helper function to return the value of a component if it exists.
+ *
+ * @param $node
+ *   The Webform node.
+ * @param $component
+ *   The Webform component to check for.
+ * @param $values
+ *   An array of webform values keyed by component ID.
+ * @param $nested_tree
+ *   Whether or not this function should treat the $values parameter as a tree.
+ *   On same-page validation the form value is in a tree. On multiple page forms
+ *   or on submission, the values are flattened by Webform.
+ *
+ * @return
+ *   The submitted value of the component, or FALSE if the component was not
+ *   contained in $values.
+ */
+function _webform_pay_component_value($node, $component, $values, $nested_tree = FALSE) {
+  $component_value = FALSE;
+  if ($nested_tree) {
+    $parent_keys = webform_component_parent_keys($node, $component);
+    $component_value = $values;
+    foreach ($parent_keys as $form_key) {
+      if (isset($component_value[$form_key])) {
+        $component_value = $component_value[$form_key];
+      }
+      else {
+        $component_value = FALSE;
+        break;
+      }
+    }
+  }
+  else {
+    $cid = $component['cid'];
+    $component_value = isset($values[$cid]) ? $values[$cid] : FALSE;
+  }
+
+  return $component_value;
+}

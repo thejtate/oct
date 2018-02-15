@@ -1,0 +1,52 @@
+.sidebar-block {
+  .button-go {
+    before: ' ';
+    after: ' ';
+    suffix: -item;
+    .before-item,
+    .after-item  {
+      display: block;
+      position: absolute;
+    }
+    .before-item {
+      width:10px;
+      height: 60px;
+      left: -10px;
+      top: 0;
+      background: sprite($icons, but-go-left) no-repeat;
+    }
+    .after-item {
+      width: 51px;
+      height: 84px;
+      right: -37px;
+      top: -12px;
+      z-index: -1;
+      background: sprite($icons, but-go-right) no-repeat;
+    }
+  }
+  .button-submit {
+    before: ' ';
+    after: ' ';
+    suffix: -item;
+    .before-item,
+    .after-item {
+      display: block;
+      position: absolute;
+      top: 0;
+      height: 31px;
+    }
+    .before-item {
+      left: 0;
+      background: sprite($icons, but-input-left) no-repeat;
+      width: 3px;
+    }
+    .after-item {
+      right: 0;
+      background: sprite($icons, but-input-right) no-repeat;
+      width: 4px;
+    }
+    .form-submit {
+      overflow: visible;
+    }
+  }
+}

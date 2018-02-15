@@ -1,0 +1,13 @@
+name = Webform pay
+description = Provides integration between Webform and Pay modules.
+core = 6.x
+package = Webform
+dependencies[] = webform
+dependencies[] = pay
+
+; Information added by drupal.org packaging script on 2011-10-01
+version = "6.x-1.0-beta2"
+core = "6.x"
+project = "webform_pay"
+datestamp = "1317499908"
+

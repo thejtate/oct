@@ -1,0 +1,141 @@
+/* messages block */
+.messages ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.messages{
+  background-color: #DDDDFF;
+  border: 5px solid #608fcc;
+  color: #3b5f94;
+  font: 13px 'HumanaSansITC';
+  margin: 10px 0px 10px 15px;
+  padding: 5px 5px 5px 15px;
+}
+div.error{
+  border: 5px solid #DD7777;
+  color: #A93B43;
+  padding: 5px 5px 5px 15px;
+}
+div.warning{
+  border: 5px solid #F0C020;
+  color: #CF760F;
+  padding: 5px 5px 5px 15px;
+  background-color: #FBFFB2;
+}
+
+.block-buttons a.facebook-link{
+  background: url("../images/fb.png") no-repeat scroll 0 0 transparent;
+  display: block;
+  height: 38px;
+  width: 39px;
+}
+.header-logo{
+  color: #FBFFB2;
+  font-size: 20px;  
+  text-shadow: 2px 2px #9A5714;
+  text-align: center;
+}
+
+.item-list ul li {
+  list-style: none;
+  margin: 0px;
+}
+
+
+/* sponsor page */
+.sponsor-block{
+  text-align: center;
+  /*min-height: 360px;*/
+}
+/*
+.sponsor-logo{
+  text-align: center;
+}*/
+.sponsor-text{
+  margin: 20px auto;
+  color: #E8AA2E;
+  font-size: 18px;
+}
+.sponsor-text span{
+  font-size: 24px;
+}
+.sponsor-top,
+.sponsor-bot{
+  background: url("../images/sponsor_top_bot_area.png") repeat-x scroll 0 0 transparent;
+  height: 32px;
+  width: 100%;
+}
+.sponsor-bot{
+  /*position: absolute;
+  bottom: 0px;*/
+}
+body.sponsor-bg {
+  background-color: #FBFFB2;
+}
+body.sponsor-bg #middle,
+body.sponsor-bg #header,
+body.sponsor-bg .wrapper,
+body.sponsor-bg .footer{
+  display: none;
+}
+.node-camp_sunmmer_item .middle-title,
+.node-summer_camp_list_page .middle-title,
+.node-summer_camp_description_page .middle-title {
+  width: 160px;
+}
+.node-camp_sunmmer_item .middle-title h1,
+.node-summer_camp_list_page .middle-title h1,
+.node-summer_camp_description_page .middle-title h1{
+  width: 150px;
+}
+
+
+.view-summer-camp-description .views-row h2 a, 
+.view-summer-camp-list .views-row h2 a {
+  font-size: 32px;
+  color: #cc7623;
+  line-height: 36px;
+  margin-bottom: 10px;
+}
+.node-summer_camp_list_page .middle-item h2,
+.node-summer_camp_description_page .middle-item h2,
+.node-camp_sunmmer_item .middle-item h2{
+  text-align: center;
+}
+.middle-content strong{
+  font-size: 18px; 
+}
+.middle-content p img{
+  height: auto;
+  width: 280px;
+}
+.view-auction-items .middle-item h2 {
+  text-align: center;
+}
+#views-exposed-form-summer-camps-products-default .views-throbbing{
+    display: none;
+}
+#node-17 p a,
+.view-id-homepage_items p a{
+    color: #b2366a;
+}
+/* sponsors slider*/
+
+#slider ul, #slider li{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+#slider, #slider li{
+    width: 320px;
+    height:70px;
+    overflow:hidden;
+}
+.view-general-info-items .views-row-first {
+    min-height: 0;
+    padding-top: 0;
+}
+.oct-ftb-pic img {
+    width: 100%;
+}
